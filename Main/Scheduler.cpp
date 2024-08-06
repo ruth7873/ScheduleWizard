@@ -1,10 +1,11 @@
 #include "Scheduler.h"
-RealTimeScheduler Scheduler::realTime;
+
+RealTimeScheduler Scheduler::realTimeScheduler;
 WeightRoundRobinScheduler Scheduler::WrrQueues;
 Task* Scheduler::currentTask = nullptr;
 void Scheduler::execute(Task* task) {
 	currentTask = task;
-	while (realTime.getRealTimeQueue().empty()) {
+	while (realTimeScheduler.getRealTimeQueue().empty()) {
 
 		if (task->getRunningTime() == 0)//the task is completed - finish running successfully.
 		{

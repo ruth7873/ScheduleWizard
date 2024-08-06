@@ -9,10 +9,12 @@
 #include <thread>
 #include <chrono>    
 
+class RealTimeScheduler;
+
 class Scheduler
 {
 private:
-	static RealTimeScheduler realTime;
+	static RealTimeScheduler realTimeScheduler;
 	static WeightRoundRobinScheduler WrrQueues;
 	static Task* currentTask;
 
