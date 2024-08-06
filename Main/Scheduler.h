@@ -2,7 +2,6 @@
 #pragma once
 
 #include "Task.h"
-#include "Consts.h"
 #include "RealTimeScheduler.h"
 #include "WeightRoundRobinScheduler.h"
 #include <iostream>
@@ -10,13 +9,16 @@
 class Scheduler
 {
 private:
-	RealTimeScheduler realTime;
+	static RealTimeScheduler realTime;
 
-	WeightRoundRobinScheduler WrrQueues;
+	static WeightRoundRobinScheduler wrrQueues;
 
-	Task* currentTask;
+	static Task* currentTask;
 
+	Task* Input();
 public:
+	void InsertTask();
 
+	static int taskAmount;
 };
 
