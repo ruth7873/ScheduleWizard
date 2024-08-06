@@ -7,6 +7,7 @@ class Consts
 public:
 	static const string COMPLETED;
 	static const string SUSPENDED;
+	static const string TERMINATED;
 	static const string CRITICAL;
 	static const string HIGHER;
 	static const string MIDDLE;

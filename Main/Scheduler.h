@@ -6,17 +6,23 @@
 #include "RealTimeScheduler.h"
 #include "WeightRoundRobinScheduler.h"
 #include <iostream>
+#include <thread>
+#include <chrono>    
 
 class Scheduler
 {
 private:
-	RealTimeScheduler realTime;
-
-	WeightRoundRobinScheduler WrrQueues;
-
-	Task* currentTask;
+	static RealTimeScheduler realTime;
+	static WeightRoundRobinScheduler WrrQueues;
+	static Task* currentTask;
 
 public:
-
+	static void execute(Task* task);
+	static void displayMessage(Task* task, string message = "") {
+		cout << "task " << task->getId() << " is " << task->getStatus();
+		if (message.length() > 0)
+			cout << message;
+		cout << endl;
+	}
 };
 

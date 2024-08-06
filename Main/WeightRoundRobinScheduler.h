@@ -6,7 +6,7 @@
 #include <unordered_map>
 
 typedef struct Queue {
-	static unordered_map<string, queue<Task*>> WRRQueues;
+	queue<Task*> WRRQueues;
 	int weight;
 };
 
@@ -17,4 +17,9 @@ private:
 	int countTasks;
 	unordered_map<string, Queue> WRRQueues;
 	unordered_map<string, int> WRRQueuesWeights;
+public:
+	void addTask(Task* task) {
+		WRRQueues[task->getPriority()].WRRQueues.push(task);
+	}
+
 };
