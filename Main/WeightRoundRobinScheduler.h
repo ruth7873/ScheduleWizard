@@ -1,4 +1,3 @@
-
 #pragma once
 #include <queue>
 #include "Task.h"
@@ -14,12 +13,16 @@ typedef struct Queue {
 #pragma once
 class WeightRoundRobinScheduler
 {
-public:
-	WeightRoundRobinScheduler();
-
 private:
 	static std::unordered_map<std::string, Queue> WRRQueues;
-	unordered_map<string, int> WRRQueuesWeights;
+	std::unordered_map<std::string, int> WRRQueuesWeights;
+
+
+public:
+	WeightRoundRobinScheduler();
+	void addTask(Task* task);
+	std::unordered_map< std::string, Queue> getWrrQueues();
 	void WeightRoundRobin();
 
 };
+

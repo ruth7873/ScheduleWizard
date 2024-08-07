@@ -1,6 +1,8 @@
 #include "WeightRoundRobinScheduler.h"
 #include "Consts.h"
 #include "queue"
+#include "Scheduler.h"
+using namespace std;
 
 unordered_map<string, Queue> WeightRoundRobinScheduler::WRRQueues;
 WeightRoundRobinScheduler::WeightRoundRobinScheduler() {
@@ -8,6 +10,18 @@ WeightRoundRobinScheduler::WeightRoundRobinScheduler() {
     WRRQueues[Consts::MIDDLE] = Queue{ std::queue<Task*>(), Consts::MIDDLE_WEIGHT };
     WRRQueues[Consts::LOWER] = Queue{ std::queue<Task*>(), Consts::LOWER_WEIGHT };
 }
+
+
+void WeightRoundRobinScheduler::addTask(Task* task) {
+    WRRQueues[task->getPriority()].queue.push(task);
+}
+
+std::unordered_map<std::string, Queue> WeightRoundRobinScheduler::getWrrQueues() {
+    return WRRQueues;
+}
+
+
+
 
 void WeightRoundRobinScheduler::WeightRoundRobin()
 {
@@ -17,20 +31,40 @@ void WeightRoundRobinScheduler::WeightRoundRobin()
             // pair.first is the name (string)
             // pair.second is the Q (Queue)
 
-            std::string nameQueue = pair.first;
+            string nameQueue = pair.first;
             Queue taskQueue = pair.second;
-            double weight = taskQueue.queue.size() * (taskQueue.weight / 100);
+            
+            int weight = taskQueue.weight;
+            int taskCountToRun = static_cast<int>(Scheduler::taskAmount * (weight / 100.0));
+            taskCountToRun = (taskCountToRun == 0 && !taskQueue.queue.empty()) ? 1 : taskCountToRun;
+
+            cout << "Processing queue: " << nameQueue << " with weight: " << weight << std::endl;
+
+
+            while (!taskQueue.queue.empty() && countTasks < taskCountToRun) {
+                Task* task = taskQueue.queue.front();
+                taskQueue.queue.pop();
+                Scheduler::execute(task);
+                countTasks++;
+            }
+
+            countTasks = 0; // Reset countTasks for the next queue
+        }
+
+        // Sleep to prevent busy-waiting (optional)
+        this_thread::sleep_for(chrono::seconds(1));
+
             // Process each queue
-            while (!taskQueue.queue.empty()) {
-                if (weight >= countTasks ) {
+  /*          while (!taskQueue.queue.empty()) {
+                if (weight <= countTasks ) {
                     countTasks = 0;
                     break;
                 }
                 Task* task = taskQueue.queue.front();
-                // Execute(task);
+                Scheduler::execute(task);
                 countTasks++;
-            }
-        }
+            }*/
+       // }
 
     }
 }
