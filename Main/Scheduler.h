@@ -17,8 +17,12 @@ private:
 
 	Task* Input();
 public:
+
+	void StartScheduling();
+
 	void InsertTask();
 
 	static int taskAmount;
+
 };
 

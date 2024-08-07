@@ -3,9 +3,9 @@
 
 int main()
 {
-	Scheduler s;
-	s.InsertTask();
-	std::cout << "Hello world!" << std::endl;
+    Scheduler s;
+    s.StartScheduling();
+    std::cout << "Hello World!\n";
 	return 0;
 }
 

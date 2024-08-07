@@ -13,7 +13,6 @@ typedef struct Queue {
 class WeightRoundRobinScheduler
 {
 private:
-	int countTasks;
 	unordered_map<string, Queue> WRRQueues;
 
 public:
@@ -21,3 +20,4 @@ public:
 	void addTask(Task*);
 
 };
+

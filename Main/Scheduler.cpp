@@ -1,5 +1,6 @@
 #include "Scheduler.h"
 #include "Consts.h"
+#include <thread>
 
 int Scheduler::taskAmount = 0;
 
@@ -9,6 +10,31 @@ WeightRoundRobinScheduler Scheduler::wrrQueues;
 
 Task* Scheduler::currentTask = nullptr;
 
+
+
+void Scheduler::StartScheduling() {
+    try {
+        // Create a thread for the InsertTask function
+        std::thread insertTask_Thread(&Scheduler::InsertTask, this);
+
+        // Create a thread for real-Time Scheduler
+        std::thread RTScheduler_Thread([this]() {
+            realTime.realTimeSchedulerFunction();
+            });
+
+        // Create a thread for WRR Scheduler
+        std::thread WRRScheduler_Thread([this]() {
+            WrrQueues.WRRScheduler();
+            });
+
+        insertTask_Thread.join();
+        RTScheduler_Thread.join();
+        WRRScheduler_Thread.join();
+    }
+    catch (const std::exception& ex) {
+        // Handle any exceptions that might occur during thread creation
+        std::cerr << "Error creating threads: " << ex.what() << std::endl;
+    }
 
 Task* Scheduler::Input()
 {
