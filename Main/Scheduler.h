@@ -6,7 +6,7 @@
 #include "Task.h"
 #include "RealTimeScheduler.h"
 #include "WeightRoundRobinScheduler.h"
-
+  
 
 class RealTimeScheduler;
 
@@ -24,9 +24,8 @@ public:
 	void InsertTask();
 	static int taskAmount;
  	static void execute(Task* task);
-	static void displayMessage(const Task* task);
+	static void displayMessage(const Task* task, string);
 	static void preemptive(Task* task);
 
 };
-
 

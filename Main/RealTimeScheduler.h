@@ -1,3 +1,4 @@
+
 #pragma once
 #include <queue>
 #include "Scheduler.h"
@@ -6,6 +7,7 @@ class RealTimeScheduler
 {
 
 private:
+
 	queue<Task*> realTimeQueue;
 
 public:
@@ -13,9 +15,8 @@ public:
 		return realTimeQueue;
 	}
 
-	void addTask(Task* task) {
-		realTimeQueue.push(task);
-	}
-	void realTimeSchedulerFunction();
-
+    void addTask(Task* task) {
+        realTimeQueue.push(task);
+    }
+    void realTimeSchedulerFunction();
 };
