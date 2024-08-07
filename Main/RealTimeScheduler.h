@@ -3,6 +3,8 @@
 #include "Task.h"
 #include "Scheduler.h"
 
+class Task; // Forward declaration
+
 class RealTimeScheduler
 {
 
@@ -19,3 +21,5 @@ public:
 	void realTimeSchedulerFunction();
 
 };
+
+

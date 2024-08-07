@@ -26,6 +26,7 @@ const std::string& Task::getPriority() const {
 
 void Task::setPriority(const std::string& newPriority) {
     priority = newPriority;
+    Scheduler::displayMessage(this);
 }
 
 int Task::getRunningTime() const {
