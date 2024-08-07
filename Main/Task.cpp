@@ -1,5 +1,6 @@
 #include "Task.h"
 #include <chrono>
+#include "Scheduler.h"
 
 Task::Task(int id, string priority, int runningTime, string status)
     : id(id), priority(priority), runningTime(runningTime), status(status)
@@ -8,8 +9,8 @@ Task::Task(int id, string priority, int runningTime, string status)
     entryTime = std::chrono::system_clock::to_time_t(currentTime);
 }
 
-Task::Task(string priority, int runningTime)
-    : Task(-1, priority, runningTime, "Creation")
+Task::Task(int id, string priority, int runningTime)
+    : Task(id, priority, runningTime, "Creation")
 {}
 
 int Task::getId() const {
@@ -42,6 +43,7 @@ const string& Task::getStatus() const {
 
 void Task::setStatus(const string& newStatus) {
     status = newStatus;
+    Scheduler::displayMessage(this);
 }
 
 time_t Task::getEntryTime() const {

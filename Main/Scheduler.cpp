@@ -52,6 +52,7 @@ void Scheduler::StartScheduling() {
 
         // Create a thread for WRR Scheduler
         std::thread WRRScheduler_Thread([this]() {
+            cout << "start wrr scheduler tread\n";
             // wrrQueues.;
             });
 
@@ -71,7 +72,7 @@ Task* Scheduler::Input()
     int runningTime;
     std::string input;
 
-    std::cout << "Enter the priority for the task. Options: Critical, Higher, Middle, Lower: ";
+    std::cout << "Enter the priority for the task. Options: Critical, Higher, Middle, Lower: \n";
     std::cin >> priority;
 
     // Input validation for priority
@@ -84,7 +85,7 @@ Task* Scheduler::Input()
 
     // Input validation for runningTime
     while (true) {
-        std::cout << "Enter the task running time: ";
+        std::cout << "Enter the task running time: \n";
         std::cin >> input;
 
         // Check if the input contains only digits
@@ -105,11 +106,12 @@ Task* Scheduler::Input()
     }
 
     // Assuming other fields like status and entryTime are set elsewhere
-    return new Task(priority, runningTime);
+    return new Task(taskAmount++, priority, runningTime);
 }
 
 void Scheduler::InsertTask()
 {
+    cout << "start insert tread\n";
     while (true) {
         Task* newTask = Input(); // Get a new task from input
         if (newTask == nullptr) {
@@ -117,14 +119,12 @@ void Scheduler::InsertTask()
             continue; // Skip the rest of the loop iteration if input is invalid
         }
 
-        std::cout << "Building new task" << std::endl;
-        newTask->setId(taskAmount++); // Assign a unique ID to the task
-
         if (newTask->getPriority() == Consts::CRITICAL) {
             realTimeScheduler.addTask(newTask); // Add task to real-time scheduler for real-time tasks
         }
         else {
             wrrQueues.addTask(newTask); // Add task to Weighted Round Robin scheduler for non-real-time tasks
         }
+       // std::this_thread::sleep_for(std::chrono::seconds(3));
     }
 }

@@ -15,7 +15,7 @@ private:
 
 public:
     Task(int id, string priority, int runningTime, string status);
-    Task(string priority, int runningTime);
+    Task(int, string priority, int runningTime);
 
     int getId() const;
     void setId(int newId);
