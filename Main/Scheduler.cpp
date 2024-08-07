@@ -52,7 +52,11 @@ void Scheduler::StartScheduling() {
 
         // Create a thread for WRR Scheduler
         std::thread WRRScheduler_Thread([this]() {
+<<<<<<< HEAD
             // wrrQueues.;
+=======
+            //wrrQueues.WRRScheduler();
+>>>>>>> 3a297fc44559574e4fbe38969c6328f9872609ae
             });
 
         insertTask_Thread.join();
@@ -64,7 +68,10 @@ void Scheduler::StartScheduling() {
         std::cerr << "Error creating threads: " << ex.what() << std::endl;
     }
 }
+<<<<<<< HEAD
 
+=======
+>>>>>>> 3a297fc44559574e4fbe38969c6328f9872609ae
 Task* Scheduler::Input()
 {
     std::string priority;
@@ -107,7 +114,6 @@ Task* Scheduler::Input()
     // Assuming other fields like status and entryTime are set elsewhere
     return new Task(priority, runningTime);
 }
-
 
 void Scheduler::InsertTask()
 {

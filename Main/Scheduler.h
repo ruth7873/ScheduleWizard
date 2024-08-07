@@ -9,7 +9,9 @@
 #include <chrono>    
 #include <string>
 
+class Task;
 class RealTimeScheduler;
+class WeightRoundRobinScheduler;
 
 class Scheduler
 {
