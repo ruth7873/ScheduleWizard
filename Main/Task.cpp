@@ -1,6 +1,4 @@
 #include "Task.h"
-#include "Scheduler.h"
-#include <chrono>
 
 Task::Task(int id, string priority, int runningTime, string status)
 	: id(id), priority(priority), runningTime(runningTime), status(status)

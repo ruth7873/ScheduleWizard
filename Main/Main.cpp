@@ -3,6 +3,9 @@
 
 int main()
 {
-	std::cout << "Hello World!\n";
-
+    Scheduler s;
+    s.StartScheduling();
+    std::cout << "Hello World!\n";
+	return 0;
 }
+

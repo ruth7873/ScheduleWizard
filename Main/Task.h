@@ -1,6 +1,8 @@
 #pragma once
+#include "Scheduler.h"
 #include <string>
 #include <ctime>
+#include <chrono>
 
 class Scheduler;
 
@@ -27,3 +29,5 @@ public:
     time_t getEntryTime() const;
     void setEntryTime(time_t newEntryTime);
 };
+
+  
