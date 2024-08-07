@@ -1,4 +1,3 @@
-
 #pragma once
 
 #include "Task.h"
@@ -6,7 +5,7 @@
 #include "WeightRoundRobinScheduler.h"
 #include <iostream>
 #include <thread>
-#include <chrono>    
+#include <chrono>
 #include <string>
 
 class Task;
@@ -16,20 +15,15 @@ class WeightRoundRobinScheduler;
 class Scheduler
 {
 private:
-
-	static RealTimeScheduler realTimeScheduler;
-	static WeightRoundRobinScheduler wrrQueues;
-	Task* Input();
+    static RealTimeScheduler realTimeScheduler;
+    static WeightRoundRobinScheduler wrrQueues;
+    Task* Input();
 
 public:
-
-	void StartScheduling();
-	void InsertTask();
-	static int taskAmount;
- 	static void execute(Task* task);
-	static void displayMessage(const Task* task);
-	static void preemptive(Task* task);
-
+    void StartScheduling();
+    void InsertTask();
+    static int taskAmount;
+    static void execute(Task* task);
+    static void displayMessage(const Task* task);
+    static void preemptive(Task* task);
 };
-
-

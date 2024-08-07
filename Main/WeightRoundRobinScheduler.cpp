@@ -1,14 +1,20 @@
 #include "WeightRoundRobinScheduler.h"
 
 WeightRoundRobinScheduler::WeightRoundRobinScheduler() {
-    WRRQueues.emplace(Consts::HIGHER, Queue{ std::queue<Task*>(), Consts::HIGHER_WEIGHT });
-    WRRQueues.emplace(Consts::MIDDLE, Queue{ std::queue<Task*>(), Consts::MIDDLE_WEIGHT });
-    WRRQueues.emplace(Consts::LOWER, Queue{ std::queue<Task*>(), Consts::LOWER_WEIGHT });
+    // Initialization code if needed
 }
 
-void WeightRoundRobinScheduler::addTask(Task* newTask)
-{
-    WRRQueues[newTask->getPriority()].WRRQueue.push(newTask);
+void WeightRoundRobinScheduler::addTask(Task* task) {
+    // Determine the task's priority and add it to the corresponding queue
+    std::string priority = task->getPriority();
+
+    if (priority == Consts::HIGHER) {
+        WRRQueues[Consts::HIGHER].WRRQueue.push(task);
+    }
+    else if (priority == Consts::MIDDLE) {
+        WRRQueues[Consts::MIDDLE].WRRQueue.push(task);
+    }
+    else if (priority == Consts::LOWER) {
+        WRRQueues[Consts::LOWER].WRRQueue.push(task);
+    }
 }
-
-

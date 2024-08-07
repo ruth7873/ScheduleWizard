@@ -1,12 +1,12 @@
 #include "Scheduler.h"
-
+#include "Task.h"
 
 int Scheduler::taskAmount = 0;
 RealTimeScheduler Scheduler::realTimeScheduler;
 WeightRoundRobinScheduler Scheduler::wrrQueues;
 
 void Scheduler::execute(Task* task) {
-	task->setStatus(Consts::RUNNING);
+    task->setStatus(Consts::RUNNING);
 	while (task->getRunningTime() > 0) {
 		if (task->getPriority() != Consts::CRITICAL && !realTimeScheduler.getRealTimeQueue().empty())
 		{
@@ -52,11 +52,7 @@ void Scheduler::StartScheduling() {
 
         // Create a thread for WRR Scheduler
         std::thread WRRScheduler_Thread([this]() {
-<<<<<<< HEAD
             // wrrQueues.;
-=======
-            //wrrQueues.WRRScheduler();
->>>>>>> 3a297fc44559574e4fbe38969c6328f9872609ae
             });
 
         insertTask_Thread.join();
@@ -68,10 +64,7 @@ void Scheduler::StartScheduling() {
         std::cerr << "Error creating threads: " << ex.what() << std::endl;
     }
 }
-<<<<<<< HEAD
 
-=======
->>>>>>> 3a297fc44559574e4fbe38969c6328f9872609ae
 Task* Scheduler::Input()
 {
     std::string priority;

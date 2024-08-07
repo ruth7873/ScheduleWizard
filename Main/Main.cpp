@@ -6,8 +6,5 @@ int main()
     Scheduler s;
     s.StartScheduling();
     std::cout << "Hello World!\n";
-	return 0;
+    return 0;
 }
-
-
-
