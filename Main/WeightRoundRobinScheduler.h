@@ -21,5 +21,7 @@ public:
 	void addTask(Task* task) {
 		WRRQueues[task->getPriority()].WRRQueues.push(task);
 	}
-
+	unordered_map<string, Queue> getWrrQueues() {
+		return WRRQueues;
+	}
 };

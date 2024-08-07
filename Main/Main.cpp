@@ -2,10 +2,14 @@
 //
 
 #include <iostream>
+#include "Scheduler.h"
 
 int main()
 {
     std::cout << "Hello World!\n";
+    Scheduler s;
+    s.InsertTask();
+    s.rt();
 }
 
 // Run program: Ctrl + F5 or Debug > Start Without Debugging menu

@@ -17,14 +17,13 @@ private:
 	static RealTimeScheduler realTimeScheduler;
 	static WeightRoundRobinScheduler WrrQueues;
 	static Task* currentTask;
-
+	Task* Input();
 public:
 	static void execute(Task* task);
-	static void displayMessage(Task* task, string message = "") {
-		cout << "task " << task->getId() << " is " << task->getStatus();
-		if (message.length() > 0)
-			cout << message;
-		cout << endl;
-	}
+	static void displayMessage(Task* task, string message = "");
+	void InsertTask();
+	static int taskAmount;
+	void rt();
 };
+
 

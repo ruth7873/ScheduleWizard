@@ -12,6 +12,10 @@ private:
     time_t entryTime;
 
 public:
+    Task(int, string, int, string);
+
+    Task(string, int);
+
     int getId() const {
         return id;
     }
