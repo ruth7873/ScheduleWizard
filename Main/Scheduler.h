@@ -1,15 +1,32 @@
 #pragma once
-#include <queue>
+#include <iostream>
+#include <thread>
+#include <chrono>    
+#include <string>
 #include "Task.h"
-class RealTimeScheduler
+#include "RealTimeScheduler.h"
+#include "WeightRoundRobinScheduler.h"
+
+
+class RealTimeScheduler;
+
+class Scheduler
 {
 private:
-    queue<Task*> realTime;
+
+	static RealTimeScheduler realTimeScheduler;
+	static WeightRoundRobinScheduler wrrQueues;
+	Task* Input();
+
 public:
-    queue<Task*> getRealTimeQueue() const {
-        return realTime;
-    }
-    void addTask(Task* task) {
-        realTime.push(task);
-    }
+
+	void StartScheduling();
+	void InsertTask();
+	static int taskAmount;
+ 	static void execute(Task* task);
+	static void displayMessage(const Task* task);
+	static void preemptive(Task* task);
+
 };
+
+
