@@ -1,22 +1,15 @@
-
 #pragma once
-
+#include <queue>
 #include "Task.h"
-#include "Consts.h"
-#include "RealTimeScheduler.h"
-#include "WeightRoundRobinScheduler.h"
-#include <iostream>
-
-class Scheduler
+class RealTimeScheduler
 {
 private:
-	RealTimeScheduler realTime;
-
-	WeightRoundRobinScheduler WrrQueues;
-
-	Task* currentTask;
-
+    queue<Task*> realTime;
 public:
-
+    queue<Task*> getRealTimeQueue() const {
+        return realTime;
+    }
+    void addTask(Task* task) {
+        realTime.push(task);
+    }
 };
-
