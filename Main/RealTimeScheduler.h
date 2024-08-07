@@ -1,17 +1,13 @@
 #pragma once
 #include <queue>
-#include "Task.h"
-#include "Scheduler.h"
-
-class Task; // Forward declaration
+#include "Task.h" // Include Task.h here
 
 class RealTimeScheduler
 {
-
 private:
-	queue<Task*> realTimeQueue;
+	std::queue<Task*> realTimeQueue;
 public:
-	queue<Task*> getRealTimeQueue() const {
+	std::queue<Task*> getRealTimeQueue() const {
 		return realTimeQueue;
 	}
 
@@ -19,7 +15,4 @@ public:
 		realTimeQueue.push(task);
 	}
 	void realTimeSchedulerFunction();
-
 };
-
-
