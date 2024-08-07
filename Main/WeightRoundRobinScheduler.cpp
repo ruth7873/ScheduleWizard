@@ -1,10 +1,14 @@
 #include "WeightRoundRobinScheduler.h"
-#include <iostream>
-#include <thread>
-void WeightRoundRobinScheduler::WRRScheduler()
-{
-	for (int i = 1; i < 10; i++) {
-		std::cout << "WRRScheduler tread:" << i << endl;
-		std::this_thread::sleep_for(std::chrono::seconds(1));
-	}
+
+WeightRoundRobinScheduler::WeightRoundRobinScheduler() {
+    WRRQueues.emplace(Consts::HIGHER, Queue{ std::queue<Task*>(), Consts::HIGHER_WEIGHT });
+    WRRQueues.emplace(Consts::MIDDLE, Queue{ std::queue<Task*>(), Consts::MIDDLE_WEIGHT });
+    WRRQueues.emplace(Consts::LOWER, Queue{ std::queue<Task*>(), Consts::LOWER_WEIGHT });
 }
+
+void WeightRoundRobinScheduler::addTask(Task* newTask)
+{
+    WRRQueues[newTask->getPriority()].WRRQueue.push(newTask);
+}
+
+

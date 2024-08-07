@@ -1,4 +1,3 @@
-
 #pragma once
 #include <queue>
 #include "Task.h"
@@ -7,15 +6,17 @@
 
 class RealTimeScheduler
 {
+
 private:
-    queue<Task*> realTime;
+	queue<Task*> realTime;
 
 public:
-    void realTimeSchedulerFunction() {
-        for (int i = 1; i < 10; i++) {
-            std::cout << "realTimeSchedulerFunction tread:" << i << endl;
-            std::this_thread::sleep_for(std::chrono::seconds(1));
-        }
-    }
+
+	queue<Task*> getRealTimeQueue() const {
+		return realTime;
+	}
+	void addTask(Task* task) {
+		realTime.push(task);
+	}
 
 };
