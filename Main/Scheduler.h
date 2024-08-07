@@ -17,6 +17,7 @@ private:
 	Task* currentTask;
 
 public:
-
+	void StartScheduling();
+	void InsertTask();
 };
 

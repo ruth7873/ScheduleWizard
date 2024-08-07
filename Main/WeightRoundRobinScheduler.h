@@ -17,4 +17,6 @@ private:
 	int countTasks;
 	unordered_map<string, Queue> WRRQueues;
 	unordered_map<string, int> WRRQueuesWeights;
+public:
+	void WRRScheduler();
 };
