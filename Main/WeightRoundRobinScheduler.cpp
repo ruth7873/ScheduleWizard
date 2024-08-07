@@ -14,15 +14,15 @@ void WeightRoundRobinScheduler::WeightRoundRobin()
     while (true) {
         int countTasks = 0;
         for (auto& pair : WRRQueues) {
-            // pair.first is the key (string)
-            // pair.second is the value (Queue)
+            // pair.first is the name (string)
+            // pair.second is the Q (Queue)
 
             std::string nameQueue = pair.first;
             Queue taskQueue = pair.second;
-
+            double weight = taskQueue.queue.size() * (taskQueue.weight / 100);
             // Process each queue
             while (!taskQueue.queue.empty()) {
-                if (taskQueue.weight >= countTasks ) {
+                if (weight >= countTasks ) {
                     countTasks = 0;
                     break;
                 }
