@@ -8,15 +8,15 @@
 class RealTimeScheduler
 {
 private:
-    queue<Task*> realTimeQueue;
+	queue<Task*> realTimeQueue;
 
 public:
-    queue<Task*> getRealTimeQueue() const {
-        return realTimeQueue;
-    }
+	queue<Task*> getRealTimeQueue() const {
+		return realTimeQueue;
+	}
 
-    void addTask(Task* task) {
-        realTimeQueue.push(task);
-    }
-    void realTimeSchedulerFunction();
+	void addTask(Task* task) {
+		realTimeQueue.push(task);
+	}
+	void realTimeSchedulerFunction();
 };

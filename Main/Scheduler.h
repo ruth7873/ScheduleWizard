@@ -8,6 +8,7 @@
 #include <iostream>
 #include <thread>
 #include <chrono>    
+#include <string>
 
 class RealTimeScheduler;
 
@@ -16,14 +17,11 @@ class Scheduler
 private:
 	static RealTimeScheduler realTimeScheduler;
 	static WeightRoundRobinScheduler WrrQueues;
-	static Task* currentTask;
-	Task* Input();
 public:
 	static void execute(Task* task);
-	static void displayMessage(Task* task, string message = "");
-	void InsertTask();
+	static void displayMessage(const Task* task);
+	static void preemptive(Task* task);
 	static int taskAmount;
-	void rt();
 };
 
 
