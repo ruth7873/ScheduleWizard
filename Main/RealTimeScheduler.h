@@ -8,6 +8,7 @@ class RealTimeScheduler
 
 private:
 	queue<Task*> realTimeQueue;
+
 public:
 	queue<Task*> getRealTimeQueue() const {
 		return realTimeQueue;

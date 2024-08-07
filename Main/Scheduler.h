@@ -17,7 +17,7 @@ private:
 
 	static RealTimeScheduler realTimeScheduler;
 	static WeightRoundRobinScheduler wrrQueues;
-  Task* Input();
+	Task* Input();
 
 public:
 

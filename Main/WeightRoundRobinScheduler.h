@@ -4,10 +4,10 @@
 #include "Consts.h"
 #include <unordered_map>
 
-typedef struct Queue {
+typedef struct Q {
 	queue<Task*> WRRQueue;
 	int weight;
-};
+}Queue;
 
 
 class WeightRoundRobinScheduler

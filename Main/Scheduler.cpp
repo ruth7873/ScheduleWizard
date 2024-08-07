@@ -3,7 +3,7 @@
 
 int Scheduler::taskAmount = 0;
 RealTimeScheduler Scheduler::realTimeScheduler;
-WeightRoundRobinScheduler Scheduler::WrrQueues;
+WeightRoundRobinScheduler Scheduler::wrrQueues;
 
 void Scheduler::execute(Task* task) {
 	task->setStatus(Consts::RUNNING);
@@ -36,7 +36,7 @@ void Scheduler::displayMessage(const Task* task) {
 
 void Scheduler::preemptive(Task* task) {
 	task->setStatus(Consts::SUSPENDED);
-	WrrQueues.addTask(task);
+	wrrQueues.addTask(task);
 }
 
 
@@ -52,7 +52,7 @@ void Scheduler::StartScheduling() {
 
         // Create a thread for WRR Scheduler
         std::thread WRRScheduler_Thread([this]() {
-            WrrQueues.WRRScheduler();
+            // wrrQueues.;
             });
 
         insertTask_Thread.join();
@@ -63,6 +63,7 @@ void Scheduler::StartScheduling() {
         // Handle any exceptions that might occur during thread creation
         std::cerr << "Error creating threads: " << ex.what() << std::endl;
     }
+}
 
 Task* Scheduler::Input()
 {
