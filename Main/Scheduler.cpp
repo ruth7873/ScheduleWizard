@@ -1,15 +1,43 @@
 #include "Scheduler.h"
-#include "Consts.h"
-#include <thread>
+
 
 int Scheduler::taskAmount = 0;
+RealTimeScheduler Scheduler::realTimeScheduler;
+WeightRoundRobinScheduler Scheduler::WrrQueues;
 
-RealTimeScheduler Scheduler::realTime;
+void Scheduler::execute(Task* task) {
+	task->setStatus(Consts::RUNNING);
+	while (task->getRunningTime() > 0) {
+		if (task->getPriority() != Consts::CRITICAL && !realTimeScheduler.getRealTimeQueue().empty())
+		{
+			preemptive(task);
+			task = realTimeScheduler.getRealTimeQueue().front();
+			realTimeScheduler.getRealTimeQueue().pop();
+			task->setStatus(Consts::RUNNING);
+		}	
+			try
+			{
+				task->setRunningTime(task->getRunningTime() - 1); // the task is running
+				std::this_thread::sleep_for(std::chrono::seconds(1));
+			}
+			catch (const std::exception& e)
+			{
+				task->setStatus(Consts::TERMINATED);
+				std::cout << " " << e.what() << std::endl;
+				break;
+			}
+		}
+  task->setStatus(Consts::COMPLETED);
+}
 
-WeightRoundRobinScheduler Scheduler::wrrQueues;
+void Scheduler::displayMessage(const Task* task) {
+	std::cout << "task " << task->getId() << " is " << task->getStatus() << std::endl;
+}
 
-Task* Scheduler::currentTask = nullptr;
-
+void Scheduler::preemptive(Task* task) {
+	task->setStatus(Consts::SUSPENDED);
+	WrrQueues.addTask(task);
+}
 
 
 void Scheduler::StartScheduling() {
@@ -19,7 +47,7 @@ void Scheduler::StartScheduling() {
 
         // Create a thread for real-Time Scheduler
         std::thread RTScheduler_Thread([this]() {
-            realTime.realTimeSchedulerFunction();
+            realTimeScheduler.realTimeSchedulerFunction();
             });
 
         // Create a thread for WRR Scheduler
@@ -93,7 +121,7 @@ void Scheduler::InsertTask()
         newTask->setId(taskAmount++); // Assign a unique ID to the task
 
         if (newTask->getPriority() == Consts::CRITICAL) {
-            realTime.addTask(newTask); // Add task to real-time scheduler for real-time tasks
+            realTimeScheduler.addTask(newTask); // Add task to real-time scheduler for real-time tasks
         }
         else {
             wrrQueues.addTask(newTask); // Add task to Weighted Round Robin scheduler for non-real-time tasks

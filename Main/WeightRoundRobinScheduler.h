@@ -9,13 +9,16 @@ typedef struct Queue {
 	int weight;
 };
 
-#pragma once
+
 class WeightRoundRobinScheduler
 {
 private:
 	unordered_map<string, Queue> WRRQueues;
 
 public:
+		unordered_map<string, Queue> getWrrQueues() {
+		return WRRQueues;
+	}
 	WeightRoundRobinScheduler();
 	void addTask(Task*);
 

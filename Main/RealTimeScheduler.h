@@ -1,22 +1,21 @@
 #pragma once
 #include <queue>
 #include "Task.h"
-#include <iostream>
-#include <thread>
+#include "Scheduler.h"
 
 class RealTimeScheduler
 {
 
 private:
-	queue<Task*> realTime;
-
+	queue<Task*> realTimeQueue;
 public:
-
 	queue<Task*> getRealTimeQueue() const {
-		return realTime;
+		return realTimeQueue;
 	}
+
 	void addTask(Task* task) {
-		realTime.push(task);
+		realTimeQueue.push(task);
 	}
+	void realTimeSchedulerFunction();
 
 };

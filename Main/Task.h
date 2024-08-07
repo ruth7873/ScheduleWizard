@@ -1,58 +1,33 @@
 #pragma once
+#include "Scheduler.h"
 #include <string>
-using namespace std;
+#include <ctime>
+#include <chrono>
 
-class Task
-{
+class Scheduler;
+
+class Task {
 private:
     int id;
-    string priority;
+    std::string priority;
     int runningTime;
-    string status;
+    std::string status;
     time_t entryTime;
 
 public:
-    Task(int, string, int, string);
+    Task(int, std::string, int, std::string);
+    Task(std::string, int);
 
-    Task(string, int);
-
-    int getId() const {
-        return id;
-    }
-
-    void setId(int newId) {
-        id = newId;
-    }
-
-    const string& getPriority() const {
-        return priority;
-    }
-
-    void setPriority(const string& newPriority) {
-        priority = newPriority;
-    }
-
-    int getRunningTime() const {
-        return runningTime;
-    }
-
-    void setRunningTime(int newRunningTime) {
-        runningTime = newRunningTime;
-    }
-
-    const string& getStatus() const {
-        return status;
-    }
-
-    void setStatus(const string& newStatus) {
-        status = newStatus;
-    }
-
-    time_t getEntryTime() const {
-        return entryTime;
-    }
-
-    void setEntryTime(time_t newEntryTime) {
-        entryTime = newEntryTime;
-    }
+    int getId() const;
+    void setId(int newId);
+    const std::string& getPriority() const;
+    void setPriority(const std::string& newPriority);
+    int getRunningTime() const;
+    void setRunningTime(int newRunningTime);
+    const std::string& getStatus() const;
+    void setStatus(const std::string& newStatus);
+    time_t getEntryTime() const;
+    void setEntryTime(time_t newEntryTime);
 };
+
+  
