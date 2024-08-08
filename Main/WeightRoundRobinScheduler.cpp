@@ -6,6 +6,7 @@
 #include <chrono>
 using namespace std;
 
+<<<<<<< HEAD
 /**
  * @brief Constructor for WeightRoundRobinScheduler.
  *
@@ -93,5 +94,23 @@ void WeightRoundRobinScheduler::WeightRoundRobin()
 
             countTasks = 0; // Reset countTasks for the next queue
         }
+=======
+WeightRoundRobinScheduler::WeightRoundRobinScheduler() {
+    // Initialization code if needed
+}
+
+void WeightRoundRobinScheduler::addTask(Task* task) {
+    // Determine the task's priority and add it to the corresponding queue
+    std::string priority = task->getPriority();
+
+    if (priority == Consts::HIGHER) {
+        WRRQueues[Consts::HIGHER].WRRQueue.push(task);
+    }
+    else if (priority == Consts::MIDDLE) {
+        WRRQueues[Consts::MIDDLE].WRRQueue.push(task);
+    }
+    else if (priority == Consts::LOWER) {
+        WRRQueues[Consts::LOWER].WRRQueue.push(task);
+>>>>>>> 3e0ceb65378f524166931a6836efd8d2f791065a
     }
 }
