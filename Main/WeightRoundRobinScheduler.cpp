@@ -6,7 +6,6 @@
 #include <chrono>
 using namespace std;
 
-<<<<<<< HEAD
 /**
  * @brief Constructor for WeightRoundRobinScheduler.
  *
@@ -61,13 +60,13 @@ std::unordered_map<std::string, Queue> WeightRoundRobinScheduler::getWrrQueues()
  *
  * The function handles tasks in a fair and efficient manner, ensuring that higher-priority tasks are given more processing time.
  */
-void WeightRoundRobinScheduler::WeightRoundRobin()
+void WeightRoundRobinScheduler::WeightRoundRobinFunction()
 {
     while (true) {
         int countTasks = 0;
         for (auto& pair : WRRQueues) {
             Queue* taskQueue = &pair.second;
-            
+
             int weight = taskQueue->weight;
             int taskCountToRun = static_cast<int>(Scheduler::taskAmount * (weight / 100.0));
             std::cout << "taskCountToRun befor If: " << taskCountToRun << endl;
@@ -94,11 +93,9 @@ void WeightRoundRobinScheduler::WeightRoundRobin()
 
             countTasks = 0; // Reset countTasks for the next queue
         }
-=======
-WeightRoundRobinScheduler::WeightRoundRobinScheduler() {
-    // Initialization code if needed
-}
 
+    }
+}
 void WeightRoundRobinScheduler::addTask(Task* task) {
     // Determine the task's priority and add it to the corresponding queue
     std::string priority = task->getPriority();
@@ -111,6 +108,5 @@ void WeightRoundRobinScheduler::addTask(Task* task) {
     }
     else if (priority == Consts::LOWER) {
         WRRQueues[Consts::LOWER].WRRQueue.push(task);
->>>>>>> 3e0ceb65378f524166931a6836efd8d2f791065a
     }
 }
