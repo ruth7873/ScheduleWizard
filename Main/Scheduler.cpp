@@ -69,6 +69,13 @@ void Scheduler::preemptive(Task* task) {
 
 
 
+/**
+ * @brief Initiates the scheduling process by creating and managing threads for various scheduler functions.
+ *
+ * This function creates separate threads for inserting tasks, real-time scheduling, and Weighted Round Robin scheduling.
+ * It utilizes threading to allow concurrent execution of these tasks in the Scheduler class context.
+ * Exceptions that may occur during thread creation are caught and handled within the function.
+ */
 void Scheduler::StartScheduling() {
     try {
         // Create a thread for the InsertTask function
@@ -95,6 +102,12 @@ void Scheduler::StartScheduling() {
     }
 }
 
+
+/**
+ * @brief This function allows the user to input details for a new task, including priority and running time.
+ *
+ * @return A pointer to the newly created Task object based on the user input.
+ */
 Task* Scheduler::Input()
 {
     std::string priority;
@@ -138,6 +151,14 @@ Task* Scheduler::Input()
     return new Task(taskAmount++, priority, runningTime);
 }
 
+
+/**
+ * @brief Continuously prompts the user to input task details and inserts the tasks into the appropriate scheduler.
+ *
+ * This function loops indefinitely, prompting the user to input task details using the Input function.
+ * If the input task is valid, it is added to the corresponding scheduler based on its priority level.
+ * Tasks with Critical priority are added to the real-time scheduler, while others are added to the Weighted Round Robin scheduler.
+ */
 void Scheduler::InsertTask()
 {
     cout << "start insert tread\n";
