@@ -12,17 +12,14 @@
 class RealTimeScheduler
 {
 private:
-    /// Queue of real-time tasks.
-    std::queue<Task*> realTimeQueue;
+	queue<Task*> realTimeQueue;
 
 public:
-    std::queue<Task*> getRealTimeQueue() const {
-        return realTimeQueue;
-    }
-
+	queue<Task*> getRealTimeQueue() const {
+		return realTimeQueue;
+	}
     void addTask(Task* task) {
         realTimeQueue.push(task);
     }
-
     void realTimeSchedulerFunction();
 };

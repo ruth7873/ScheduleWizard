@@ -1,4 +1,6 @@
 #include "Scheduler.h"
+#include "Consts.h"
+
 #include "Task.h"
 
 int Scheduler::taskAmount = 0;
@@ -13,8 +15,7 @@ WeightRoundRobinScheduler Scheduler::wrrQueues;
  * @param task Pointer to the task to be executed.
  */
 void Scheduler::execute(Task* task) {
-    task->setStatus(Consts::RUNNING);
-
+	task->setStatus(Consts::RUNNING);
     // Continue executing the task while it has remaining running time
     while (task->getRunningTime() > 0) {
         if (task->getPriority() != Consts::CRITICAL && !realTimeScheduler.getRealTimeQueue().empty()) {
@@ -41,8 +42,8 @@ void Scheduler::execute(Task* task) {
 
     // Set the task status to COMPLETED when execution is finished
     task->setStatus(Consts::COMPLETED);
+    delete task;
 }
-
 
 /**
  * @brief Displays the status of a task.

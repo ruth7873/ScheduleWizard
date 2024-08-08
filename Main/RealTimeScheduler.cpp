@@ -8,15 +8,11 @@
 	 */
 void RealTimeScheduler::realTimeSchedulerFunction() {
 	cout << "start real-time Tread\n";
-    while (true) {
-        // Wait until the queue is not empty
-        while (realTimeQueue.empty());
-
-        // Get the first task from the queue
-        Task* task = realTimeQueue.front();
-        realTimeQueue.pop();
-
-        // Process the task
-        Scheduler::execute(task);
-    }
+	while (true) {
+		while (realTimeQueue.empty());
+		Task* task = RealTimeScheduler::realTimeQueue.front();
+		RealTimeScheduler::realTimeQueue.pop();
+		Scheduler::execute(task);
+	}
+    cout << "start real-time Tread\n";
 }
