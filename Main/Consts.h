@@ -9,7 +9,10 @@ public:
 	static const string SUSPENDED;
 	static const string TERMINATED;
 	static const string RUNNING;
+<<<<<<< HEAD
+=======
   
+>>>>>>> 3e0ceb65378f524166931a6836efd8d2f791065a
 	static const string CRITICAL;
 	static const string HIGHER;
 	static const string MIDDLE;

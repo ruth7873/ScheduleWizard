@@ -1,11 +1,35 @@
 #include "Scheduler.h"
+<<<<<<< HEAD
+#include "Consts.h"
+
+int Scheduler::taskAmount = 0;
+
+=======
 #include "Task.h"
 
 int Scheduler::taskAmount = 0;
+>>>>>>> 3e0ceb65378f524166931a6836efd8d2f791065a
 RealTimeScheduler Scheduler::realTimeScheduler;
 WeightRoundRobinScheduler Scheduler::wrrQueues;
 
 void Scheduler::execute(Task* task) {
+<<<<<<< HEAD
+	task->setStatus(Consts::RUNNING);
+	displayMessage(task,"");
+	while ((task->getPriority() == Consts::CRITICAL && !realTimeScheduler.getRealTimeQueue().empty()) || realTimeScheduler.getRealTimeQueue().empty()) {
+
+		if (task->getRunningTime() == 0)//the task is completed - finish running successfully.
+		{
+			task->setStatus(Consts::COMPLETED);
+			displayMessage(task,"");
+			break;
+		}
+		else {
+			try
+			{
+				task->setRunningTime(task->getRunningTime() - 1);//the task is running
+				//std::this_thread::sleep_for(std::chrono::seconds(1));
+=======
     task->setStatus(Consts::RUNNING);
 	while (task->getRunningTime() > 0) {
 		if (task->getPriority() != Consts::CRITICAL && !realTimeScheduler.getRealTimeQueue().empty())
@@ -19,10 +43,31 @@ void Scheduler::execute(Task* task) {
 			{
 				task->setRunningTime(task->getRunningTime() - 1); // the task is running
 				std::this_thread::sleep_for(std::chrono::seconds(1));
+>>>>>>> 3e0ceb65378f524166931a6836efd8d2f791065a
 			}
 			catch (const std::exception& e)
 			{
 				task->setStatus(Consts::TERMINATED);
+<<<<<<< HEAD
+				displayMessage(task, e.what());
+				break;
+			}
+		}
+	}//real-time task arrived or task comleted.
+	if (task->getStatus() != Consts::COMPLETED && task->getStatus() != Consts::TERMINATED) {
+		task->setStatus(Consts::SUSPENDED);//real time task arrived- hijack.
+		wrrQueues.addTask(task);
+		displayMessage(task,"");
+	}
+	task = nullptr;
+}
+
+void Scheduler::displayMessage(const Task* task, string message) {
+	cout << "task " << task->getId() << " is " << task->getStatus();
+	if (message.length() > 0)
+		cout << message;
+	cout << endl;
+=======
 				std::cout << " " << e.what() << std::endl;
 				break;
 			}
@@ -127,4 +172,5 @@ void Scheduler::InsertTask()
         }
        // std::this_thread::sleep_for(std::chrono::seconds(3));
     }
+>>>>>>> 3e0ceb65378f524166931a6836efd8d2f791065a
 }
