@@ -28,6 +28,7 @@ void Scheduler::execute(Task* task) {
 			}
 		}
   task->setStatus(Consts::COMPLETED);
+  delete task;
 }
 
 void Scheduler::displayMessage(const Task* task) {
@@ -38,7 +39,6 @@ void Scheduler::preemptive(Task* task) {
 	task->setStatus(Consts::SUSPENDED);
 	wrrQueues.addTask(task);
 }
-
 
 void Scheduler::StartScheduling() {
     try {
