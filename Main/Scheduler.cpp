@@ -5,39 +5,68 @@ int Scheduler::taskAmount = 0;
 RealTimeScheduler Scheduler::realTimeScheduler;
 WeightRoundRobinScheduler Scheduler::wrrQueues;
 
+/**
+ * @brief Executes a given task.
+ *
+ * This function processes a task by running it and updating its status. If the task is not critical and there are tasks in the real-time scheduler queue, the current task is preempted and a task from the real-time queue is executed. The function also handles exceptions by setting the task status to terminated and printing an error message.
+ *
+ * @param task Pointer to the task to be executed.
+ */
 void Scheduler::execute(Task* task) {
     task->setStatus(Consts::RUNNING);
-	while (task->getRunningTime() > 0) {
-		if (task->getPriority() != Consts::CRITICAL && !realTimeScheduler.getRealTimeQueue().empty())
-		{
-			preemptive(task);
-			task = realTimeScheduler.getRealTimeQueue().front();
-			realTimeScheduler.getRealTimeQueue().pop();
-			task->setStatus(Consts::RUNNING);
-		}	
-			try
-			{
-				task->setRunningTime(task->getRunningTime() - 1); // the task is running
-				std::this_thread::sleep_for(std::chrono::seconds(1));
-			}
-			catch (const std::exception& e)
-			{
-				task->setStatus(Consts::TERMINATED);
-				std::cout << " " << e.what() << std::endl;
-				break;
-			}
-		}
-  task->setStatus(Consts::COMPLETED);
+
+    // Continue executing the task while it has remaining running time
+    while (task->getRunningTime() > 0) {
+        if (task->getPriority() != Consts::CRITICAL && !realTimeScheduler.getRealTimeQueue().empty()) {
+            preemptive(task);
+
+            // Switch to the next task from the real-time queue
+            task = realTimeScheduler.getRealTimeQueue().front();
+            realTimeScheduler.getRealTimeQueue().pop();
+            task->setStatus(Consts::RUNNING);
+        }
+
+        try {
+            // Simulate task execution by decrementing running time
+            task->setRunningTime(task->getRunningTime() - 1); 
+            std::this_thread::sleep_for(std::chrono::seconds(1));
+        }
+        catch (const std::exception& e) {
+            // Handle any exceptions that occur during execution
+            task->setStatus(Consts::TERMINATED);
+            std::cout << " " << e.what() << std::endl; // Print the exception message
+            break; // Exit the loop if an exception is caught
+        }
+    }
+
+    // Set the task status to COMPLETED when execution is finished
+    task->setStatus(Consts::COMPLETED);
 }
 
+
+/**
+ * @brief Displays the status of a task.
+ *
+ * This function prints the current status of the specified task to the standard output.
+ *
+ * @param task Pointer to the task whose status is to be displayed.
+ */
 void Scheduler::displayMessage(const Task* task) {
-	std::cout << "task " << task->getId() << " is " << task->getStatus() << std::endl;
+    std::cout << "task " << task->getId() << " is " << task->getStatus() << std::endl;
 }
 
+/**
+ * @brief Handles task preemption.
+ *
+ * This function sets the status of the given task to suspended and adds it to the weighted round-robin queue. This is used to preempt the current task when a higher priority task needs to be processed.
+ *
+ * @param task Pointer to the task to be preempted.
+ */
 void Scheduler::preemptive(Task* task) {
-	task->setStatus(Consts::SUSPENDED);
-	wrrQueues.addTask(task);
+    task->setStatus(Consts::SUSPENDED);
+    wrrQueues.addTask(task);
 }
+
 
 
 void Scheduler::StartScheduling() {
