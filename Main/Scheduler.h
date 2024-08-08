@@ -6,7 +6,8 @@
 #include "Task.h"
 #include "RealTimeScheduler.h"
 #include "WeightRoundRobinScheduler.h"
-
+#include "spdlog/spdlog.h"
+#include "spdlog/sinks/daily_file_sink.h"
 class RealTimeScheduler;
 class Task;
 class WeightRoundRobinScheduler;

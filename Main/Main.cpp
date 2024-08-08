@@ -3,11 +3,24 @@
 #include "WeightRoundRobinScheduler.h"
 #include "Task.h"
 #include "Consts.h"
-
+#include "spdlog/spdlog.h"
+#include "spdlog/sinks/daily_file_sink.h"
 using namespace std;
 
+
+void initialize_logger() {
+    // יצירת יומן יומי שמתחלף בחצות
+    auto daily_logger = spdlog::daily_logger_mt("daily_logger", "logs/daily_log.txt", 0, 0);
+
+    // הגדרת היומן שנוצר כברירת מחדל
+    spdlog::set_default_logger(daily_logger);
+    spdlog::set_level(spdlog::level::info); // הגדרת רמת היומן ל-info
+    spdlog::set_pattern("[%Y-%m-%d %H:%M:%S.%e] [%l] %v"); // התאמת תבנית היומן
+    spdlog::get("daily_logger")->info("Logger initialized and logging to daily file");
+}
 int main() {
     //Scheduler::taskAmount = 30;
+    initialize_logger();
 
     Scheduler s;
     s.StartScheduling();

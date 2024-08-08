@@ -15,6 +15,7 @@ WeightRoundRobinScheduler Scheduler::wrrQueues;
  * @param task Pointer to the task to be executed.
  */
 void Scheduler::execute(Task* task) {
+    spdlog::info("Executing task with ID: {}", task->getId());
 	task->setStatus(Consts::RUNNING);
     // Continue executing the task while it has remaining running time
     while (task->getRunningTime() > 0) {
@@ -43,6 +44,7 @@ void Scheduler::execute(Task* task) {
     // Set the task status to COMPLETED when execution is finished
     task->setStatus(Consts::COMPLETED);
     delete task;
+    spdlog::info("Task {} completed", task->getId());
 }
 
 /**
@@ -90,7 +92,7 @@ void Scheduler::StartScheduling() {
         // Create a thread for WRR Scheduler
         std::thread WRRScheduler_Thread([this]() {
             cout << "start wrr scheduler tread\n";
-                 wrrQueues.WeightRoundRobinFunction();
+                // wrrQueues.WeightRoundRobinFunction();
             });
 
         insertTask_Thread.join();
