@@ -1,90 +1,82 @@
 #include "Scheduler.h"
-<<<<<<< HEAD
 #include "Consts.h"
 
-int Scheduler::taskAmount = 0;
-
-=======
 #include "Task.h"
 
 int Scheduler::taskAmount = 0;
->>>>>>> 3e0ceb65378f524166931a6836efd8d2f791065a
 RealTimeScheduler Scheduler::realTimeScheduler;
 WeightRoundRobinScheduler Scheduler::wrrQueues;
 
+/**
+ * @brief Executes a given task.
+ *
+ * This function processes a task by running it and updating its status. If the task is not critical and there are tasks in the real-time scheduler queue, the current task is preempted and a task from the real-time queue is executed. The function also handles exceptions by setting the task status to terminated and printing an error message.
+ *
+ * @param task Pointer to the task to be executed.
+ */
 void Scheduler::execute(Task* task) {
-<<<<<<< HEAD
 	task->setStatus(Consts::RUNNING);
-	displayMessage(task,"");
-	while ((task->getPriority() == Consts::CRITICAL && !realTimeScheduler.getRealTimeQueue().empty()) || realTimeScheduler.getRealTimeQueue().empty()) {
+    // Continue executing the task while it has remaining running time
+    while (task->getRunningTime() > 0) {
+        if (task->getPriority() != Consts::CRITICAL && !realTimeScheduler.getRealTimeQueue().empty()) {
+            preemptive(task);
 
-		if (task->getRunningTime() == 0)//the task is completed - finish running successfully.
-		{
-			task->setStatus(Consts::COMPLETED);
-			displayMessage(task,"");
-			break;
-		}
-		else {
-			try
-			{
-				task->setRunningTime(task->getRunningTime() - 1);//the task is running
-				//std::this_thread::sleep_for(std::chrono::seconds(1));
-=======
-    task->setStatus(Consts::RUNNING);
-	while (task->getRunningTime() > 0) {
-		if (task->getPriority() != Consts::CRITICAL && !realTimeScheduler.getRealTimeQueue().empty())
-		{
-			preemptive(task);
-			task = realTimeScheduler.getRealTimeQueue().front();
-			realTimeScheduler.getRealTimeQueue().pop();
-			task->setStatus(Consts::RUNNING);
-		}	
-			try
-			{
-				task->setRunningTime(task->getRunningTime() - 1); // the task is running
-				std::this_thread::sleep_for(std::chrono::seconds(1));
->>>>>>> 3e0ceb65378f524166931a6836efd8d2f791065a
-			}
-			catch (const std::exception& e)
-			{
-				task->setStatus(Consts::TERMINATED);
-<<<<<<< HEAD
-				displayMessage(task, e.what());
-				break;
-			}
-		}
-	}//real-time task arrived or task comleted.
-	if (task->getStatus() != Consts::COMPLETED && task->getStatus() != Consts::TERMINATED) {
-		task->setStatus(Consts::SUSPENDED);//real time task arrived- hijack.
-		wrrQueues.addTask(task);
-		displayMessage(task,"");
-	}
-	task = nullptr;
+            // Switch to the next task from the real-time queue
+            task = realTimeScheduler.getRealTimeQueue().front();
+            realTimeScheduler.getRealTimeQueue().pop();
+            task->setStatus(Consts::RUNNING);
+        }
+
+        try {
+            // Simulate task execution by decrementing running time
+            task->setRunningTime(task->getRunningTime() - 1); 
+            std::this_thread::sleep_for(std::chrono::seconds(1));
+        }
+        catch (const std::exception& e) {
+            // Handle any exceptions that occur during execution
+            task->setStatus(Consts::TERMINATED);
+            std::cout << " " << e.what() << std::endl; // Print the exception message
+            break; // Exit the loop if an exception is caught
+        }
+    }
+
+    // Set the task status to COMPLETED when execution is finished
+    task->setStatus(Consts::COMPLETED);
+    delete task;
 }
 
-void Scheduler::displayMessage(const Task* task, string message) {
-	cout << "task " << task->getId() << " is " << task->getStatus();
-	if (message.length() > 0)
-		cout << message;
-	cout << endl;
-=======
-				std::cout << " " << e.what() << std::endl;
-				break;
-			}
-		}
-  task->setStatus(Consts::COMPLETED);
-}
-
+/**
+ * @brief Displays the status of a task.
+ *
+ * This function prints the current status of the specified task to the standard output.
+ *
+ * @param task Pointer to the task whose status is to be displayed.
+ */
 void Scheduler::displayMessage(const Task* task) {
-	std::cout << "task " << task->getId() << " is " << task->getStatus() << std::endl;
+    std::cout << "task " << task->getId() << " is " << task->getStatus() << std::endl;
 }
 
+/**
+ * @brief Handles task preemption.
+ *
+ * This function sets the status of the given task to suspended and adds it to the weighted round-robin queue. This is used to preempt the current task when a higher priority task needs to be processed.
+ *
+ * @param task Pointer to the task to be preempted.
+ */
 void Scheduler::preemptive(Task* task) {
-	task->setStatus(Consts::SUSPENDED);
-	wrrQueues.addTask(task);
+    task->setStatus(Consts::SUSPENDED);
+    wrrQueues.addTask(task);
 }
 
 
+
+/**
+ * @brief Initiates the scheduling process by creating and managing threads for various scheduler functions.
+ *
+ * This function creates separate threads for inserting tasks, real-time scheduling, and Weighted Round Robin scheduling.
+ * It utilizes threading to allow concurrent execution of these tasks in the Scheduler class context.
+ * Exceptions that may occur during thread creation are caught and handled within the function.
+ */
 void Scheduler::StartScheduling() {
     try {
         // Create a thread for the InsertTask function
@@ -111,6 +103,12 @@ void Scheduler::StartScheduling() {
     }
 }
 
+
+/**
+ * @brief This function allows the user to input details for a new task, including priority and running time.
+ *
+ * @return A pointer to the newly created Task object based on the user input.
+ */
 Task* Scheduler::Input()
 {
     std::string priority;
@@ -154,6 +152,14 @@ Task* Scheduler::Input()
     return new Task(taskAmount++, priority, runningTime);
 }
 
+
+/**
+ * @brief Continuously prompts the user to input task details and inserts the tasks into the appropriate scheduler.
+ *
+ * This function loops indefinitely, prompting the user to input task details using the Input function.
+ * If the input task is valid, it is added to the corresponding scheduler based on its priority level.
+ * Tasks with Critical priority are added to the real-time scheduler, while others are added to the Weighted Round Robin scheduler.
+ */
 void Scheduler::InsertTask()
 {
     cout << "start insert tread\n";
@@ -172,5 +178,4 @@ void Scheduler::InsertTask()
         }
        // std::this_thread::sleep_for(std::chrono::seconds(3));
     }
->>>>>>> 3e0ceb65378f524166931a6836efd8d2f791065a
 }
