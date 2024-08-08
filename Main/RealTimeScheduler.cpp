@@ -1,6 +1,13 @@
 #include "RealTimeScheduler.h"
 #include "Scheduler.h"
 
+RealTimeScheduler::~RealTimeScheduler(){
+	while(!realTimeQueue.empty()){
+		delete realTimeQueue.front();
+		realTimeQueue.pop();
+	}
+
+}
 /**
 	 * @brief Function that manages the execution of real-time tasks.
 	 *
