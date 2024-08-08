@@ -18,6 +18,10 @@ private:
 
 public:
 	WeightRoundRobinScheduler();
+	~WeightRoundRobinScheduler();
+	WeightRoundRobinScheduler(WeightRoundRobinScheduler&& wrr) = delete;
+	WeightRoundRobinScheduler(const WeightRoundRobinScheduler& wrr) = delete;
+
 	void addTask(Task* task);
 	std::unordered_map< std::string, Queue> getWrrQueues();
 	void WeightRoundRobin();
