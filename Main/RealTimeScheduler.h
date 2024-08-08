@@ -15,6 +15,7 @@ private:
 	queue<Task*> realTimeQueue;
 
 public:
+	RealTimeScheduler() {}
 	RealTimeScheduler(const RealTimeScheduler& rt) = delete;
 	RealTimeScheduler(RealTimeScheduler&& rt) = delete;
 	~RealTimeScheduler();

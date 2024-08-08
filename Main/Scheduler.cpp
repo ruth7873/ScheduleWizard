@@ -90,7 +90,7 @@ void Scheduler::StartScheduling() {
         // Create a thread for WRR Scheduler
         std::thread WRRScheduler_Thread([this]() {
             cout << "start wrr scheduler tread\n";
-            // wrrQueues.;
+                 wrrQueues.WeightRoundRobinFunction();
             });
 
         insertTask_Thread.join();
