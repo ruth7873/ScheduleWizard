@@ -21,6 +21,11 @@ private:
 
 public:
     void StartScheduling();
+    Scheduler(const Scheduler& other) = delete;
+    Scheduler& operator=(const Scheduler& other) = delete;
+    Scheduler(Scheduler&& other) = delete;
+    Scheduler& operator=(Scheduler&& other) = delete;
+
     void InsertTask();
     static int taskAmount;
     static void execute(Task* task);
