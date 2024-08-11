@@ -20,6 +20,7 @@ void RealTimeScheduler::realTimeSchedulerFunction() {
 		Task* task = RealTimeScheduler::realTimeQueue.front();
 		RealTimeScheduler::realTimeQueue.pop();
 		Scheduler::rtLock.lock();
+
 		Scheduler::execute(task);
 		if (realTimeQueue.empty())
 			Scheduler::rtLock.unlock();
