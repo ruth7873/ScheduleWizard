@@ -82,7 +82,8 @@ void WeightRoundRobinScheduler::WeightRoundRobinFunction()
                 taskQueue->queue.pop();
 
                 cout << "size after pop: " << taskQueue->queue.size() << endl;
-
+                while (Scheduler::rtLock.try_lock());
+                Scheduler::rtLock.unlock();
                 Scheduler::execute(task);
 
                 countTasks++;

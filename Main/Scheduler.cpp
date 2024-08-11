@@ -4,6 +4,7 @@
 #include "Task.h"
 
 int Scheduler::taskAmount = 0;
+mutex Scheduler::rtLock;
 RealTimeScheduler Scheduler::realTimeScheduler;
 WeightRoundRobinScheduler Scheduler::wrrQueues;
 
@@ -92,7 +93,7 @@ void Scheduler::StartScheduling() {
         // Create a thread for WRR Scheduler
         std::thread WRRScheduler_Thread([this]() {
             cout << "start wrr scheduler tread\n";
-                // wrrQueues.WeightRoundRobinFunction();
+            wrrQueues.WeightRoundRobinFunction();
             });
 
         insertTask_Thread.join();
