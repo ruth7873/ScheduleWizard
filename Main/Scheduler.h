@@ -6,7 +6,9 @@
 #include "Task.h"
 #include "RealTimeScheduler.h"
 #include "WeightRoundRobinScheduler.h"
-
+#include "spdlog/spdlog.h"
+#include "spdlog/sinks/daily_file_sink.h"
+#include <mutex>
 class RealTimeScheduler;
 class Task;
 class WeightRoundRobinScheduler;
@@ -26,6 +28,9 @@ private:
 	Task* Input();
 
 public:
+
+    static mutex rtLock;
+
     void StartScheduling();
     void InsertTask();
     static int taskAmount;

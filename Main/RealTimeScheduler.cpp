@@ -19,8 +19,11 @@ void RealTimeScheduler::realTimeSchedulerFunction() {
 		while (realTimeQueue.empty());
 		Task* task = RealTimeScheduler::realTimeQueue.front();
 		RealTimeScheduler::realTimeQueue.pop();
-		
+		Scheduler::rtLock.lock();
+
 		Scheduler::execute(task);
+		if (realTimeQueue.empty())
+			Scheduler::rtLock.unlock();
 	}
     cout << "start real-time Tread\n";
 }
