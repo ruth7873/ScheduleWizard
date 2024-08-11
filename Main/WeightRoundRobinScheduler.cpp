@@ -69,6 +69,7 @@ void WeightRoundRobinScheduler::WeightRoundRobinFunction()
 
             int weight = taskQueue->weight;
             int taskCountToRun = static_cast<int>(Scheduler::taskAmount * (weight / 100.0));
+
             taskCountToRun = (taskCountToRun == 0 && !taskQueue->queue.empty()) ? 1 : taskCountToRun;
 
             while (!taskQueue->queue.empty() && countTasks < taskCountToRun) {
@@ -76,6 +77,9 @@ void WeightRoundRobinScheduler::WeightRoundRobinFunction()
                 Task* task = taskQueue->queue.front();
                 taskQueue->queue.pop();
                 spdlog::info("Queue size after pop: {}", taskQueue->queue.size());
+
+                while (Scheduler::rtLock.try_lock());
+                Scheduler::rtLock.unlock();
                 Scheduler::execute(task);
 
                 countTasks++;

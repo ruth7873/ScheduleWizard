@@ -1,9 +1,9 @@
 #include "Scheduler.h"
 #include "Consts.h"
-
 #include "Task.h"
 
 int Scheduler::taskAmount = 0;
+mutex Scheduler::rtLock;
 RealTimeScheduler Scheduler::realTimeScheduler;
 WeightRoundRobinScheduler Scheduler::wrrQueues;
 
@@ -22,13 +22,11 @@ void Scheduler::execute(Task* task) {
         if (task->getPriority() != Consts::CRITICAL && !realTimeScheduler.getRealTimeQueue().empty()) {
             spdlog::info("Preempting task with ID: {} for real-time task.", task->getId());
             preemptive(task);
-
             // Switch to the next task from the real-time queue
             task = realTimeScheduler.getRealTimeQueue().front();
             realTimeScheduler.getRealTimeQueue().pop();
             task->setStatus(Consts::RUNNING);
         }
-
         try {
             // Simulate task execution by decrementing running time
             task->setRunningTime(task->getRunningTime() - 1); 
@@ -124,7 +122,8 @@ Task* Scheduler::Input()
     int runningTime;
     std::string input;
 
-    std::cout << "Enter the priority for the task. Options: Critical, Higher, Middle, Lower: \n";
+    std::
+      << "Enter the priority for the task. Options: Critical, Higher, Middle, Lower: \n";
     std::cin >> priority;
 
     // Input validation for priority

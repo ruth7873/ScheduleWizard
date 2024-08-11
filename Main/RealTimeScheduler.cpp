@@ -21,6 +21,11 @@ void RealTimeScheduler::realTimeSchedulerFunction() {
 		RealTimeScheduler::realTimeQueue.pop();
 		spdlog::info("Popped task with ID: {} from real-time queue.", task->getId());
 		spdlog::info("real-time queue size is {}.", realTimeQueue.size());
+
+		Scheduler::rtLock.lock();
+
 		Scheduler::execute(task);
+		if (realTimeQueue.empty())
+			Scheduler::rtLock.unlock();
 	}
 }
