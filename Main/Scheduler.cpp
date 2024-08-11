@@ -1,6 +1,5 @@
 #include "Scheduler.h"
 #include "Consts.h"
-
 #include "Task.h"
 
 int Scheduler::taskAmount = 0;
@@ -20,13 +19,11 @@ void Scheduler::execute(Task* task) {
     while (task->getRunningTime() > 0) {
         if (task->getPriority() != Consts::CRITICAL && !realTimeScheduler.getRealTimeQueue().empty()) {
             preemptive(task);
-
             // Switch to the next task from the real-time queue
             task = realTimeScheduler.getRealTimeQueue().front();
             realTimeScheduler.getRealTimeQueue().pop();
             task->setStatus(Consts::RUNNING);
         }
-
         try {
             // Simulate task execution by decrementing running time
             task->setRunningTime(task->getRunningTime() - 1); 

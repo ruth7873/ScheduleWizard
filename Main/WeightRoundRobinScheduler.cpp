@@ -69,11 +69,11 @@ void WeightRoundRobinScheduler::WeightRoundRobinFunction()
 
             int weight = taskQueue->weight;
             int taskCountToRun = static_cast<int>(Scheduler::taskAmount * (weight / 100.0));
-            std::cout << "taskCountToRun befor If: " << taskCountToRun << endl;
+            //std::cout << "taskCountToRun befor If: " << taskCountToRun << endl;
             taskCountToRun = (taskCountToRun == 0 && !taskQueue->queue.empty()) ? 1 : taskCountToRun;
-            std::cout << "taskCountToRun after...: " << taskCountToRun << endl;
+            //std::cout << "taskCountToRun after...: " << taskCountToRun << endl;
 
-            cout << "Processing queue: " << pair.first << " with weight: " << weight << std::endl;
+            //cout << "Processing queue: " << pair.first << " with weight: " << weight << std::endl;
 
 
             while (!taskQueue->queue.empty() && countTasks < taskCountToRun) {
