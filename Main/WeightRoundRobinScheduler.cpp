@@ -18,7 +18,6 @@ WeightRoundRobinScheduler::WeightRoundRobinScheduler() {
     WRRQueues[Consts::LOWER] = Queue{ std::queue<Task*>(), Consts::LOWER_WEIGHT };
 }
 
-
 /**
  * @brief Destructor for WeightRoundRobinScheduler.
  *
@@ -43,12 +42,12 @@ WeightRoundRobinScheduler::~WeightRoundRobinScheduler() {
  */
 void WeightRoundRobinScheduler::addTask(Task* task) {
     WRRQueues[task->getPriority()].queue.push(task);
+    spdlog::info("Task with ID: {} added to {} queue.", task->getId(), task->getPriority());
 }
 
 std::unordered_map<std::string, Queue> WeightRoundRobinScheduler::getWrrQueues() {
     return WRRQueues;
 }
-
 
 
 /**
@@ -62,6 +61,7 @@ std::unordered_map<std::string, Queue> WeightRoundRobinScheduler::getWrrQueues()
  */
 void WeightRoundRobinScheduler::WeightRoundRobinFunction()
 {
+    
     while (true) {
         int countTasks = 0;
         for (auto& pair : WRRQueues) {
@@ -69,20 +69,13 @@ void WeightRoundRobinScheduler::WeightRoundRobinFunction()
 
             int weight = taskQueue->weight;
             int taskCountToRun = static_cast<int>(Scheduler::taskAmount * (weight / 100.0));
-            //std::cout << "taskCountToRun befor If: " << taskCountToRun << endl;
             taskCountToRun = (taskCountToRun == 0 && !taskQueue->queue.empty()) ? 1 : taskCountToRun;
-            //std::cout << "taskCountToRun after...: " << taskCountToRun << endl;
-
-            //cout << "Processing queue: " << pair.first << " with weight: " << weight << std::endl;
-
 
             while (!taskQueue->queue.empty() && countTasks < taskCountToRun) {
-                cout << "size befor pop: " << taskQueue->queue.size() << endl;
+                spdlog::info("Popping task from {} queue. Queue size before: {}", pair.first, taskQueue->queue.size());
                 Task* task = taskQueue->queue.front();
                 taskQueue->queue.pop();
-
-                cout << "size after pop: " << taskQueue->queue.size() << endl;
-
+                spdlog::info("Queue size after pop: {}", taskQueue->queue.size());
                 Scheduler::execute(task);
 
                 countTasks++;
