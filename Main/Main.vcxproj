@@ -127,6 +127,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Colors.cpp" />
     <ClCompile Include="Consts.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="RealTimeScheduler.cpp" />
@@ -135,6 +136,7 @@
     <ClCompile Include="WeightRoundRobinScheduler.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Colors.h" />
     <ClInclude Include="Consts.h" />
     <ClInclude Include="RealTimeScheduler.h" />
     <ClInclude Include="Scheduler.h" />
