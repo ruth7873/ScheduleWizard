@@ -13,11 +13,10 @@ using namespace std;
  * Each queue is associated with a weight defined in the Consts header.
  */
 WeightRoundRobinScheduler::WeightRoundRobinScheduler() {
-    WRRQueues[Consts::HIGHER] = Queue{ std::queue<Task*>(), Consts::HIGHER_WEIGHT };
-    WRRQueues[Consts::MIDDLE] = Queue{ std::queue<Task*>(), Consts::MIDDLE_WEIGHT };
-    WRRQueues[Consts::LOWER] = Queue{ std::queue<Task*>(), Consts::LOWER_WEIGHT };
+    WRRQueues[PrioritiesLevel::HIGHER] = Queue{ std::queue<Task*>(), WeightPrecents::HIGHER_WEIGHT };
+    WRRQueues[PrioritiesLevel::MIDDLE] = Queue{ std::queue<Task*>(), WeightPrecents::MIDDLE_WEIGHT };
+    WRRQueues[PrioritiesLevel::LOWER] = Queue{ std::queue<Task*>(), WeightPrecents::LOWER_WEIGHT };
 }
-
 
 /**
  * @brief Destructor for WeightRoundRobinScheduler.
@@ -43,12 +42,12 @@ WeightRoundRobinScheduler::~WeightRoundRobinScheduler() {
  */
 void WeightRoundRobinScheduler::addTask(Task* task) {
     WRRQueues[task->getPriority()].queue.push(task);
+    spdlog::info("Task with ID: {} added to {} queue.", task->getId(), task->getPriority());
 }
 
 std::unordered_map<std::string, Queue> WeightRoundRobinScheduler::getWrrQueues() {
     return WRRQueues;
 }
-
 
 
 /**
@@ -60,38 +59,34 @@ std::unordered_map<std::string, Queue> WeightRoundRobinScheduler::getWrrQueues()
  *
  * The function handles tasks in a fair and efficient manner, ensuring that higher-priority tasks are given more processing time.
  */
-void WeightRoundRobinScheduler::WeightRoundRobinFunction()
+void WeightRoundRobinScheduler::weightRoundRobinFunction()
 {
+    
     while (true) {
-        int countTasks = 0;
+        int countTasksInCurrentQueue = 0;
         for (auto& pair : WRRQueues) {
             Queue* taskQueue = &pair.second;
 
             int weight = taskQueue->weight;
-            int taskCountToRun = static_cast<int>(Scheduler::taskAmount * (weight / 100.0));
-            //std::cout << "taskCountToRun befor If: " << taskCountToRun << endl;
+            int taskCountToRun = static_cast<int>(Scheduler::totalRunningTask  * (weight / 100.0));
+
             taskCountToRun = (taskCountToRun == 0 && !taskQueue->queue.empty()) ? 1 : taskCountToRun;
-            //std::cout << "taskCountToRun after...: " << taskCountToRun << endl;
 
-            //cout << "Processing queue: " << pair.first << " with weight: " << weight << std::endl;
-
-
-            while (!taskQueue->queue.empty() && countTasks < taskCountToRun) {
-                cout << "size befor pop: " << taskQueue->queue.size() << endl;
+            while (!taskQueue->queue.empty() && countTasksInCurrentQueue < taskCountToRun) {
+                spdlog::info("Popping task from {} queue. Queue size before: {}", pair.first, taskQueue->queue.size());
                 Task* task = taskQueue->queue.front();
                 taskQueue->queue.pop();
+                spdlog::info("Queue size after pop: {}", taskQueue->queue.size());
 
-                cout << "size after pop: " << taskQueue->queue.size() << endl;
-
+                while (Scheduler::rtLock.try_lock());
+                Scheduler::rtLock.unlock();
                 Scheduler::execute(task);
-
-                countTasks++;
-                Scheduler::taskAmount--;
+                countTasksInCurrentQueue++;
                 std::this_thread::sleep_for(std::chrono::seconds(1));
 
             }
 
-            countTasks = 0; // Reset countTasks for the next queue
+            countTasksInCurrentQueue = 0; // Reset countTasksInCurrentQueue for the next queue
         }
 
     }

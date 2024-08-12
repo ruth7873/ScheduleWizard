@@ -6,7 +6,9 @@
 #include "Task.h"
 #include "RealTimeScheduler.h"
 #include "WeightRoundRobinScheduler.h"
-
+#include "spdlog/spdlog.h"
+#include "spdlog/sinks/daily_file_sink.h"
+#include <mutex>
 class RealTimeScheduler;
 class Task;
 class WeightRoundRobinScheduler;
@@ -20,17 +22,19 @@ class WeightRoundRobinScheduler;
 class Scheduler
 {
 private:
-
-	static RealTimeScheduler realTimeScheduler;
+    static RealTimeScheduler realTimeScheduler;
 	static WeightRoundRobinScheduler wrrQueues;
-	Task* Input();
+	Task* input();
+    static Task* runningTask;
+    const unsigned int MAX_TASKS = std::numeric_limits<unsigned int>::max(); public:
+    static mutex rtLock;
 
-public:
-    void StartScheduling();
-    void InsertTask();
-    static int taskAmount;
+    void init();
+    void insertTask();
+    static int totalRunningTask;
+    static unsigned int taskIds;
+
     static void execute(Task* task);
     static void displayMessage(const Task* task);
     static void preemptive(Task* task);
-
 };
