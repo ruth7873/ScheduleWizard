@@ -34,6 +34,7 @@ public:
     void StartScheduling();
     void InsertTask();
     static int taskAmount;
+    static int totalTasks;
     static void execute(Task* task);
     static void displayMessage(const Task* task);
     static void preemptive(Task* task);

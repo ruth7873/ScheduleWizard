@@ -22,10 +22,11 @@ void Scheduler::execute(Task* task) {
         if (task->getPriority() != Consts::CRITICAL && !realTimeScheduler.getRealTimeQueue().empty()) {
             spdlog::info("Preempting task with ID: {} for real-time task.", task->getId());
             preemptive(task);
+            return;
             // Switch to the next task from the real-time queue
-            task = realTimeScheduler.getRealTimeQueue().front();
-            realTimeScheduler.getRealTimeQueue().pop();
-            task->setStatus(Consts::RUNNING);
+            //task = realTimeScheduler.getRealTimeQueue().front();
+            //realTimeScheduler.getRealTimeQueue().pop();
+            //task->setStatus(Consts::RUNNING);
         }
         try {
             // Simulate task execution by decrementing running time
@@ -42,8 +43,17 @@ void Scheduler::execute(Task* task) {
 
     // Set the task status to COMPLETED when execution is finished
     task->setStatus(Consts::COMPLETED);
+    if (task->getPriority() == Consts::CRITICAL) {
+        realTimeScheduler.getRealTimeQueue().pop();
+    }
+    else {
+        wrrQueues.getWrrQueues()[task->getPriority()].queue.pop();
+    }
+
     spdlog::info("Task with ID: {} completed.", task->getId());
-    delete task;
+    if (task != nullptr) {
+        delete task;
+    }
 }
 
 /**
@@ -54,7 +64,7 @@ void Scheduler::execute(Task* task) {
  * @param task Pointer to the task whose status is to be displayed.
  */
 void Scheduler::displayMessage(const Task* task) {
-    std::cout << "task " << task->getId() << " is " << task->getStatus() << std::endl;
+    std::cout << "task " << task->getId() <<" with priority: " << task->getPriority()<< " is " << task->getStatus() << std::endl;
 }
 
 /**
@@ -66,7 +76,7 @@ void Scheduler::displayMessage(const Task* task) {
  */
 void Scheduler::preemptive(Task* task) {
     task->setStatus(Consts::SUSPENDED);
-    wrrQueues.addTask(task);
+    //wrrQueues.addTask(task);
     spdlog::info("Task with ID: {} suspended and added back to WRR queue.", task->getId());
 }
 
@@ -122,8 +132,7 @@ Task* Scheduler::Input()
     int runningTime;
     std::string input;
 
-    std::
-      << "Enter the priority for the task. Options: Critical, Higher, Middle, Lower: \n";
+    std::cout<< "Enter the priority for the task. Options: Critical, Higher, Middle, Lower: \n";
     std::cin >> priority;
 
     // Input validation for priority
