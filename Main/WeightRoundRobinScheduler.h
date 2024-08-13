@@ -23,7 +23,7 @@ public:
 	WeightRoundRobinScheduler(const WeightRoundRobinScheduler& wrr) = delete;
 
 	void addTask(Task* task);
-	std::unordered_map< std::string, Queue> getWrrQueues();
+	std::unordered_map< std::string, Queue>& getWrrQueues();
 	void WeightRoundRobinFunction();
 
 

@@ -45,7 +45,7 @@ void WeightRoundRobinScheduler::addTask(Task* task) {
     spdlog::info("Task with ID: {} added to {} queue.", task->getId(), task->getPriority());
 }
 
-std::unordered_map<std::string, Queue> WeightRoundRobinScheduler::getWrrQueues() {
+std::unordered_map<std::string, Queue>& WeightRoundRobinScheduler::getWrrQueues() {
     return WRRQueues;
 }
 
@@ -73,14 +73,16 @@ void WeightRoundRobinScheduler::WeightRoundRobinFunction()
             taskCountToRun = (taskCountToRun == 0 && !taskQueue->queue.empty()) ? 1 : taskCountToRun;
 
             while (!taskQueue->queue.empty() && countTasks < taskCountToRun) {
-                spdlog::info("Popping task from {} queue. Queue size before: {}", pair.first, taskQueue->queue.size());
                 Task* task = taskQueue->queue.front();
-                taskQueue->queue.pop();
-                spdlog::info("Queue size after pop: {}", taskQueue->queue.size());
 
-                while (!Scheduler::rtLock.try_lock());
+                while (!Scheduler::rtLock.try_lock()) {
+                    std::this_thread::sleep_for(std::chrono::seconds(1));
+                }
+              
                 Scheduler::rtLock.unlock();
+                if(task != nullptr){
                 Scheduler::execute(task);
+                }
 
                 countTasks++;
                 //TODO:
