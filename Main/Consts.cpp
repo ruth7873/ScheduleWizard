@@ -14,4 +14,5 @@ const int Consts::LOWER_WEIGHT = 10;
 const int Consts::MIDDLE_WEIGHT = 30;
 const int Consts::HIGHER_WEIGHT = 50;
 
+const string Consts::SCENARIO_1_FILE_PATH = "tests/scenario_1.json";
 

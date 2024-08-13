@@ -3,6 +3,9 @@
 #include "Task.h"
 #include "Scheduler.h"
 
+
+class Scheduler; // Forward declaration
+
 /**
  * @class RealTimeScheduler
  * @brief Manages real-time tasks.

@@ -73,22 +73,19 @@ void WeightRoundRobinScheduler::WeightRoundRobinFunction()
             taskCountToRun = (taskCountToRun == 0 && !taskQueue->queue.empty()) ? 1 : taskCountToRun;
 
             while (!taskQueue->queue.empty() && countTasks < taskCountToRun) {
-                //spdlog::info("Popping task from {} queue. Queue size before: {}", pair.first, taskQueue->queue.size());
                 Task* task = taskQueue->queue.front();
-                //taskQueue->queue.pop();
-                //spdlog::info("Queue size after pop: {}", taskQueue->queue.size());
 
                 while (!Scheduler::rtLock.try_lock()) {
-                   // cout << "in while (Scheduler::rtLock.try_lock())\n";
                     std::this_thread::sleep_for(std::chrono::seconds(1));
                 }
+              
                 Scheduler::rtLock.unlock();
                 if(task != nullptr){
                 Scheduler::execute(task);
                 }
 
                 countTasks++;
-                Scheduler::taskAmount--;
+                //TODO:
                 std::this_thread::sleep_for(std::chrono::seconds(1));
 
             }
