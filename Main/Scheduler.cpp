@@ -86,7 +86,7 @@ void Scheduler::preemptive(Task* task) {
 void Scheduler::StartScheduling() {
     spdlog::info("Starting scheduling process.");
     try {
-        ReadFromJSON::createTasksFromJSON(Consts::SCENARIO_1_FILE_PATH);
+        //ReadFromJSON::createTasksFromJSON(Consts::SCENARIO_1_FILE_PATH);
         // Create a thread for the InsertTask function
         std::thread insertTask_Thread(&Scheduler::InsertTaskFromInput, this);
         spdlog::info("InsertTask thread started.");
