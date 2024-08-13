@@ -25,8 +25,8 @@ private:
     static RealTimeScheduler realTimeScheduler;
 	static WeightRoundRobinScheduler wrrQueues;
 	Task* input();
-    static Task* runningTask;
-    const unsigned int MAX_TASKS = std::numeric_limits<unsigned int>::max(); public:
+    const unsigned int MAX_TASKS = std::numeric_limits<unsigned int>::max();
+public:
     static mutex rtLock;
 
     void init();

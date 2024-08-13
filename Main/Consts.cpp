@@ -6,7 +6,6 @@ const string TaskStatus::TERMINATED = "Terminated";
 const string TaskStatus::RUNNING = "Running";
 const string TaskStatus::CREATION = "Creation";
 
-
 const string PrioritiesLevel::CRITICAL = "Critical";
 const string PrioritiesLevel::HIGHER = "Higher";
 const string PrioritiesLevel::MIDDLE = "Middle";
