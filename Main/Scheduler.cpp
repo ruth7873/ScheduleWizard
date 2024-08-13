@@ -41,11 +41,13 @@ void Scheduler::execute(Task* task) {
 			break; // Exit the loop if an exception is caught
 		}
 	}
-
 	// Set the task status to COMPLETED when execution is finished
-	task->setStatus(TaskStatus::COMPLETED);
+	if (task->getStatus() != TaskStatus::TERMINATED)
+	{
+		task->setStatus(TaskStatus::COMPLETED);
+		spdlog::info("Task with ID: {} completed.", task->getId());
+	}
 	totalRunningTask--;
-	spdlog::info("Task with ID: {} completed.", task->getId());
 	delete task;
 }
 
