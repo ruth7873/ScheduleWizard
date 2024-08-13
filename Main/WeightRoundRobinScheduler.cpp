@@ -78,12 +78,12 @@ void WeightRoundRobinScheduler::WeightRoundRobinFunction()
                 taskQueue->queue.pop();
                 spdlog::info("Queue size after pop: {}", taskQueue->queue.size());
 
-                while (Scheduler::rtLock.try_lock());
+                while (!Scheduler::rtLock.try_lock());
                 Scheduler::rtLock.unlock();
                 Scheduler::execute(task);
 
                 countTasks++;
-                Scheduler::taskAmount--;
+                //TODO:
                 std::this_thread::sleep_for(std::chrono::seconds(1));
 
             }

@@ -22,7 +22,7 @@ class WeightRoundRobinScheduler;
 class Scheduler
 {
 private:
-
+    static int taskCounter;
 	static RealTimeScheduler realTimeScheduler;
 	static WeightRoundRobinScheduler wrrQueues;
 	Task* Input();
@@ -32,7 +32,8 @@ public:
     static mutex rtLock;
 
     void StartScheduling();
-    void InsertTask();
+    void InsertTaskFromInput();
+    static void InsertTask(Task*);
     static int taskAmount;
     static void execute(Task* task);
     static void displayMessage(const Task* task);

@@ -1,8 +1,11 @@
 #include "Scheduler.h"
 #include "Consts.h"
 #include "Task.h"
+#include "ReadFromJSON.h"
+
 
 int Scheduler::taskAmount = 0;
+int Scheduler::taskCounter = 0;
 mutex Scheduler::rtLock;
 RealTimeScheduler Scheduler::realTimeScheduler;
 WeightRoundRobinScheduler Scheduler::wrrQueues;
@@ -22,10 +25,7 @@ void Scheduler::execute(Task* task) {
         if (task->getPriority() != Consts::CRITICAL && !realTimeScheduler.getRealTimeQueue().empty()) {
             spdlog::info("Preempting task with ID: {} for real-time task.", task->getId());
             preemptive(task);
-            // Switch to the next task from the real-time queue
-            task = realTimeScheduler.getRealTimeQueue().front();
-            realTimeScheduler.getRealTimeQueue().pop();
-            task->setStatus(Consts::RUNNING);
+            return;
         }
         try {
             // Simulate task execution by decrementing running time
@@ -42,8 +42,12 @@ void Scheduler::execute(Task* task) {
 
     // Set the task status to COMPLETED when execution is finished
     task->setStatus(Consts::COMPLETED);
+    //pop...
+    
+    Scheduler::taskAmount--;
     spdlog::info("Task with ID: {} completed.", task->getId());
     delete task;
+
 }
 
 /**
@@ -82,8 +86,9 @@ void Scheduler::preemptive(Task* task) {
 void Scheduler::StartScheduling() {
     spdlog::info("Starting scheduling process.");
     try {
+        ReadFromJSON::createTasksFromJSON(Consts::SCENARIO_1_FILE_PATH);
         // Create a thread for the InsertTask function
-        std::thread insertTask_Thread(&Scheduler::InsertTask, this);
+        std::thread insertTask_Thread(&Scheduler::InsertTaskFromInput, this);
         spdlog::info("InsertTask thread started.");
 
         // Create a thread for real-Time Scheduler
@@ -109,6 +114,13 @@ void Scheduler::StartScheduling() {
     }
 }
 
+void Scheduler::InsertTaskFromInput()
+{
+    while (true) {
+        InsertTask(Input());
+    }
+}
+
 
 
 /**
@@ -122,8 +134,7 @@ Task* Scheduler::Input()
     int runningTime;
     std::string input;
 
-    std::
-      << "Enter the priority for the task. Options: Critical, Higher, Middle, Lower: \n";
+    std::cout<< "Enter the priority for the task. Options: Critical, Higher, Middle, Lower: \n";
     std::cin >> priority;
 
     // Input validation for priority
@@ -157,7 +168,8 @@ Task* Scheduler::Input()
     }
     spdlog::info("New task created with priority: {} and running time: {}", priority, runningTime);
     // Assuming other fields like status and entryTime are set elsewhere
-    return new Task(taskAmount++, priority, runningTime);
+    taskAmount++;
+    return new Task(taskCounter++, priority, runningTime);
 }
 
 
@@ -168,25 +180,19 @@ Task* Scheduler::Input()
  * If the input task is valid, it is added to the corresponding scheduler based on its priority level.
  * Tasks with Critical priority are added to the real-time scheduler, while others are added to the Weighted Round Robin scheduler.
  */
-void Scheduler::InsertTask()
+void Scheduler::InsertTask(Task* newTask)
 {
-    while (true) {
-        Task* newTask = Input(); // Get a new task from input
-        if (newTask == nullptr) {
-            std::cerr << "Error: Invalid task input. Please try again." << std::endl; 
-            spdlog::error("Error: Invalid task input. Skipping task insertion.");
-
-            continue; // Skip the rest of the loop iteration if input is invalid
-        }
-
-        if (newTask->getPriority() == Consts::CRITICAL) {
-            realTimeScheduler.addTask(newTask); // Add task to real-time scheduler for real-time tasks
-            spdlog::info("Critical task with ID: {} added to RealTimeScheduler.", newTask->getId());
-        }
-        else {
-            wrrQueues.addTask(newTask); // Add task to Weighted Round Robin scheduler for non-real-time tasks
-            spdlog::info("Non-critical task with ID: {} added to WRR queue.", newTask->getId());
-        }
-       // std::this_thread::sleep_for(std::chrono::seconds(3));
+    if (newTask == nullptr) {
+        std::cerr << "Error: Invalid task input. Please try again." << std::endl; 
+        spdlog::error("Error: Invalid task input. Skipping task insertion.");
     }
+    if (newTask->getPriority() == Consts::CRITICAL) {
+        realTimeScheduler.addTask(newTask); // Add task to real-time scheduler for real-time tasks
+        spdlog::info("Critical task with ID: {} added to RealTimeScheduler.", newTask->getId());
+    }
+    else {
+        wrrQueues.addTask(newTask); // Add task to Weighted Round Robin scheduler for non-real-time tasks
+        spdlog::info("Non-critical task with ID: {} added to WRR queue.", newTask->getId());
+    }
+    
 }
