@@ -170,7 +170,6 @@ Task* Scheduler::input()
 	return new Task((taskIds++) % MAX_TASKS, priority, runningTime);
 }
 
-
 /**
  * @brief Continuously prompts the user to input task details and inserts the tasks into the appropriate scheduler.
  *

@@ -4,7 +4,7 @@
 #include "Scheduler.h"
 #include <thread>
 #include <chrono>
-#include "Utilities.h"
+#include "Timer.h"
 using namespace std;
 
 /**
@@ -81,7 +81,7 @@ void WeightRoundRobinScheduler::weightRoundRobinFunction()
 
                 auto startTime = std::chrono::steady_clock::now();
                 while (Scheduler::rtLock.try_lock()) {
-                    if (checkLoopTimeout(startTime, 300)) {  // בדיקה של תקיעה בלולאה עם Timeout של 5 דקות
+                    if (checkLoopTimeout(startTime, 300,"There are many critical tasks, it may cause starvation of other tasks")) {  // בדיקה של תקיעה בלולאה עם Timeout של 5 דקות
                         break;
                     }
                     std::this_thread::sleep_for(std::chrono::milliseconds(100));  // מניעת busy-wait
