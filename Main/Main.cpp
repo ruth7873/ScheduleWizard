@@ -11,7 +11,6 @@ using namespace std;
 
 
 int main() {
-    initialize_logger();
     Scheduler s;
     s.init();
 }

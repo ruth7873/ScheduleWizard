@@ -9,6 +9,7 @@
 #include "spdlog/spdlog.h"
 #include "spdlog/sinks/daily_file_sink.h"
 #include <mutex>
+#include "Logger.h"
 class RealTimeScheduler;
 class Task;
 class WeightRoundRobinScheduler;
