@@ -12,7 +12,7 @@ void Logger::initialize_logger() {
 
     std::thread([]() {
         while (true) {
-            std::this_thread::sleep_for(std::chrono::hours(1));
+            std::this_thread::sleep_for(std::chrono::seconds(10));
             spdlog::get("daily_logger")->flush();
             spdlog::get("daily_logger")->info("Starting new hourly log file");
         }
