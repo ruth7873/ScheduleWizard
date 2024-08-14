@@ -1,6 +1,10 @@
 {
     "tasks": [
-       
+        {
+            "priority": "Critical",
+            "runningTime": 2,
+            "status": "Creation"
+        },
         {
             "priority": "Lower",
             "runningTime": 2,
@@ -8,31 +12,6 @@
         },
         {
             "priority": "Critical",
-            "runningTime": 2,
-            "status": "Creation"
-        },
-        {
-            "priority": "Higher",
-            "runningTime": 2,
-            "status": "Creation"
-        },
-        {
-            "priority": "Higher",
-            "runningTime": 2,
-            "status": "Creation"
-        },
-        {
-            "priority": "Higher",
-            "runningTime": 2,
-            "status": "Creation"
-        },
-        {
-            "priority": "Higher",
-            "runningTime": 2,
-            "status": "Creation"
-        },
-        {
-            "priority": "Higher",
             "runningTime": 2,
             "status": "Creation"
         },
