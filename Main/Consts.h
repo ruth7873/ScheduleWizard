@@ -5,6 +5,7 @@ using namespace std;
 class Consts
 {
 public:
+	static const string CREATION;
 	static const string COMPLETED;
 	static const string SUSPENDED;
 	static const string TERMINATED;

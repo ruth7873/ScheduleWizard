@@ -134,6 +134,7 @@
     <ClCompile Include="RealTimeScheduler.cpp" />
     <ClCompile Include="Scheduler.cpp" />
     <ClCompile Include="Task.cpp" />
+    <ClCompile Include="Timer.cpp" />
     <ClCompile Include="WeightRoundRobinScheduler.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -142,6 +143,7 @@
     <ClInclude Include="RealTimeScheduler.h" />
     <ClInclude Include="Scheduler.h" />
     <ClInclude Include="Task.h" />
+    <ClInclude Include="Timer.h" />
     <ClInclude Include="WeightRoundRobinScheduler.h" />
   </ItemGroup>
   <ItemGroup>

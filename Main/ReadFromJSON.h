@@ -4,12 +4,18 @@
 #include  <nlohmann/json.hpp>
 #include "Task.h"
 #include "Scheduler.h"
+#include "Timer.h"
 
-using json = nlohmann::json; 
 
 class ReadFromJSON
 {
+private:
+    using json = nlohmann::json;
+
 public:
-    static void createTasksFromJSON(const string& filePath);
+    static void createTasksFromJSON(const string&);
+
+    static void createTasksFromJSONWithDelay(const string& filePath, int linesToRead, int delaySeconds, string message = "Waiting a long time");
+
 };
 

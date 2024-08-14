@@ -1,6 +1,7 @@
 #include "Consts.h"
 
 const string Consts::COMPLETED = "Completed";
+const string Consts::CREATION = "Creation";
 const string Consts::SUSPENDED = "Suspended";
 const string Consts::TERMINATED = "Terminated";
 const string Consts::RUNNING = "Running";
