@@ -42,12 +42,17 @@ void Scheduler::execute(Task* task) {
 
     // Set the task status to COMPLETED when execution is finished
     task->setStatus(Consts::COMPLETED);
-    //pop...
-    
-    Scheduler::taskAmount--;
+    if (task->getPriority() == Consts::CRITICAL) {
+        realTimeScheduler.getRealTimeQueue().pop();
+    }
+    else {
+        wrrQueues.getWrrQueues()[task->getPriority()].queue.pop();
+    }
+  
     spdlog::info("Task with ID: {} completed.", task->getId());
-    delete task;
-
+    if (task != nullptr) {
+        delete task;
+    }
 }
 
 /**
@@ -58,7 +63,7 @@ void Scheduler::execute(Task* task) {
  * @param task Pointer to the task whose status is to be displayed.
  */
 void Scheduler::displayMessage(const Task* task) {
-    std::cout << "task " << task->getId() << " is " << task->getStatus() << std::endl;
+    std::cout << "task " << task->getId() <<" with priority: " << task->getPriority()<< " is " << task->getStatus() << std::endl;
 }
 
 /**
@@ -70,7 +75,6 @@ void Scheduler::displayMessage(const Task* task) {
  */
 void Scheduler::preemptive(Task* task) {
     task->setStatus(Consts::SUSPENDED);
-    wrrQueues.addTask(task);
     spdlog::info("Task with ID: {} suspended and added back to WRR queue.", task->getId());
 }
 
