@@ -81,9 +81,7 @@ void WeightRoundRobinScheduler::weightRoundRobinFunction()
 
                 auto startTime = std::chrono::steady_clock::now();
                 while (Scheduler::rtLock.try_lock()) {
-                    if (checkLoopTimeout(startTime, 300,"There are many critical tasks, it may cause starvation of other tasks")) {  // בדיקה של תקיעה בלולאה עם Timeout של 5 דקות
-                        break;
-                    }
+                    checkLoopTimeout(startTime, 300, "There are many critical tasks, it may cause starvation of other tasks");  // בדיקה של תקיעה בלולאה עם Timeout של 5 דקות   
                     std::this_thread::sleep_for(std::chrono::milliseconds(100));  // מניעת busy-wait
                 }
 
@@ -92,8 +90,15 @@ void WeightRoundRobinScheduler::weightRoundRobinFunction()
                 }
 
                 //while (Scheduler::rtLock.try_lock());
-                Scheduler::rtLock.unlock();
+                //Scheduler::rtLock.unlock();
                 Scheduler::execute(task);
+
+                while (taskQueue->queue.front()->getStatus() == TaskStatus::RUNNING || taskQueue->queue.front()->getStatus()==TaskStatus::SUSPENDED) {
+                    if(taskQueue->queue.front()->getStatus() == TaskStatus::RUNNING)
+                        checkLoopTimeout(startTime, 300, "The task is running for too long");
+                    else if(taskQueue->queue.front()->getStatus() == TaskStatus::SUSPENDED)
+                        checkLoopTimeout(startTime, 300, "The task is suspended for too long");
+                }
                 countTasksInCurrentQueue++;
             }
 

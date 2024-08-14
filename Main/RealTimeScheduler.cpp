@@ -16,7 +16,9 @@ RealTimeScheduler::~RealTimeScheduler(){
 void RealTimeScheduler::realTimeSchedulerFunction() {
 
 	while (true) {
-		while (realTimeQueue.empty());
+		while (realTimeQueue.empty()) {
+			std::this_thread::sleep_for(std::chrono::milliseconds(100));
+		}
 		Task* task = RealTimeScheduler::realTimeQueue.front();
 		RealTimeScheduler::realTimeQueue.pop();
 		spdlog::info("Popped task with ID: {} from real-time queue.", task->getId());
