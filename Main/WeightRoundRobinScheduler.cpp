@@ -43,10 +43,10 @@ WeightRoundRobinScheduler::~WeightRoundRobinScheduler() {
  */
 void WeightRoundRobinScheduler::addTask(Task* task) {
     WRRQueues[task->getPriority()].queue.push(task);
-    spdlog::info(LoggerInfo::ADD_NON_CRITICAL_TASK, task->getId(), task->getPriority());
+    spdlog::info(Logger::LoggerInfo::ADD_NON_CRITICAL_TASK, task->getId(), task->getPriority());
 }
 
-std::unordered_map<std::string, Queue> WeightRoundRobinScheduler::getWrrQueues() {
+std::unordered_map<std::string, Queue>& WeightRoundRobinScheduler::getWrrQueues() {
     return WRRQueues;
 }
 
@@ -64,34 +64,30 @@ void WeightRoundRobinScheduler::weightRoundRobinFunction()
 {
     
     while (true) {
-        int countTasksInCurrentQueue = 0;
+        int countTasks = 0;
         for (auto& pair : WRRQueues) {
             Queue* taskQueue = &pair.second;
 
             int weight = taskQueue->weight;
+         
             int taskCountToRun = static_cast<int>(Scheduler::totalRunningTask  * (weight / 100.0));
 
             taskCountToRun = (taskCountToRun == 0 && !taskQueue->queue.empty()) ? 1 : taskCountToRun;
 
-            while (!taskQueue->queue.empty() && countTasksInCurrentQueue < taskCountToRun) {
-                spdlog::info("Popping task from {} queue. Queue size before: {}", pair.first, taskQueue->queue.size());
+            while (!taskQueue->queue.empty() && countTasks < taskCountToRun) {
                 Task* task = taskQueue->queue.front();
-                taskQueue->queue.pop();
-                spdlog::info("Queue size after pop: {}", taskQueue->queue.size());
-
-                auto startTime = std::chrono::steady_clock::now();
-                while (Scheduler::rtLock.try_lock()) {
-                    checkLoopTimeout(startTime, 300, "There are many critical tasks, it may cause starvation of other tasks");  // áãé÷ä ùì ú÷éòä áìåìàä òí Timeout ùì 5 ã÷åú   
-                    std::this_thread::sleep_for(std::chrono::milliseconds(100));  // îðéòú busy-wait
-                }
-
-                if (Scheduler::rtLock.try_lock()) {
-                    Scheduler::rtLock.unlock();
-                }
-
-                //while (Scheduler::rtLock.try_lock());
-                //Scheduler::rtLock.unlock();
+          
+            auto startTime = std::chrono::steady_clock::now();
+            while (!Scheduler::rtLock.try_lock()) {
+                    checkLoopTimeout(startTime, 300, "There are many critical tasks, it may cause starvation of other tasks");  // ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ Timeout ï¿½ï¿½ 5 ï¿½ï¿½ï¿½ï¿½   
+                    std::this_thread::sleep_for(std::chrono::milliseconds(100));  // ï¿½ï¿½ï¿½ï¿½ï¿½ busy-wait
+            }
+                    
+            Scheduler::rtLock.unlock();
+            if(task != nullptr){
                 Scheduler::execute(task);
+                }
+
 
                 while (taskQueue->queue.front()->getStatus() == TaskStatus::RUNNING || taskQueue->queue.front()->getStatus()==TaskStatus::SUSPENDED) {
                     if(taskQueue->queue.front()->getStatus() == TaskStatus::RUNNING)
@@ -99,11 +95,10 @@ void WeightRoundRobinScheduler::weightRoundRobinFunction()
                     else if(taskQueue->queue.front()->getStatus() == TaskStatus::SUSPENDED)
                         checkLoopTimeout(startTime, 300, "The task is suspended for too long");
                 }
-                countTasksInCurrentQueue++;
+               countTasks++;
+
             }
-
-            countTasksInCurrentQueue = 0; // Reset countTasksInCurrentQueue for the next queue
+            countTasks = 0; // Reset countTasksInCurrentQueue for the next queue
         }
-
     }
 }
