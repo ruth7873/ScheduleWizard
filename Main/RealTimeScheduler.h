@@ -23,7 +23,7 @@ public:
 	RealTimeScheduler(RealTimeScheduler&& rt) = delete;
 	~RealTimeScheduler();
 
-	queue<Task*>& getRealTimeQueue() {
+	queue<Task*>& const getRealTimeQueue() {
 		return realTimeQueue;
 	}
     void addTask(Task* task) {

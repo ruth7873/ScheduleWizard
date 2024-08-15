@@ -14,9 +14,9 @@ void initialize_logger() {
     spdlog::get("daily_logger")->info("Logger initialized and logging to daily file");
 }
 
-int main() {
-    initialize_logger();
-    Scheduler s;
-    s.StartScheduling();
-    cout << "hellow world";
-}
+//int main() {
+//    initialize_logger();
+//    Scheduler s;
+//    s.StartScheduling();
+//    cout << "hellow world";
+//}
