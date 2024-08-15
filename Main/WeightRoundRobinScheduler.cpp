@@ -4,6 +4,7 @@
 #include "Scheduler.h"
 #include <thread>
 #include <chrono>
+#include "Timer.h"
 using namespace std;
 
 /**
@@ -13,9 +14,9 @@ using namespace std;
  * Each queue is associated with a weight defined in the Consts header.
  */
 WeightRoundRobinScheduler::WeightRoundRobinScheduler() {
-    WRRQueues[Consts::HIGHER] = Queue{ std::queue<Task*>(), Consts::HIGHER_WEIGHT };
-    WRRQueues[Consts::MIDDLE] = Queue{ std::queue<Task*>(), Consts::MIDDLE_WEIGHT };
-    WRRQueues[Consts::LOWER] = Queue{ std::queue<Task*>(), Consts::LOWER_WEIGHT };
+    WRRQueues[PrioritiesLevel::HIGHER] = Queue{ std::queue<Task*>(), WeightPrecents::HIGHER_WEIGHT };
+    WRRQueues[PrioritiesLevel::MIDDLE] = Queue{ std::queue<Task*>(), WeightPrecents::MIDDLE_WEIGHT };
+    WRRQueues[PrioritiesLevel::LOWER] = Queue{ std::queue<Task*>(), WeightPrecents::LOWER_WEIGHT };
 }
 
 /**
@@ -42,7 +43,7 @@ WeightRoundRobinScheduler::~WeightRoundRobinScheduler() {
  */
 void WeightRoundRobinScheduler::addTask(Task* task) {
     WRRQueues[task->getPriority()].queue.push(task);
-    spdlog::info("Task with ID: {} added to {} queue.", task->getId(), task->getPriority());
+    spdlog::info(Logger::LoggerInfo::ADD_NON_CRITICAL_TASK, task->getId(), task->getPriority());
 }
 
 std::unordered_map<std::string, Queue>& WeightRoundRobinScheduler::getWrrQueues() {
@@ -59,7 +60,7 @@ std::unordered_map<std::string, Queue>& WeightRoundRobinScheduler::getWrrQueues(
  *
  * The function handles tasks in a fair and efficient manner, ensuring that higher-priority tasks are given more processing time.
  */
-void WeightRoundRobinScheduler::WeightRoundRobinFunction()
+void WeightRoundRobinScheduler::weightRoundRobinFunction()
 {
     
     while (true) {
@@ -68,30 +69,38 @@ void WeightRoundRobinScheduler::WeightRoundRobinFunction()
             Queue* taskQueue = &pair.second;
 
             int weight = taskQueue->weight;
-            int taskCountToRun = static_cast<int>(Scheduler::taskAmount * (weight / 100.0));
+         
+            int taskCountToRun = static_cast<int>(Scheduler::totalRunningTask  * (weight / 100.0));
 
             taskCountToRun = (taskCountToRun == 0 && !taskQueue->queue.empty()) ? 1 : taskCountToRun;
 
             while (!taskQueue->queue.empty() && countTasks < taskCountToRun) {
                 Task* task = taskQueue->queue.front();
+          
+            auto startTime = std::chrono::steady_clock::now();
+            while (!Scheduler::rtLock.try_lock()) {
+                    checkLoopTimeout(startTime, 300, "There are many critical tasks, it may cause starvation of other tasks");
+                    std::this_thread::sleep_for(std::chrono::milliseconds(100));  // busy-wait
+            }
 
-                while (!Scheduler::rtLock.try_lock()) {
-                    std::this_thread::sleep_for(std::chrono::seconds(1));
-                }
-              
+            if(Scheduler::rtLock.try_lock())
                 Scheduler::rtLock.unlock();
-                if(task != nullptr){
+
+            if(task != nullptr){
                 Scheduler::execute(task);
                 }
 
-                countTasks++;
-                //TODO:
-                std::this_thread::sleep_for(std::chrono::seconds(1));
+
+                while (taskQueue->queue.front()->getStatus() == TaskStatus::RUNNING || taskQueue->queue.front()->getStatus()==TaskStatus::SUSPENDED) {
+                    if(taskQueue->queue.front()->getStatus() == TaskStatus::RUNNING)
+                        checkLoopTimeout(startTime, 300, "The task is running for too long");
+                    else if(taskQueue->queue.front()->getStatus() == TaskStatus::SUSPENDED)
+                        checkLoopTimeout(startTime, 300, "The task is suspended for too long");
+                }
+               countTasks++;
 
             }
-
-            countTasks = 0; // Reset countTasks for the next queue
+            countTasks = 0; // Reset countTasksInCurrentQueue for the next queue
         }
-
     }
 }
