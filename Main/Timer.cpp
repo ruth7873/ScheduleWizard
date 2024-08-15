@@ -1,5 +1,4 @@
 #include "Timer.h"
-#include <spdlog/spdlog.h>
 bool checkLoopTimeout(const std::chrono::steady_clock::time_point& startTime, int timeoutSeconds, std::string message) {
     auto currentTime = std::chrono::steady_clock::now();
     auto elapsed = std::chrono::duration_cast<std::chrono::seconds>(currentTime - startTime).count();//Counts how many seconds have passed from the starting time to now
@@ -10,6 +9,5 @@ bool checkLoopTimeout(const std::chrono::steady_clock::time_point& startTime, in
 
         return true;
     }
-
     return false;
 }
