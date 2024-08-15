@@ -74,7 +74,9 @@ void ReadFromJSON::createTasksFromJSONWithDelay(const string& filePath, int line
             if (linesRead == linesToRead) {
                 // Wait for the specified delay between reading tasks
                 auto startTime = std::chrono::steady_clock::now();
-                checkLoopTimeout(startTime, delaySeconds, message);
+                //checkLoopTimeout(startTime, delaySeconds, message);
+                std::this_thread::sleep_for(std::chrono::seconds(delaySeconds));  // busy-wait
+
                 // Reset the lines read counter
                 linesRead = 0;
             }

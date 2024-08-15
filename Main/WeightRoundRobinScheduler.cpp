@@ -60,47 +60,42 @@ std::unordered_map<std::string, Queue>& WeightRoundRobinScheduler::getWrrQueues(
  *
  * The function handles tasks in a fair and efficient manner, ensuring that higher-priority tasks are given more processing time.
  */
+
 void WeightRoundRobinScheduler::weightRoundRobinFunction()
 {
-    
-    while (true) {
+    while (true) {  // Infinite loop to continuously process tasks
         int countTasks = 0;
-        for (auto& pair : WRRQueues) {
+
+        for (auto& pair : WRRQueues) {  // Iterate through each priority queue
             Queue* taskQueue = &pair.second;
 
             int weight = taskQueue->weight;
-         
-            int taskCountToRun = static_cast<int>(Scheduler::totalRunningTask  * (weight / 100.0));
+            // Calculate the number of tasks to run based on the queue's weight
+            int taskCountToRun = static_cast<int>(Scheduler::totalRunningTask * (weight / 100.0));
 
+            // Ensure at least one task runs if the queue is not empty
             taskCountToRun = (taskCountToRun == 0 && !taskQueue->queue.empty()) ? 1 : taskCountToRun;
 
             while (!taskQueue->queue.empty() && countTasks < taskCountToRun) {
                 Task* task = taskQueue->queue.front();
-          
-            auto startTime = std::chrono::steady_clock::now();
-            while (!Scheduler::rtLock.try_lock()) {
-                    checkLoopTimeout(startTime, 300, "There are many critical tasks, it may cause starvation of other tasks");
-                    std::this_thread::sleep_for(std::chrono::milliseconds(100));  // busy-wait
+
+                auto startTime = std::chrono::steady_clock::now();
+
+                // Wait until the mutex is released
+                {
+                    std::unique_lock<std::mutex> lock(Scheduler::rtLock);  // Lock the rtLock
+                }// The mutex will be automatically released at the end of this scope
+
+                    // Check if the task is not null and execute it
+                    if (task != nullptr) {
+                        Scheduler::execute(task);
+                    }
+
+             
+                countTasks++;
             }
 
-            if(Scheduler::rtLock.try_lock())
-                Scheduler::rtLock.unlock();
-
-            if(task != nullptr){
-                Scheduler::execute(task);
-                }
-
-
-                while (taskQueue->queue.front()->getStatus() == TaskStatus::RUNNING || taskQueue->queue.front()->getStatus()==TaskStatus::SUSPENDED) {
-                    if(taskQueue->queue.front()->getStatus() == TaskStatus::RUNNING)
-                        checkLoopTimeout(startTime, 300, "The task is running for too long");
-                    else if(taskQueue->queue.front()->getStatus() == TaskStatus::SUSPENDED)
-                        checkLoopTimeout(startTime, 300, "The task is suspended for too long");
-                }
-               countTasks++;
-
-            }
-            countTasks = 0; // Reset countTasksInCurrentQueue for the next queue
+            countTasks = 0;  // Reset the task count for the next queue
         }
     }
 }
