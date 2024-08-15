@@ -25,5 +25,8 @@ public:
 	static const int MIDDLE_WEIGHT;
 	static const int LOWER_WEIGHT;
 
+};
+class Scenario {
+public:
 	static const string SCENARIO_1_FILE_PATH;
 };

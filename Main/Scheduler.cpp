@@ -18,10 +18,10 @@ WeightRoundRobinScheduler Scheduler::wrrQueues;
  */
 void Scheduler::execute(Task* task) {
   spdlog::info("Executing task with ID: {}", task->getId());
-	task->setStatus(Consts::RUNNING);
+	task->setStatus(TaskStatus::RUNNING);
     // Continue executing the task while it has remaining running time
     while (task->getRunningTime() > 0) {
-        if (task->getPriority() != Consts::CRITICAL && !realTimeScheduler.getRealTimeQueue().empty()) {
+        if (task->getPriority() != PrioritiesLevel::CRITICAL && !realTimeScheduler.getRealTimeQueue().empty()) {
             spdlog::info("Preempting task with ID: {} for real-time task.", task->getId());
             preemptive(task);
             return;
@@ -34,14 +34,14 @@ void Scheduler::execute(Task* task) {
         catch (const std::exception& e) {
             // Handle any exceptions that occur during execution
             spdlog::error("Exception occurred while executing task with ID: {}: {}", task->getId(), e.what());
-            task->setStatus(Consts::TERMINATED);
+            task->setStatus(TaskStatus::TERMINATED);
             break; // Exit the loop if an exception is caught
         }
     }
 
     // Set the task status to COMPLETED when execution is finished
-    task->setStatus(Consts::COMPLETED);
-    if (task->getPriority() == Consts::CRITICAL) {
+    task->setStatus(TaskStatus::COMPLETED);
+    if (task->getPriority() == PrioritiesLevel::CRITICAL) {
         realTimeScheduler.getRealTimeQueue().pop();
     }
     else {
@@ -73,7 +73,7 @@ void Scheduler::displayMessage(const Task* task) {
  * @param task Pointer to the task to be preempted.
  */
 void Scheduler::preemptive(Task* task) {
-    task->setStatus(Consts::SUSPENDED);
+    task->setStatus(TaskStatus::SUSPENDED);
     spdlog::info("Task with ID: {} suspended and added back to WRR queue.", task->getId());
 }
 
@@ -91,11 +91,12 @@ void Scheduler::init() {
 
 	spdlog::info(Logger::LoggerInfo::START_SCHEDULER);
 	try {
+		ReadFromJSON::createTasksFromJSON(Scenario::SCENARIO_1_FILE_PATH);
 		// Create a thread for the InsertTask function
 		std::thread insertTask_Thread([this]() {
 			SetThreadDescription(GetCurrentThread(), L"InsertTask");
 			spdlog::info(Logger::LoggerInfo::START_THREAD, "InsertTask");
-			this->InsertTaskFromInput();
+			this->insertTaskFromInput();
 			});
 
 		// Create a thread for real-Time Scheduler
@@ -122,10 +123,10 @@ void Scheduler::init() {
 	}
 }
 
-void Scheduler::InsertTaskFromInput()
+void Scheduler::insertTaskFromInput()
 {
     while (true) {
-        InsertTask(Input());
+        insertTask(input());
     }
 }
 
