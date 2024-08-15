@@ -24,8 +24,6 @@ public:
 
 	void addTask(Task* task);
 	std::unordered_map< std::string, Queue>& getWrrQueues();
-	void WeightRoundRobinFunction();
-
-
+	void weightRoundRobinFunction();
 };
 
