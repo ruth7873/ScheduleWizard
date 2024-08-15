@@ -135,6 +135,7 @@
     <ClCompile Include="RealTimeScheduler.cpp" />
     <ClCompile Include="Scheduler.cpp" />
     <ClCompile Include="Task.cpp" />
+    <ClCompile Include="Test_InsertTask.cpp" />
     <ClCompile Include="Test_Main.cpp" />
     <ClCompile Include="Timer.cpp" />
     <ClCompile Include="WeightRoundRobinScheduler.cpp" />
