@@ -21,10 +21,10 @@ void ReadFromJSON::createTasksFromJSON(const string& filePath) {
         // Iterate over the tasks array and create Task objects
         for (const auto& task : tasksData) {
             // Create a new Task object using data from JSON
-            Task* newTask = new Task(Scheduler::taskAmount++, task["priority"], task["runningTime"], task["status"]);
+            Task* newTask = new Task(Scheduler::taskIds++, task["priority"], task["runningTime"], task["status"]);
 
             // Insert the new Task into the Scheduler's queues
-            Scheduler::InsertTask(newTask);
+            Scheduler::insertTask(newTask);
         }
     }
     catch (const std::exception& e) {

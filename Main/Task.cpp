@@ -12,7 +12,7 @@ Task::Task(int id, string priority, int runningTime, string status)
 }
 
 Task::Task(int id, string priority, int runningTime)
-    : Task(id, priority, runningTime, Consts::CREATION)
+    : Task(id, priority, runningTime, TaskStatus::CREATION)
 {}
 
 int Task::getId() const {

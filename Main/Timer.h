@@ -6,6 +6,7 @@
 
 using namespace std;
 
-bool timer(const std::chrono::steady_clock::time_point& startTime, int timeoutSeconds, string message);
+bool checkLoopTimeout(const std::chrono::steady_clock::time_point& startTime, int timeoutSeconds, string message);
 
 #endif // TIMER_H
+
