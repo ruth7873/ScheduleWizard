@@ -49,9 +49,10 @@ void Scheduler::execute(Task* task) {
     }
   
     spdlog::info("Task with ID: {} completed.", task->getId());
-    if (task != nullptr) {
+   /* if (task != nullptr) {
         delete task;
-    }
+		task = nullptr;
+    }*/
 }
 
 /**

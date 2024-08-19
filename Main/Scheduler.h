@@ -40,4 +40,12 @@ public:
     static void execute(Task* task);
     static void displayMessage(const Task* task);
     static void preemptive(Task* task);
+
+    static RealTimeScheduler& getRealTimeScheduler() {
+        return realTimeScheduler;
+    }
+
+    static WeightRoundRobinScheduler& getWrrQueues() {
+        return wrrQueues;
+    }
 };
