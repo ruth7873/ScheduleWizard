@@ -17,12 +17,12 @@ WeightRoundRobinScheduler Scheduler::wrrQueues;
  * @param task Pointer to the task to be executed.
  */
 void Scheduler::execute(Task* task) {
-  spdlog::info("Executing task with ID: {}", task->getId());
+  //spdlog::info("Executing task with ID: {}", task->getId());
 	task->setStatus(TaskStatus::RUNNING);
     // Continue executing the task while it has remaining running time
     while (task->getRunningTime() > 0) {
         if (task->getPriority() != PrioritiesLevel::CRITICAL && !realTimeScheduler.getRealTimeQueue().empty()) {
-            spdlog::info("Preempting task with ID: {} for real-time task.", task->getId());
+           // spdlog::info("Preempting task with ID: {} for real-time task.", task->getId());
             preemptive(task);
             return;
         }
@@ -33,7 +33,7 @@ void Scheduler::execute(Task* task) {
         }
         catch (const std::exception& e) {
             // Handle any exceptions that occur during execution
-            spdlog::error("Exception occurred while executing task with ID: {}: {}", task->getId(), e.what());
+          //  spdlog::error("Exception occurred while executing task with ID: {}: {}", task->getId(), e.what());
             task->setStatus(TaskStatus::TERMINATED);
             break; // Exit the loop if an exception is caught
         }
@@ -48,7 +48,7 @@ void Scheduler::execute(Task* task) {
         wrrQueues.getWrrQueues()[task->getPriority()].queue.pop();
     }
   
-    spdlog::info("Task with ID: {} completed.", task->getId());
+    //spdlog::info("Task with ID: {} completed.", task->getId());
     if (task != nullptr) {
         delete task;
     }
@@ -74,7 +74,7 @@ void Scheduler::displayMessage(const Task* task) {
  */
 void Scheduler::preemptive(Task* task) {
     task->setStatus(TaskStatus::SUSPENDED);
-    spdlog::info("Task with ID: {} suspended and added back to WRR queue.", task->getId());
+    //spdlog::info("Task with ID: {} suspended and added back to WRR queue.", task->getId());
 }
 
 
@@ -89,30 +89,30 @@ void Scheduler::preemptive(Task* task) {
 void Scheduler::init() {
 	Logger::initialize_logger();
 
-	spdlog::info(Logger::LoggerInfo::START_SCHEDULER);
+//	spdlog::info(Logger::LoggerInfo::START_SCHEDULER);
 	try {
     std::thread readtasksFromJSON_Thread([this]() {
       SetThreadDescription(GetCurrentThread(), L"createTasksFromJSONWithDelay");
-      spdlog::info("read tasks From JSON thread started.");
+//      spdlog::info("read tasks From JSON thread started.");
       ReadFromJSON::createTasksFromJSONWithDelay(Scenario::SCENARIO_1_FILE_PATH, 3, 15);
       });		// Create a thread for the InsertTask function
 		std::thread insertTask_Thread([this]() {
 			SetThreadDescription(GetCurrentThread(), L"InsertTask");
-			spdlog::info(Logger::LoggerInfo::START_THREAD, "InsertTask");
+//			spdlog::info(Logger::LoggerInfo::START_THREAD, "InsertTask");
 			this->insertTaskFromInput();
 			});
 
 		// Create a thread for real-Time Scheduler
 		std::thread RTScheduler_Thread([this]() {
 			SetThreadDescription(GetCurrentThread(), L"RealTimeScheduler");
-			spdlog::info(Logger::LoggerInfo::START_THREAD, "RealTimeScheduler");
+			//spdlog::info(Logger::LoggerInfo::START_THREAD, "RealTimeScheduler");
 			realTimeScheduler.realTimeSchedulerFunction();
 			});
 
 		// Create a thread for WRR Scheduler
 		std::thread WRRScheduler_Thread([this]() {
 			SetThreadDescription(GetCurrentThread(), L"WeightRoundRobinScheduler");
-			spdlog::info(Logger::LoggerInfo::START_THREAD, "WeightRoundRobinScheduler");
+			//spdlog::info(Logger::LoggerInfo::START_THREAD, "WeightRoundRobinScheduler");
 			wrrQueues.weightRoundRobinFunction();
 			});
 
@@ -122,7 +122,7 @@ void Scheduler::init() {
 	}
 	catch (const std::exception& ex) {
 		// Handle any exceptions that might occur during thread creation
-		spdlog::error(Logger::LoggerError::ERROR_CREATE_THREAD, ex.what());
+		//spdlog::error(Logger::LoggerError::ERROR_CREATE_THREAD, ex.what());
 	}
 }
 
@@ -178,7 +178,7 @@ Task* Scheduler::input()
 
 		break; // If runningTime is valid, exit the loop
 	}
-	spdlog::info(Logger::LoggerInfo::CREATE_NEW_TASK, priority, runningTime);
+	//spdlog::info(Logger::LoggerInfo::CREATE_NEW_TASK, priority, runningTime);
 	// Assuming other fields like status and entryTime are set elsewhere
 
 	return new Task((taskIds++) % MAX_TASKS, priority, runningTime);
@@ -196,14 +196,14 @@ void Scheduler::insertTask(Task* newTask)
 {
     if (newTask == nullptr) {
         std::cerr << "Error: Invalid task input. Please try again." << std::endl; 
-        spdlog::error("Error: Invalid task input. Skipping task insertion.");
+        //spdlog::error("Error: Invalid task input. Skipping task insertion.");
     }
     if (newTask->getPriority() == PrioritiesLevel::CRITICAL) {
 			realTimeScheduler.addTask(newTask); // Add task to real-time scheduler for real-time tasks
-			spdlog::info(Logger::LoggerInfo::ADD_CRITICAL_TASK, newTask->getId());
+			//spdlog::info(Logger::LoggerInfo::ADD_CRITICAL_TASK, newTask->getId());
 		}
 		else {
 			wrrQueues.addTask(newTask); // Add task to Weighted Round Robin scheduler for non-real-time tasks
-			spdlog::info(Logger::LoggerInfo::ADD_NON_CRITICAL_TASK, newTask->getId(), newTask->getPriority());
+			//spdlog::info(Logger::LoggerInfo::ADD_NON_CRITICAL_TASK, newTask->getId(), newTask->getPriority());
 		}    
 }

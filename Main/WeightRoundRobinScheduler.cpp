@@ -43,7 +43,7 @@ WeightRoundRobinScheduler::~WeightRoundRobinScheduler() {
  */
 void WeightRoundRobinScheduler::addTask(Task* task) {
     WRRQueues[task->getPriority()].queue.push(task);
-    spdlog::info(Logger::LoggerInfo::ADD_NON_CRITICAL_TASK, task->getId(), task->getPriority());
+    //spdlog::info(Logger::LoggerInfo::ADD_NON_CRITICAL_TASK, task->getId(), task->getPriority());
 }
 
 std::unordered_map<std::string, Queue>& WeightRoundRobinScheduler::getWrrQueues() {

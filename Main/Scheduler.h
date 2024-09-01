@@ -27,13 +27,13 @@ private:
 
 	static RealTimeScheduler realTimeScheduler;
 	static WeightRoundRobinScheduler wrrQueues;
-	Task* input();
     const unsigned int MAX_TASKS = std::numeric_limits<unsigned int>::max();
 public:
     static mutex rtLock;
     static int totalRunningTask;
     static unsigned int taskIds;
-    
+    Task* input();
+
     void init();
     void insertTaskFromInput();
     static void insertTask(Task*);

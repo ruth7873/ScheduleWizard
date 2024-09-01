@@ -31,7 +31,7 @@ void ReadFromJSON::createTasksFromJSON(const string& filePath) {
         // Handle exceptions thrown during JSON parsing or task creation
         std::cerr << "An exception occurred: " << e.what() << std::endl;
         // Log the exception
-        spdlog::error("An exception occurred: {}", e.what());
+       // spdlog::error("An exception occurred: {}", e.what());
     }
 }
 
@@ -86,6 +86,6 @@ void ReadFromJSON::createTasksFromJSONWithDelay(const string& filePath, int line
         // Handle exceptions thrown during JSON parsing or task creation
         std::cerr << "An exception occurred: " << e.what() << std::endl;
         // Log the exception
-        spdlog::error("An exception occurred: {}", e.what());
+        //spdlog::error("An exception occurred: {}", e.what());
     }
 }

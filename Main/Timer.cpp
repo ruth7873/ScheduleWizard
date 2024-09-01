@@ -5,8 +5,8 @@ bool checkLoopTimeout(const std::chrono::steady_clock::time_point& startTime, in
     auto elapsed = std::chrono::duration_cast<std::chrono::seconds>(currentTime - startTime).count();//Counts how many seconds have passed from the starting time to now
 
     if (elapsed > timeoutSeconds) {
-        spdlog::warn("Loop has been running for more than {} seconds.", timeoutSeconds);
-        spdlog::warn(message);
+        //spdlog::warn("Loop has been running for more than {} seconds.", timeoutSeconds);
+        //spdlog::warn(message);
 
         return true;
     }
