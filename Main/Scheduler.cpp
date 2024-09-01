@@ -16,7 +16,7 @@ WeightRoundRobinScheduler Scheduler::wrrQueues;
  *
  * @param task Pointer to the task to be executed.
  */
-void Scheduler::execute(Task* task) {
+void Scheduler::execute(shared_ptr<Task> task) {
   spdlog::info("Executing task with ID: {}", task->getId());
 	task->setStatus(TaskStatus::RUNNING);
     // Continue executing the task while it has remaining running time
@@ -49,9 +49,6 @@ void Scheduler::execute(Task* task) {
     }
   
     spdlog::info("Task with ID: {} completed.", task->getId());
-    if (task != nullptr) {
-        delete task;
-    }
 }
 
 /**
@@ -72,7 +69,7 @@ void Scheduler::displayMessage(const Task* task) {
  *
  * @param task Pointer to the task to be preempted.
  */
-void Scheduler::preemptive(Task* task) {
+void Scheduler::preemptive(shared_ptr<Task> task) {
     task->setStatus(TaskStatus::SUSPENDED);
     spdlog::info("Task with ID: {} suspended and added back to WRR queue.", task->getId());
 }
@@ -140,7 +137,7 @@ void Scheduler::insertTaskFromInput()
  *
  * @return A pointer to the newly created Task object based on the user input.
  */
-Task* Scheduler::input()
+shared_ptr<Task> Scheduler::input()
 {
 	std::string priority;
 	int runningTime;
@@ -181,7 +178,7 @@ Task* Scheduler::input()
 	spdlog::info(Logger::LoggerInfo::CREATE_NEW_TASK, priority, runningTime);
 	// Assuming other fields like status and entryTime are set elsewhere
 
-	return new Task((taskIds++) % MAX_TASKS, priority, runningTime);
+	return shared_ptr<Task>(new Task((taskIds++) % MAX_TASKS, priority, runningTime));
 }
 
 /**
@@ -192,7 +189,7 @@ Task* Scheduler::input()
  * Tasks with Critical priority are added to the real-time scheduler, while others are added to the Weighted Round Robin scheduler.
  */
 
-void Scheduler::insertTask(Task* newTask)
+void Scheduler::insertTask(shared_ptr<Task> newTask)
 {
     if (newTask == nullptr) {
         std::cerr << "Error: Invalid task input. Please try again." << std::endl; 
