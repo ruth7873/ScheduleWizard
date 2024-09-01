@@ -28,7 +28,7 @@ class Scheduler
 private:
 
 	static RealTimeScheduler realTimeScheduler;
-	static WeightRoundRobinScheduler wrrQueues;
+	static WeightRoundRobinScheduler wrrQueuesScheduler;
 	shared_ptr<Task> input();
     const unsigned int MAX_TASKS = std::numeric_limits<unsigned int>::max();
 public:
@@ -47,7 +47,7 @@ public:
         return realTimeScheduler;
     }
 
-    static WeightRoundRobinScheduler& getWrrQueues() {
-        return wrrQueues;
+    static WeightRoundRobinScheduler& getWrrQueuesScheduler() {
+        return wrrQueuesScheduler;
     }
 };

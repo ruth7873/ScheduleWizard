@@ -7,7 +7,7 @@ int Scheduler::totalRunningTask = 0;
 unsigned int Scheduler::taskIds = 0;
 mutex Scheduler::rtLock;
 RealTimeScheduler Scheduler::realTimeScheduler;
-WeightRoundRobinScheduler Scheduler::wrrQueues;
+WeightRoundRobinScheduler Scheduler::wrrQueuesScheduler;
 
 /**
  * @brief Executes a given task.
@@ -45,7 +45,7 @@ void Scheduler::execute(shared_ptr<Task> task) {
         realTimeScheduler.getRealTimeQueue().pop();
     }
     else {
-        wrrQueues.getWrrQueues()[task->getPriority()].queue.pop();
+        wrrQueuesScheduler.getWrrQueues()[task->getPriority()].queue.pop();
     }
   
     spdlog::info("Task with ID: {} completed.", task->getId());
@@ -110,7 +110,7 @@ void Scheduler::init() {
 		std::thread WRRScheduler_Thread([this]() {
 			SetThreadDescription(GetCurrentThread(), L"WeightRoundRobinScheduler");
 			spdlog::info(Logger::LoggerInfo::START_THREAD, "WeightRoundRobinScheduler");
-			wrrQueues.weightRoundRobinFunction();
+			wrrQueuesScheduler.weightRoundRobinFunction();
 			});
 
 		insertTask_Thread.join();
@@ -200,7 +200,7 @@ void Scheduler::insertTask(shared_ptr<Task> newTask)
 			spdlog::info(Logger::LoggerInfo::ADD_CRITICAL_TASK, newTask->getId());
 		}
 		else {
-			wrrQueues.addTask(newTask); // Add task to Weighted Round Robin scheduler for non-real-time tasks
+			wrrQueuesScheduler.addTask(newTask); // Add task to Weighted Round Robin scheduler for non-real-time tasks
 			spdlog::info(Logger::LoggerInfo::ADD_NON_CRITICAL_TASK, newTask->getId(), newTask->getPriority());
 		}    
 }
