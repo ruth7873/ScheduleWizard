@@ -1,4 +1,5 @@
 {
+    "delayParams": {"linesToRead": 3, "delaySeconds": 15},
     "tasks": [
         {
             "priority": "Critical",

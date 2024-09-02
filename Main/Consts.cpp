@@ -11,7 +11,7 @@ const string PrioritiesLevel::HIGHER = "Higher";
 const string PrioritiesLevel::MIDDLE = "Middle";
 const string PrioritiesLevel::LOWER = "Lower";
 
-const string Scenario::SCENARIO_1_FILE_PATH = "tests/scenario_1.json";
+const string Scenario::SCENARIO_1_FILE_PATH = "scenarios/scenario_1.json";
 
 const int WeightPrecents::LOWER_WEIGHT = 10;
 const int WeightPrecents::MIDDLE_WEIGHT = 30;
