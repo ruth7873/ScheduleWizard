@@ -134,7 +134,6 @@ void Scheduler::insertTaskFromInput()
 }
 
 
-
 /**
  * @brief This function allows the user to input details for a new task, including priority and running time.
  *
@@ -152,6 +151,7 @@ Task* Scheduler::input()
 	// Input validation for priority
 	while (priority != PrioritiesLevel::CRITICAL && priority != PrioritiesLevel::HIGHER &&
 		priority != PrioritiesLevel::MIDDLE && priority != PrioritiesLevel::LOWER) {
+		spdlog::error("Invalid priority. Please enter one of the specified options.");
 		std::cout << "Invalid priority. Please enter one of the specified options." << std::endl;
 		std::cout << "Enter the priority for the task. Options: Critical, Higher, Middle, Lower: ";
 		std::cin >> priority;
