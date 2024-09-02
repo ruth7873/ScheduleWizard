@@ -135,7 +135,9 @@
     <ClCompile Include="RealTimeScheduler.cpp" />
     <ClCompile Include="Scheduler.cpp" />
     <ClCompile Include="Task.cpp" />
+    <ClCompile Include="Test_Execute.cpp" />
     <ClCompile Include="Test_Main.cpp" />
+    <ClCompile Include="Test_RealTimeScheduler.cpp" />
     <ClCompile Include="Timer.cpp" />
     <ClCompile Include="WeightRoundRobinScheduler.cpp" />
   </ItemGroup>
@@ -151,6 +153,7 @@
     <ClInclude Include="WeightRoundRobinScheduler.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="cpp.hint" />
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -14,9 +14,9 @@ using namespace std;
  * Each queue is associated with a weight defined in the Consts header.
  */
 WeightRoundRobinScheduler::WeightRoundRobinScheduler() {
-    WRRQueues[PrioritiesLevel::HIGHER] = Queue{ std::queue<Task*>(), WeightPrecents::HIGHER_WEIGHT };
-    WRRQueues[PrioritiesLevel::MIDDLE] = Queue{ std::queue<Task*>(), WeightPrecents::MIDDLE_WEIGHT };
-    WRRQueues[PrioritiesLevel::LOWER] = Queue{ std::queue<Task*>(), WeightPrecents::LOWER_WEIGHT };
+    WRRQueues[PrioritiesLevel::HIGHER] = Queue{ std::queue<shared_ptr<Task>>(), WeightPrecents::HIGHER_WEIGHT };
+    WRRQueues[PrioritiesLevel::MIDDLE] = Queue{ std::queue<shared_ptr<Task>>(), WeightPrecents::MIDDLE_WEIGHT };
+    WRRQueues[PrioritiesLevel::LOWER] = Queue{ std::queue<shared_ptr<Task>>(), WeightPrecents::LOWER_WEIGHT };
 }
 
 /**
@@ -28,7 +28,6 @@ WeightRoundRobinScheduler::WeightRoundRobinScheduler() {
 WeightRoundRobinScheduler::~WeightRoundRobinScheduler() {
     for (auto& pair : WRRQueues) {
         while (!pair.second.queue.empty()) {
-            delete pair.second.queue.front();
             pair.second.queue.pop();
         }
     }
@@ -41,7 +40,7 @@ WeightRoundRobinScheduler::~WeightRoundRobinScheduler() {
  *
  * The task is pushed into the queue corresponding to its priority (HIGHER, MIDDLE, LOWER).
  */
-void WeightRoundRobinScheduler::addTask(Task* task) {
+void WeightRoundRobinScheduler::addTask(shared_ptr<Task> task) {
     WRRQueues[task->getPriority()].queue.push(task);
     spdlog::info(Logger::LoggerInfo::ADD_NON_CRITICAL_TASK, task->getId(), task->getPriority());
 }
@@ -77,7 +76,7 @@ void WeightRoundRobinScheduler::weightRoundRobinFunction()
             taskCountToRun = (taskCountToRun == 0 && !taskQueue->queue.empty()) ? 1 : taskCountToRun;
 
             while (!taskQueue->queue.empty() && countTasks < taskCountToRun) {
-                Task* task = taskQueue->queue.front();
+                shared_ptr<Task> task = taskQueue->queue.front();
 
                 auto startTime = std::chrono::steady_clock::now();
 

@@ -3,7 +3,6 @@
 
 RealTimeScheduler::~RealTimeScheduler() {
 	while (!realTimeQueue.empty()) {
-		delete realTimeQueue.front();
 		realTimeQueue.pop();
 	}
 }
@@ -20,7 +19,7 @@ void RealTimeScheduler::realTimeSchedulerFunction() {
 
 		std::unique_lock<std::mutex> lock(Scheduler::rtLock); // שימוש ב-lock לנעילה אוטומטית
 
-		Task* task = realTimeQueue.front();
+		shared_ptr<Task> task = realTimeQueue.front();
 
 		if (task != nullptr) {
 			Scheduler::execute(task);
