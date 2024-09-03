@@ -17,7 +17,7 @@ TEST_CASE("Test RealTimeScheduler::realTimeSchedulerFunction") {
 		//scheduler.getRealTimeScheduler().realTimeSchedulerFunction();
 		std::thread schedulerThread(&RealTimeScheduler::realTimeSchedulerFunction, &scheduler.getRealTimeScheduler());
 		// Give some time for tasks to be executed
-		std::this_thread::sleep_for(std::chrono::seconds(10));
+		std::this_thread::sleep_for(std::chrono::seconds(15));
 
 		schedulerThread.detach();  // We detach instead of join to avoid infinite loop
 
