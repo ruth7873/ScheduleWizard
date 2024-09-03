@@ -135,10 +135,10 @@
     <ClCompile Include="RealTimeScheduler.cpp" />
     <ClCompile Include="Scheduler.cpp" />
     <ClCompile Include="Task.cpp" />
-    <ClCompile Include="Test_InsertTask.cpp" />
-    <ClCompile Include="Test_Execute.cpp" />
-    <ClCompile Include="Test_Main.cpp" />
-    <ClCompile Include="Test_RealTimeScheduler.cpp" />
+    <ClCompile Include="Test1_InsertTask.cpp" />
+    <ClCompile Include="Test3_Execute.cpp" />
+    <ClCompile Include="Test0_Main.cpp" />
+    <ClCompile Include="Test2_RealTimeScheduler.cpp" />
     <ClCompile Include="Timer.cpp" />
     <ClCompile Include="WeightRoundRobinScheduler.cpp" />
   </ItemGroup>
