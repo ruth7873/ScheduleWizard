@@ -41,10 +41,10 @@ void Scheduler::execute(shared_ptr<Task> task) {
 
     // Set the task status to COMPLETED when execution is finished
     task->setStatus(TaskStatus::COMPLETED);
-    if (task->getPriority() == PrioritiesLevel::CRITICAL) {
+    if (task->getPriority() == PrioritiesLevel::CRITICAL&& !realTimeScheduler.getRealTimeQueue().empty()) {
         realTimeScheduler.getRealTimeQueue().pop();
     }
-    else {
+    else if(!wrrQueuesScheduler.getWrrQueues()[task->getPriority()].queue.empty()) {
         wrrQueuesScheduler.getWrrQueues()[task->getPriority()].queue.pop();
     }
   
