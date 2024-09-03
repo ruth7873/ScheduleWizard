@@ -42,11 +42,10 @@ public:
     static void execute(shared_ptr<Task> task);
     static void displayMessage(const Task* task);
     static void preemptive(shared_ptr<Task> task);
-
     static RealTimeScheduler& getRealTimeScheduler() {
         return realTimeScheduler;
     }
-
+  
     static WeightRoundRobinScheduler& getWrrQueuesScheduler() {
         return wrrQueuesScheduler;
     }

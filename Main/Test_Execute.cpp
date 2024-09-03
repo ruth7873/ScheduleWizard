@@ -1,8 +1,6 @@
 #include "doctest.h"
 #include "Scheduler.h"
 
-
-
 TEST_CASE("Scheduler::execute - Successful Execution of Critical Task") {
 	Scheduler scheduler;
 	shared_ptr<Task> criticalTask(new Task(Scheduler::taskIds++, PrioritiesLevel::CRITICAL, 2));

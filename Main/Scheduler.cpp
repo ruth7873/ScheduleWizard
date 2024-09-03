@@ -191,16 +191,22 @@ shared_ptr<Task> Scheduler::input()
 
 void Scheduler::insertTask(shared_ptr<Task> newTask)
 {
-    if (newTask == nullptr) {
-        std::cerr << "Error: Invalid task input. Please try again." << std::endl; 
-        spdlog::error("Error: Invalid task input. Skipping task insertion.");
-    }
-    if (newTask->getPriority() == PrioritiesLevel::CRITICAL) {
+	try {
+		if (newTask == nullptr) {
+			throw std::invalid_argument("Invalid task input. Please try again.");
+		}
+
+		if (newTask->getPriority() == PrioritiesLevel::CRITICAL) {
 			realTimeScheduler.addTask(newTask); // Add task to real-time scheduler for real-time tasks
 			spdlog::info(Logger::LoggerInfo::ADD_CRITICAL_TASK, newTask->getId());
 		}
 		else {
 			wrrQueuesScheduler.addTask(newTask); // Add task to Weighted Round Robin scheduler for non-real-time tasks
 			spdlog::info(Logger::LoggerInfo::ADD_NON_CRITICAL_TASK, newTask->getId(), newTask->getPriority());
-		}    
+		}
+	}
+	catch (const std::invalid_argument& e) {
+		std::cerr << "Error: " << e.what() << std::endl;
+		spdlog::error("Error: {}", e.what());
+	}
 }
