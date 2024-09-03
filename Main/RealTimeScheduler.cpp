@@ -19,11 +19,13 @@ void RealTimeScheduler::realTimeSchedulerFunction() {
 
 		std::unique_lock<std::mutex> lock(Scheduler::rtLock); // שימוש ב-lock לנעילה אוטומטית
 
-		shared_ptr<Task> task = realTimeQueue.front();
+		if (!realTimeQueue.empty())
+		{
+			shared_ptr<Task> task = realTimeQueue.front();
 
-		if (task != nullptr) {
-			Scheduler::execute(task);
+			if (task != nullptr) {
+				Scheduler::execute(task);
+			}
 		}
 	}
 }
-     
