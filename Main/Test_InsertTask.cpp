@@ -11,7 +11,7 @@ TEST_CASE("Test Scheduler::InsertTask") {
 
         CHECK_EQ(scheduler.getRealTimeScheduler().getRealTimeQueue().size(), 1); // Assuming realTimeScheduler has a method to get the task count
         
-        scheduler.getRealTimeScheduler().getRealTimeQueue().pop();
+        //scheduler.getRealTimeScheduler().getRealTimeQueue().pop();
     }
 
     SUBCASE("Insert a non-critical task") {
