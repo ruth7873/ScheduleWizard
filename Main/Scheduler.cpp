@@ -1,11 +1,52 @@
 #include "Scheduler.h"
 
+int Scheduler::sumOfAllSeconds = 0;
 int Scheduler::totalRunningTask = 0;
 unsigned int Scheduler::taskIds = 0;
+int Scheduler::numOfSeconds = 0;
+double Scheduler::AverageLength = 0;
+mutex Scheduler::coutMutex;
 mutex Scheduler::rtLock;
 RealTimeScheduler Scheduler::realTimeScheduler;
-WeightRoundRobinScheduler Scheduler::wrrQueues;
+WeightRoundRobinScheduler Scheduler::wrrQueuesScheduler;
 
+void Scheduler::popTaskFromItsQueue(shared_ptr<Task> taskToPop) {
+	if (taskToPop->getPriority() == PrioritiesLevel::CRITICAL && !realTimeScheduler.getRealTimeQueue().empty()) {
+		realTimeScheduler.getRealTimeQueue().pop();
+	}
+	else if (!wrrQueuesScheduler.getWrrQueues()[taskToPop->getPriority()].queue.empty()) {
+		wrrQueuesScheduler.getWrrQueues()[taskToPop->getPriority()].queue.pop();
+	}
+	totalRunningTask--;
+}
+
+void Scheduler::addTaskToItsQueue(shared_ptr<Task> taskToAdd) {
+	if (taskToAdd->getPriority() == PrioritiesLevel::CRITICAL) {
+		realTimeScheduler.addTask(taskToAdd); // Add task to real-time scheduler for real-time tasks
+		spdlog::info(Logger::LoggerInfo::ADD_CRITICAL_TASK, taskToAdd->getId());
+	}
+	else {
+		wrrQueuesScheduler.addTask(taskToAdd); // Add task to Weighted Round Robin scheduler for non-real-time tasks
+		spdlog::info(Logger::LoggerInfo::ADD_NON_CRITICAL_TASK, taskToAdd->getId(), taskToAdd->getPriority());
+	}
+}
+
+void Scheduler::stopLongTask(shared_ptr<Task> longTask) {
+	longTask->setStatus(TaskStatus::SUSPENDED);
+	spdlog::info("the long task stop, and will continue later");
+	popTaskFromItsQueue(longTask);
+	addTaskToItsQueue(longTask);
+}
+
+void Scheduler::calculateAverageLength() {
+	if (totalRunningTask)
+		AverageLength = sumOfAllSeconds / totalRunningTask;
+	std::ostringstream oss;
+	oss << "the average is: " << AverageLength << endl;
+	std::lock_guard<std::mutex> lock(coutMutex);
+	std::cout << oss.str();
+
+}
 /**
  * @brief Executes a given task.
  *
@@ -14,11 +55,24 @@ WeightRoundRobinScheduler Scheduler::wrrQueues;
  * @param task Pointer to the task to be executed.
  */
 void Scheduler::execute(shared_ptr<Task> task) {
+	calculateAverageLength();
+	numOfSeconds = 0;
 	spdlog::info("Executing task with ID: {}", task->getId());
 	task->setStatus(TaskStatus::RUNNING);
 	// Continue executing the task while it has remaining running time
-	while (task->getRunningTime() > 0) {
-		if (task->getPriority() != PrioritiesLevel::CRITICAL && !realTimeScheduler.getRealTimeQueue().empty()) {
+	while (true) {
+		if (task->getRunningTime() == 0) {//the task has finished 
+			// Set the task status to COMPLETED when execution is finished
+			task->setStatus(TaskStatus::COMPLETED);
+			popTaskFromItsQueue(task);
+			spdlog::info("Task with ID: {} completed.", task->getId());
+			break;
+		}
+		if (numOfSeconds > AverageLength) {//long task-suspend
+			stopLongTask(task);
+			break;
+		}
+		if (task->getPriority() != PrioritiesLevel::CRITICAL && !realTimeScheduler.getRealTimeQueue().empty()) {//preemptive
 			spdlog::info("Preempting task with ID: {} for real-time task.", task->getId());
 			preemptive(task);
 			return;
@@ -26,29 +80,18 @@ void Scheduler::execute(shared_ptr<Task> task) {
 		try {
 			// Simulate task execution by decrementing running time
 			task->setRunningTime(task->getRunningTime() - 1);
+			numOfSeconds++;
+			sumOfAllSeconds--;
 			std::this_thread::sleep_for(std::chrono::seconds(1));
 		}
 		catch (const std::exception& e) {
 			// Handle any exceptions that occur during execution
 			spdlog::error("Exception occurred while executing task with ID: {}: {}", task->getId(), e.what());
 			task->setStatus(TaskStatus::TERMINATED);
+			popTaskFromItsQueue(task);
 			break; // Exit the loop if an exception is caught
 		}
 	}
-
-	// Set the task status to COMPLETED when execution is finished
-	task->setStatus(TaskStatus::COMPLETED);
-	if (task->getPriority() == PrioritiesLevel::CRITICAL) {
-		realTimeScheduler.getRealTimeQueue().pop();
-	}
-	else {
-		wrrQueues.getWrrQueues()[task->getPriority()].queue.pop();
-	}
-
-	spdlog::info("Task with ID: {} completed.", task->getId());
-	/* if (task != nullptr) {
-		 delete task;
-	 }*/
 }
 
 /**
@@ -59,7 +102,15 @@ void Scheduler::execute(shared_ptr<Task> task) {
  * @param task Pointer to the task whose status is to be displayed.
  */
 void Scheduler::displayMessage(const Task* task) {
-	std::cout << "task " << task->getId() << " with priority: " << task->getPriority() << " is " << task->getStatus() << std::endl;
+	std::ostringstream oss;
+	oss << "task " << task->getId()
+		<< " with priority: " << task->getPriority()
+		<< " and running time: " << task->getRunningTime()
+		<< " is " << task->getStatus() << std::endl;
+
+	std::lock_guard<std::mutex> lock(coutMutex);
+	std::cout << oss.str();
+	//std::cout << "task " << task->getId() << " with priority: " << task->getPriority() <<"and running time "<<task->getRunningTime() << " is " << task->getStatus() << std::endl;
 }
 
 /**
@@ -108,7 +159,7 @@ void Scheduler::init() {
 		std::thread WRRScheduler_Thread([this]() {
 			SetThreadDescription(GetCurrentThread(), L"WeightRoundRobinScheduler");
 			spdlog::info(Logger::LoggerInfo::START_THREAD, "WeightRoundRobinScheduler");
-			wrrQueues.weightRoundRobinFunction();
+			wrrQueuesScheduler.weightRoundRobinFunction();
 			});
 
 		insertTask_Thread.join();
@@ -193,12 +244,7 @@ void Scheduler::insertTask(shared_ptr<Task> newTask)
 		std::cerr << "Error: Invalid task input. Please try again." << std::endl;
 		spdlog::error("Error: Invalid task input. Skipping task insertion.");
 	}
-	if (newTask->getPriority() == PrioritiesLevel::CRITICAL) {
-		realTimeScheduler.addTask(newTask); // Add task to real-time scheduler for real-time tasks
-		spdlog::info(Logger::LoggerInfo::ADD_CRITICAL_TASK, newTask->getId());
-	}
-	else {
-		wrrQueues.addTask(newTask); // Add task to Weighted Round Robin scheduler for non-real-time tasks
-		spdlog::info(Logger::LoggerInfo::ADD_NON_CRITICAL_TASK, newTask->getId(), newTask->getPriority());
-	}
+	addTaskToItsQueue(newTask);
+	totalRunningTask++;
+	sumOfAllSeconds += newTask->getRunningTime();
 }
