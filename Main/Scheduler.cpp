@@ -7,7 +7,7 @@ int Scheduler::totalRunningTask = 0;
 unsigned int Scheduler::taskIds = 0;
 mutex Scheduler::rtLock;
 RealTimeScheduler Scheduler::realTimeScheduler;
-WeightRoundRobinScheduler Scheduler::wrrQueues;
+WeightRoundRobinScheduler Scheduler::wrrQueuesScheduler;
 
 /**
  * @brief Executes a given task.
@@ -16,7 +16,7 @@ WeightRoundRobinScheduler Scheduler::wrrQueues;
  *
  * @param task Pointer to the task to be executed.
  */
-void Scheduler::execute(Task* task) {
+void Scheduler::execute(shared_ptr<Task> task) {
   spdlog::info("Executing task with ID: {}", task->getId());
 	task->setStatus(TaskStatus::RUNNING);
     // Continue executing the task while it has remaining running time
@@ -45,13 +45,10 @@ void Scheduler::execute(Task* task) {
         realTimeScheduler.getRealTimeQueue().pop();
     }
     else {
-        wrrQueues.getWrrQueues()[task->getPriority()].queue.pop();
+        wrrQueuesScheduler.getWrrQueues()[task->getPriority()].queue.pop();
     }
   
     spdlog::info("Task with ID: {} completed.", task->getId());
-    if (task != nullptr) {
-        delete task;
-    }
 }
 
 /**
@@ -72,7 +69,7 @@ void Scheduler::displayMessage(const Task* task) {
  *
  * @param task Pointer to the task to be preempted.
  */
-void Scheduler::preemptive(Task* task) {
+void Scheduler::preemptive(shared_ptr<Task> task) {
     task->setStatus(TaskStatus::SUSPENDED);
     spdlog::info("Task with ID: {} suspended and added back to WRR queue.", task->getId());
 }
@@ -113,7 +110,7 @@ void Scheduler::init() {
 		std::thread WRRScheduler_Thread([this]() {
 			SetThreadDescription(GetCurrentThread(), L"WeightRoundRobinScheduler");
 			spdlog::info(Logger::LoggerInfo::START_THREAD, "WeightRoundRobinScheduler");
-			wrrQueues.weightRoundRobinFunction();
+			wrrQueuesScheduler.weightRoundRobinFunction();
 			});
 
 		insertTask_Thread.join();
@@ -140,7 +137,7 @@ void Scheduler::insertTaskFromInput()
  *
  * @return A pointer to the newly created Task object based on the user input.
  */
-Task* Scheduler::input()
+shared_ptr<Task> Scheduler::input()
 {
 	std::string priority;
 	int runningTime;
@@ -181,7 +178,7 @@ Task* Scheduler::input()
 	spdlog::info(Logger::LoggerInfo::CREATE_NEW_TASK, priority, runningTime);
 	// Assuming other fields like status and entryTime are set elsewhere
 
-	return new Task((taskIds++) % MAX_TASKS, priority, runningTime);
+	return shared_ptr<Task>(new Task((taskIds++) % MAX_TASKS, priority, runningTime));
 }
 
 /**
@@ -192,7 +189,7 @@ Task* Scheduler::input()
  * Tasks with Critical priority are added to the real-time scheduler, while others are added to the Weighted Round Robin scheduler.
  */
 
-void Scheduler::insertTask(Task* newTask)
+void Scheduler::insertTask(shared_ptr<Task> newTask)
 {
 	try {
 		if (newTask == nullptr) {
@@ -204,7 +201,7 @@ void Scheduler::insertTask(Task* newTask)
 			spdlog::info(Logger::LoggerInfo::ADD_CRITICAL_TASK, newTask->getId());
 		}
 		else {
-			wrrQueues.addTask(newTask); // Add task to Weighted Round Robin scheduler for non-real-time tasks
+			wrrQueuesScheduler.addTask(newTask); // Add task to Weighted Round Robin scheduler for non-real-time tasks
 			spdlog::info(Logger::LoggerInfo::ADD_NON_CRITICAL_TASK, newTask->getId(), newTask->getPriority());
 		}
 	}

@@ -15,7 +15,7 @@ class Scheduler; // Forward declaration
 class RealTimeScheduler
 {
 private:
-	queue<Task*> realTimeQueue;
+	queue<shared_ptr<Task>> realTimeQueue;
 
 public:
 	RealTimeScheduler() {}
@@ -23,10 +23,10 @@ public:
 	RealTimeScheduler(RealTimeScheduler&& rt) = delete;
 	~RealTimeScheduler();
 
-	queue<Task*>& getRealTimeQueue() {
+	queue<shared_ptr<Task>>& getRealTimeQueue() {
 		return realTimeQueue;
 	}
-    void addTask(Task* task) {
+    void addTask(shared_ptr<Task> task) {
         realTimeQueue.push(task);
     }
     void realTimeSchedulerFunction();

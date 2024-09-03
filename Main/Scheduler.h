@@ -10,6 +10,8 @@
 #include "spdlog/sinks/daily_file_sink.h"
 #include <mutex>
 #include "Logger.h"
+#include <memory>
+
 
 class RealTimeScheduler;
 class Task;
@@ -26,8 +28,8 @@ class Scheduler
 private:
 
 	static RealTimeScheduler realTimeScheduler;
-	static WeightRoundRobinScheduler wrrQueues;
-	Task* input();
+	static WeightRoundRobinScheduler wrrQueuesScheduler;
+	shared_ptr<Task> input();
     const unsigned int MAX_TASKS = std::numeric_limits<unsigned int>::max();
 public:
     static mutex rtLock;
@@ -36,16 +38,15 @@ public:
     
     void init();
     void insertTaskFromInput();
-    static void insertTask(Task*);
-    static void execute(Task* task);
+    static void insertTask(shared_ptr<Task>);
+    static void execute(shared_ptr<Task> task);
     static void displayMessage(const Task* task);
-    static void preemptive(Task* task);
-
+    static void preemptive(shared_ptr<Task> task);
     static RealTimeScheduler& getRealTimeScheduler() {
         return realTimeScheduler;
     }
-
-    static WeightRoundRobinScheduler& getWrrQueues() {
-        return wrrQueues;
+  
+    static WeightRoundRobinScheduler& getWrrQueuesScheduler() {
+        return wrrQueuesScheduler;
     }
 };

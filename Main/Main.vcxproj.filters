@@ -46,6 +46,10 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Test_InsertTask.cpp">
+    <ClCompile Include="Test_RealTimeScheduler.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Test_Execute.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -80,5 +84,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+    <None Include="cpp.hint" />
   </ItemGroup>
 </Project>
