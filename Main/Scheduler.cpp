@@ -41,13 +41,13 @@ void Scheduler::execute(shared_ptr<Task> task) {
 
     // Set the task status to COMPLETED when execution is finished
     task->setStatus(TaskStatus::COMPLETED);
-    if (task->getPriority() == PrioritiesLevel::CRITICAL) {
-        realTimeScheduler.getRealTimeQueue().pop();
-    }
-    else {
-        wrrQueuesScheduler.getWrrQueues()[task->getPriority()].queue.pop();
-    }
-  
+
+     if (task->getPriority() == PrioritiesLevel::CRITICAL&& !realTimeScheduler.getRealTimeQueue().empty()) {
+      realTimeScheduler.getRealTimeQueue().pop();
+  }
+  else if(!wrrQueuesScheduler.getWrrQueues()[task->getPriority()].queue.empty()) {
+      wrrQueuesScheduler.getWrrQueues()[task->getPriority()].queue.pop();
+  }
     spdlog::info("Task with ID: {} completed.", task->getId());
 }
 
