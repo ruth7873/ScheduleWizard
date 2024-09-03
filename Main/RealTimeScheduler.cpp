@@ -1,9 +1,8 @@
 #include "RealTimeScheduler.h"
-#include "Scheduler.h"
 
 RealTimeScheduler::~RealTimeScheduler() {
 	while (!realTimeQueue.empty()) {
-		delete realTimeQueue.front();
+		//delete realTimeQueue.front();
 		realTimeQueue.pop();
 	}
 }
@@ -18,13 +17,17 @@ void RealTimeScheduler::realTimeSchedulerFunction() {
 
 		while (realTimeQueue.empty());
 
-		std::unique_lock<std::mutex> lock(Scheduler::rtLock); // שימוש ב-lock לנעילה אוטומטית
-
-		Task* task = realTimeQueue.front();
+		std::unique_lock<std::mutex> lock(Scheduler::rtLock); //lock 
+		shared_ptr<Task> task (realTimeQueue.front());
 
 		if (task != nullptr) {
 			Scheduler::execute(task);
 		}
 	}
 }
-     
+queue<shared_ptr<Task>>& RealTimeScheduler::getRealTimeQueue() {
+	return realTimeQueue;
+}
+void RealTimeScheduler::addTask(shared_ptr<Task> task) {
+	realTimeQueue.push(task);
+}

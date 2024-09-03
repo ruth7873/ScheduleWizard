@@ -1,11 +1,13 @@
 #pragma once
 #include <queue>
+#include <memory>
+#include <mutex>
 #include "Task.h"
 #include "Scheduler.h"
-
+using namespace std;
 
 class Scheduler; // Forward declaration
-
+class Task;
 /**
  * @class RealTimeScheduler
  * @brief Manages real-time tasks.
@@ -15,19 +17,17 @@ class Scheduler; // Forward declaration
 class RealTimeScheduler
 {
 private:
-	queue<Task*> realTimeQueue;
+	queue<shared_ptr<Task>> realTimeQueue;
 
 public:
+	//c'rots, d'tors
 	RealTimeScheduler() {}
 	RealTimeScheduler(const RealTimeScheduler& rt) = delete;
 	RealTimeScheduler(RealTimeScheduler&& rt) = delete;
 	~RealTimeScheduler();
 
-	queue<Task*>& getRealTimeQueue() {
-		return realTimeQueue;
-	}
-    void addTask(Task* task) {
-        realTimeQueue.push(task);
-    }
-    void realTimeSchedulerFunction();
+	void realTimeSchedulerFunction();
+
+	queue<shared_ptr<Task>>& getRealTimeQueue();
+	void addTask(shared_ptr<Task> task);
 };
