@@ -56,9 +56,9 @@ void Logger::initialize_logger() {
 	// Set the custom HTML formatter
 	daily_logger->set_formatter(std::make_unique<HtmlFormatter>());
 
-	spdlog::set_default_logger(daily_logger);
-	spdlog::set_level(spdlog::level::debug);
-	spdlog::get("daily_logger")->info("Logger initialized and logging to daily and hourly files");
+    spdlog::set_default_logger(daily_logger);
+    spdlog::set_level(spdlog::level::debug);
+    spdlog::get("daily_logger")->debug("Logger initialized and logging to daily and hourly files");
 
 	std::thread([]() {
 		while (true) {
