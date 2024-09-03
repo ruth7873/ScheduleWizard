@@ -1,9 +1,9 @@
 {
-    "delayParams": {"linesToRead": 3, "delaySeconds": 15},
     "tasks": [
         {
-            "priority": "Critical",
-            "runningTime": 2
+            "priority": "Middle",
+            "runningTime": 10,
+            "delay":15
         },
         {
             "priority": "Lower",
@@ -15,10 +15,11 @@
         },
         {
             "priority": "Higher",
-            "runningTime": 1
+            "runningTime": 1,
+            "delay":3
         },
         {
-            "priority": "Critical",
+            "priority": "Lower",
             "runningTime": 2
         },
         {

@@ -42,8 +42,6 @@ void ReadFromJSON::createTasksFromJSON(const string& filePath) {
  * It then creates Task objects based on the data and inserts them into the Scheduler with a specified delay between reads.
  *
  * @param filePath The path to the JSON file containing task data.
- * @param linesToRead Number of tasks to read at a time.
- * @param delaySeconds Time to wait between reading tasks.
  * @param message Message to display while waiting.
  */
 void ReadFromJSON::createTasksFromJSONWithDelay(const string& filePath, string message) {
@@ -53,12 +51,8 @@ void ReadFromJSON::createTasksFromJSONWithDelay(const string& filePath, string m
         json jsonData;
         file >> jsonData;
 
-        // Access the "tasks" & "DelayParams" array in the JSON object
+        // Access the "tasks" array in the JSON object
         json tasksData = jsonData["tasks"];
-        json delayParamsData = jsonData["delayParams"];
-        cout << "DelayParamsData lineToRead: " << delayParamsData["linesToRead"] << " delaySeconds: " << delayParamsData["delaySeconds"]<<endl;
-        // Variable to keep track of the number of lines read
-        int linesRead = 0;
 
         // Iterate over the tasks array and create Task objects
         for (const auto& task : tasksData) {
@@ -68,19 +62,11 @@ void ReadFromJSON::createTasksFromJSONWithDelay(const string& filePath, string m
             // Insert the new Task into the Scheduler's queues
             Scheduler::insertTask(newTask);
 
-            // Increment the lines read
-            linesRead++;
-
-            // Check if the number of lines read equals the specified lines to read
-            if (linesRead == delayParamsData["linesToRead"]) {
+            // Check if the "delay" field exists for a task object
+            if (task.find("delay") != task.end()) {
                 // Wait for the specified delay between reading tasks
-                auto startTime = std::chrono::steady_clock::now();
-                //checkLoopTimeout(startTime, delaySeconds, message);
-                std::this_thread::sleep_for(std::chrono::seconds(delayParamsData["delaySeconds"]));  // busy-wait
-
-                // Reset the lines read counter
-                linesRead = 0;
-            }
+                std::this_thread::sleep_for(std::chrono::seconds(task["delay"]));  // busy-wait
+            }            
         }
     }
     catch (const std::exception& e) {
