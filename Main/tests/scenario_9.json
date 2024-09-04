@@ -1,0 +1,30 @@
+{
+    "title": "Task Suspension Scenario",
+    "objective": "Verify task execution order and handle long tasks by suspending them.",
+    "tasks": [
+        {
+            "priority": "Lower",
+            "runningTime": 4
+        },
+        {
+            "priority": "Middle",
+            "runningTime": 10
+        },
+        {
+            "priority": "Higher",
+            "runningTime": 3
+        },
+        {
+            "priority": "Higher",
+            "runningTime": 30
+        },
+        {
+            "priority": "Higher",
+            "runningTime": 6
+        },
+        {
+            "priority": "Higher",
+            "runningTime": 2
+        }
+    ]
+}

@@ -132,6 +132,7 @@
     <ClCompile Include="DeadLineTask.cpp" />
     <ClCompile Include="IterativeTask.cpp" />
     <ClCompile Include="Logger.cpp" />
+    <ClCompile Include="LongTaskHandler.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="ReadFromJSON.cpp" />
     <ClCompile Include="RealTimeScheduler.cpp" />
@@ -147,6 +148,7 @@
     <ClInclude Include="DeadLineTask.h" />
     <ClInclude Include="IterativeTask.h" />
     <ClInclude Include="Logger.h" />
+    <ClInclude Include="LongTaskHandler.h" />
     <ClInclude Include="ReadFromJSON.h" />
     <ClInclude Include="RealTimeScheduler.h" />
     <ClInclude Include="Scheduler.h" />

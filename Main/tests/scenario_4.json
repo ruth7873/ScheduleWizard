@@ -1,0 +1,22 @@
+{
+    "title": "Critical Tasks with Other Priorities",
+    "objective": "To verify that critical tasks receive immediate attention and that no issues arise with lower-priority tasks waiting for their turn.",
+    "tasks": [
+        {
+            "priority": "Critical",
+            "runningTime": 4
+        },
+        {
+            "priority": "Middle",
+            "runningTime": 6
+        },
+        {
+            "priority": "Lower",
+            "runningTime": 3
+        },
+        {
+            "priority": "Critical",
+            "runningTime": 5
+        }
+    ]
+}
