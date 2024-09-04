@@ -29,4 +29,14 @@ public:
 class Scenario {
 public:
 	static const string SCENARIO_1_FILE_PATH;
+	static const string SCENARIO_2_FILE_PATH;
+	static const string SCENARIO_3_FILE_PATH;
+	static const string SCENARIO_4_FILE_PATH;
+	static const string SCENARIO_5_FILE_PATH;
+	static const string SCENARIO_6_FILE_PATH;
+	static const string SCENARIO_7_FILE_PATH;
+	static const string SCENARIO_8_FILE_PATH;
+	static const string SCENARIO_9_FILE_PATH;
+
+
 };
