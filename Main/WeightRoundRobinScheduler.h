@@ -4,10 +4,11 @@
 #include "Consts.h"
 #include <unordered_map>
 #include <string>
+#include <memory>
 
 
 typedef struct Q {
-	queue<Task*> queue;
+	queue<shared_ptr<Task>> queue;
     int weight;
 } Queue;
 
@@ -22,7 +23,7 @@ public:
 	WeightRoundRobinScheduler(WeightRoundRobinScheduler&& wrr) = delete;
 	WeightRoundRobinScheduler(const WeightRoundRobinScheduler& wrr) = delete;
 
-	void addTask(Task* task);
+	void addTask(shared_ptr<Task> task);
 	std::unordered_map< std::string, Queue>& getWrrQueues();
 	void weightRoundRobinFunction();
 };
