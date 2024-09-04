@@ -22,6 +22,7 @@ public:
 	// Setters
 	static void addSumOfAllSeconds(int value);
 	static void increaseNumOfSeconds();
+	static void setSumOfAllSeconds(int value);
 	static void setNumOfSeconds(int value);
 	static void setAverageLength(double value);
 };
