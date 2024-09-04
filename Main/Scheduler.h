@@ -3,15 +3,15 @@
 #include <thread>
 #include <chrono>    
 #include <string>
+#include <memory>
+#include <mutex>
 #include "Task.h"
 #include "RealTimeScheduler.h"
 #include "WeightRoundRobinScheduler.h"
-#include "spdlog/spdlog.h"
-#include "spdlog/sinks/daily_file_sink.h"
-#include <mutex>
 #include "Logger.h"
 #include <memory>
-
+#include "Consts.h"
+#include "ReadFromJSON.h"
 
 class RealTimeScheduler;
 class Task;
@@ -26,11 +26,9 @@ class WeightRoundRobinScheduler;
 class Scheduler
 {
 private:
-
 	static RealTimeScheduler realTimeScheduler;
 	static WeightRoundRobinScheduler wrrQueuesScheduler;
-	shared_ptr<Task> input();
-    const unsigned int MAX_TASKS = std::numeric_limits<unsigned int>::max();
+    //const unsigned int MAX_TASKS = std::numeric_limits<unsigned int>::max();
 public:
     static mutex rtLock;
     static int totalRunningTask;
@@ -49,4 +47,8 @@ public:
     static WeightRoundRobinScheduler& getWrrQueuesScheduler() {
         return wrrQueuesScheduler;
     }
+	//static WeightRoundRobinScheduler wrrQueues;
+	const unsigned int MAX_TASKS = std::numeric_limits<unsigned int>::max();
+	shared_ptr<Task> input();
+
 };

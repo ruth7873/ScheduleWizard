@@ -17,6 +17,7 @@ WeightRoundRobinScheduler::WeightRoundRobinScheduler() {
     WRRQueues[PrioritiesLevel::HIGHER] = Queue{ std::queue<shared_ptr<Task>>(), WeightPrecents::HIGHER_WEIGHT };
     WRRQueues[PrioritiesLevel::MIDDLE] = Queue{ std::queue<shared_ptr<Task>>(), WeightPrecents::MIDDLE_WEIGHT };
     WRRQueues[PrioritiesLevel::LOWER] = Queue{ std::queue<shared_ptr<Task>>(), WeightPrecents::LOWER_WEIGHT };
+
 }
 
 /**
@@ -31,6 +32,12 @@ WeightRoundRobinScheduler::~WeightRoundRobinScheduler() {
             pair.second.queue.pop();
         }
     }
+	for (auto& pair : WRRQueues) {
+		while (!pair.second.queue.empty()) {
+			//delete pair.second.queue.front();
+			pair.second.queue.pop();
+		}
+	}
 }
 
 /**
@@ -43,10 +50,11 @@ WeightRoundRobinScheduler::~WeightRoundRobinScheduler() {
 void WeightRoundRobinScheduler::addTask(shared_ptr<Task> task) {
     WRRQueues[task->getPriority()].queue.push(task);
     spdlog::info(Logger::LoggerInfo::ADD_NON_CRITICAL_TASK, task->getId(), task->getPriority());
+
 }
 
 std::unordered_map<std::string, Queue>& WeightRoundRobinScheduler::getWrrQueues() {
-    return WRRQueues;
+	return WRRQueues;
 }
 
 
@@ -62,39 +70,39 @@ std::unordered_map<std::string, Queue>& WeightRoundRobinScheduler::getWrrQueues(
 
 void WeightRoundRobinScheduler::weightRoundRobinFunction()
 {
-    while (true) {  // Infinite loop to continuously process tasks
-        int countTasks = 0;
+	while (true) {  // Infinite loop to continuously process tasks
+		int countTasks = 0;
 
-        for (auto& pair : WRRQueues) {  // Iterate through each priority queue
-            Queue* taskQueue = &pair.second;
+		for (auto& pair : WRRQueues) {  // Iterate through each priority queue
+			Queue* taskQueue = &pair.second;
 
-            int weight = taskQueue->weight;
-            // Calculate the number of tasks to run based on the queue's weight
-            int taskCountToRun = static_cast<int>(Scheduler::totalRunningTask * (weight / 100.0));
+			int weight = taskQueue->weight;
+			// Calculate the number of tasks to run based on the queue's weight
+			int taskCountToRun = static_cast<int>(Scheduler::totalRunningTask * (weight / 100.0));
 
-            // Ensure at least one task runs if the queue is not empty
-            taskCountToRun = (taskCountToRun == 0 && !taskQueue->queue.empty()) ? 1 : taskCountToRun;
+			// Ensure at least one task runs if the queue is not empty
+			taskCountToRun = (taskCountToRun == 0 && !taskQueue->queue.empty()) ? 1 : taskCountToRun;
 
-            while (!taskQueue->queue.empty() && countTasks < taskCountToRun) {
-                shared_ptr<Task> task = taskQueue->queue.front();
 
-                auto startTime = std::chrono::steady_clock::now();
+			while (!taskQueue->queue.empty() && countTasks < taskCountToRun) {
+				shared_ptr<Task> task = taskQueue->queue.front();
 
-                // Wait until the mutex is released
-                {
-                    std::unique_lock<std::mutex> lock(Scheduler::rtLock);  // Lock the rtLock
-                }// The mutex will be automatically released at the end of this scope
+				auto startTime = std::chrono::steady_clock::now();
 
-                    // Check if the task is not null and execute it
-                    if (task != nullptr) {
-                        Scheduler::execute(task);
-                    }
+				// Wait until the mutex is released
+				{
+					std::unique_lock<std::mutex> lock(Scheduler::rtLock);  // Lock the rtLock
+				}// The mutex will be automatically released at the end of this scope
 
-             
-                countTasks++;
-            }
+					// Check if the task is not null and execute it
+				if (task != nullptr) {
+					Scheduler::execute(task);
+				}
 
-            countTasks = 0;  // Reset the task count for the next queue
-        }
-    }
+				countTasks++;
+			}
+
+			countTasks = 0;  // Reset the task count for the next queue
+		}
+	}
 }

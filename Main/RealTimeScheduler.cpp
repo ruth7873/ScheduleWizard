@@ -1,8 +1,8 @@
 #include "RealTimeScheduler.h"
-#include "Scheduler.h"
 
 RealTimeScheduler::~RealTimeScheduler() {
 	while (!realTimeQueue.empty()) {
+
 		realTimeQueue.pop();
 	}
 }
@@ -21,9 +21,16 @@ void RealTimeScheduler::realTimeSchedulerFunction() {
 
 		shared_ptr<Task> task = realTimeQueue.front();
 
+		//shared_ptr<Task> task (realTimeQueue.front());
+
 		if (task != nullptr) {
 			Scheduler::execute(task);
 		}
 	}
 }
-     
+queue<shared_ptr<Task>>& RealTimeScheduler::getRealTimeQueue() {
+	return realTimeQueue;
+}
+void RealTimeScheduler::addTask(shared_ptr<Task> task) {
+	realTimeQueue.push(task);
+}
