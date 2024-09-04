@@ -1,0 +1,27 @@
+{
+    "title": "Basic Task Execution",
+    "objective": "To verify that tasks are executed in the correct order based on their priority and that long tasks are handled properly.",
+    "tasks": [
+        {
+            "priority": "Critical",
+            "runningTime": 5
+        },
+        {
+            "priority": "Lower",
+            "runningTime": 3
+        },
+        
+        {
+            "priority": "Middle",
+            "runningTime": 6
+        },
+        {
+            "priority": "Higher",
+            "runningTime": 2
+        },
+        {
+            "priority": "Critical",
+            "runningTime": 6
+        }
+    ]
+}
