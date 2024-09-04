@@ -40,3 +40,10 @@ public:
 
 
 };
+
+class TaskType {
+public:
+	static const string BASIC;
+	static const string DEAD_LINE;
+	static const string ITERATIVE;
+};

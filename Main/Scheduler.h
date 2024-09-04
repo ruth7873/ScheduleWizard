@@ -33,6 +33,7 @@ private:
 	shared_ptr<Task> input();
 
 public:
+	static const unsigned int MAX_TASKS = std::numeric_limits<unsigned int>::max();
 	static mutex rtLock;
 	static int totalRunningTask;
 	static unsigned int taskIds;
