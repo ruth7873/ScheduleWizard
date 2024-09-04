@@ -1,0 +1,22 @@
+{
+    "title": "Edge Case: Same Priority with Varying Status",
+    "objective": "To ensure that critical tasks with varying running times are managed correctly and that there are no delays caused by tasks with the same priority level.",
+    "tasks": [
+        {
+            "priority": "Critical",
+            "runningTime": 10
+        },
+        {
+            "priority": "Critical",
+            "runningTime": 5
+        },
+        {
+            "priority": "Critical",
+            "runningTime": 8
+        },
+        {
+            "priority": "Critical",
+            "runningTime": 7
+        }
+    ]
+}

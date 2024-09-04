@@ -1,0 +1,22 @@
+{
+    "title": "Long Running Tasks",
+    "objective": "To check that long tasks are handled correctly and do not cause significant delays for other tasks.",
+    "tasks": [
+        {
+            "priority": "Critical",
+            "runningTime": 10
+        },
+        {
+            "priority": "Lower",
+            "runningTime": 15
+        },
+        {
+            "priority": "Middle",
+            "runningTime": 20
+        },
+        {
+            "priority": "Higher",
+            "runningTime": 12
+        }
+    ]
+}

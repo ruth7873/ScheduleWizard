@@ -25,18 +25,12 @@ class WeightRoundRobinScheduler;
 class Scheduler
 {
 private:
-	static int sumOfAllSeconds;
-	static int numOfSeconds;
-	static double AverageLength;
 	static RealTimeScheduler realTimeScheduler;
 	static WeightRoundRobinScheduler wrrQueuesScheduler;
 	const unsigned int MAX_TASKS = std::numeric_limits<unsigned int>::max();
-	static void popTaskFromItsQueue(shared_ptr<Task> taskToPop);
-	static void addTaskToItsQueue(shared_ptr<Task> taskToAdd);
-	static void stopLongTask(shared_ptr<Task>);
-	shared_ptr<Task> input();
-	static void calculateAverageLength();
+
 	static std::mutex coutMutex;
+	shared_ptr<Task> input();
 
 public:
 	static mutex rtLock;
@@ -46,8 +40,20 @@ public:
 	void init();
 	void insertTaskFromInput();
 
+	static void printAtomically(const string& message);
 	static void insertTask(shared_ptr<Task>);
 	static void execute(shared_ptr<Task> task);
 	static void displayMessage(const Task* task);
 	static void preemptive(shared_ptr<Task> task);
+
+	static void popTaskFromItsQueue(shared_ptr<Task> taskToPop);
+	static void addTaskToItsQueue(shared_ptr<Task> taskToAdd);
+
+	static RealTimeScheduler& getRealTimeScheduler() {
+		return realTimeScheduler;
+	}
+
+	static WeightRoundRobinScheduler& getWrrQueuesScheduler() {
+		return wrrQueuesScheduler;
+	}
 };
