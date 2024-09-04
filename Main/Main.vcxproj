@@ -136,11 +136,14 @@
     <ClCompile Include="RealTimeScheduler.cpp" />
     <ClCompile Include="Scheduler.cpp" />
     <ClCompile Include="Task.cpp" />
+    <ClCompile Include="Test_LongTask.cpp" />
+    <ClCompile Include="Test_Main.cpp" />
     <ClCompile Include="Timer.cpp" />
     <ClCompile Include="WeightRoundRobinScheduler.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Consts.h" />
+    <ClInclude Include="doctest.h" />
     <ClInclude Include="Logger.h" />
     <ClInclude Include="LongTaskHandler.h" />
     <ClInclude Include="ReadFromJSON.h" />
