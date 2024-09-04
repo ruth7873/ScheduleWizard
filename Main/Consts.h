@@ -30,3 +30,10 @@ class Scenario {
 public:
 	static const string SCENARIO_1_FILE_PATH;
 };
+
+class TaskType {
+public:
+	static const string BASIC;
+	static const string DEAD_LINE;
+	static const string ITERATIVE;
+};

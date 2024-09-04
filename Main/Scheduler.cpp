@@ -1,4 +1,5 @@
 #include "Scheduler.h"
+#include "TaskFactory.h"
 
 int Scheduler::totalRunningTask = 0;
 unsigned int Scheduler::taskIds = 0;
@@ -124,60 +125,21 @@ void Scheduler::init() {
 void Scheduler::insertTaskFromInput()
 {
 	while (true) {
-		insertTask(input());
+		cout << "Enter task type. basic/deadline/iterative:" << endl;
+		string type;
+		cin >> type;
+
+		// Validate the input task type
+		if (type == TaskType::BASIC || type == TaskType::DEAD_LINE || type == TaskType::ITERATIVE) {
+			shared_ptr<Task> newTask = TaskFactory::createTask(type);
+			insertTask(newTask);
+		}
+		else {
+			cout << "Invalid task type. Please enter 'basic', 'deadline', or 'iterative'." << endl;
+		}
 	}
 }
 
-
-/**
- * @brief This function allows the user to input details for a new task, including priority and running time.
- *
- * @return A pointer to the newly created Task object based on the user input.
- */
-shared_ptr<Task> Scheduler::input()
-{
-	std::string priority;
-	int runningTime;
-	std::string input;
-
-	std::cout << "Enter the priority for the task. Options: Critical, Higher, Middle, Lower: \n";
-	std::cin >> priority;
-
-	// Input validation for priority
-	while (priority != PrioritiesLevel::CRITICAL && priority != PrioritiesLevel::HIGHER &&
-		priority != PrioritiesLevel::MIDDLE && priority != PrioritiesLevel::LOWER) {
-		spdlog::error("Invalid priority. Please enter one of the specified options.");
-		std::cout << "Invalid priority. Please enter one of the specified options." << std::endl;
-		std::cout << "Enter the priority for the task. Options: Critical, Higher, Middle, Lower: ";
-		std::cin >> priority;
-	}
-
-	// Input validation for runningTime
-	while (true) {
-		std::cout << "Enter the task running time in seconds: \n";
-		std::cin >> input;
-
-		// Check if the input contains only digits
-		if (input.find_first_not_of("0123456789-") != std::string::npos) {
-			std::cerr << "Invalid input. Running time should contain only numeric digits." << std::endl;
-			continue; // Restart the loop for a valid input
-		}
-
-		// Convert the input to an integer
-		runningTime = std::stoi(input);
-
-		if (runningTime < 0) {
-			std::cerr << "Invalid input: Running time cannot be negative." << std::endl;
-			continue; // Restart the loop for a valid input
-		}
-
-		break; // If runningTime is valid, exit the loop
-	}
-	spdlog::info(Logger::LoggerInfo::CREATE_NEW_TASK, priority, runningTime);
-	// Assuming other fields like status and entryTime are set elsewhere
-
-	return shared_ptr<Task>(new Task((taskIds++) % MAX_TASKS, priority, runningTime));
-}
 
 /**
  * @brief Continuously prompts the user to input task details and inserts the tasks into the appropriate scheduler.
@@ -190,10 +152,10 @@ shared_ptr<Task> Scheduler::input()
 void Scheduler::insertTask(shared_ptr<Task> newTask)
 {
 	if (newTask == nullptr) {
-		std::cerr << "Error: Invalid task input. Please try again." << std::endl;
+		std::cout << "Error: Invalid task input. Please try again." << std::endl;
 		spdlog::error("Error: Invalid task input. Skipping task insertion.");
 	}
-	if (newTask->getPriority() == PrioritiesLevel::CRITICAL) {
+	else if (newTask->getPriority() == PrioritiesLevel::CRITICAL) {
 		realTimeScheduler.addTask(newTask); // Add task to real-time scheduler for real-time tasks
 		spdlog::info(Logger::LoggerInfo::ADD_CRITICAL_TASK, newTask->getId());
 	}

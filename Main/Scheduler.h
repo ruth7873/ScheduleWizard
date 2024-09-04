@@ -27,10 +27,9 @@ class Scheduler
 private:
 	static RealTimeScheduler realTimeScheduler;
 	static WeightRoundRobinScheduler wrrQueues;
-	const unsigned int MAX_TASKS = std::numeric_limits<unsigned int>::max();
-	shared_ptr<Task> input();
 
 public:
+	static const unsigned int MAX_TASKS = std::numeric_limits<unsigned int>::max();
 	static mutex rtLock;
 	static int totalRunningTask;
 	static unsigned int taskIds;

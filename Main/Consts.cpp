@@ -16,3 +16,7 @@ const string Scenario::SCENARIO_1_FILE_PATH = "tests/scenario_1.json";
 const int WeightPrecents::LOWER_WEIGHT = 10;
 const int WeightPrecents::MIDDLE_WEIGHT = 30;
 const int WeightPrecents::HIGHER_WEIGHT = 50;
+
+const string TaskType::BASIC = "basic";
+const string TaskType::DEAD_LINE = "deadLine";
+const string TaskType::ITERATIVE = "iterative";
