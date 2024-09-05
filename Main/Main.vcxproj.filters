@@ -12,6 +12,7 @@
     <ClCompile Include="WeightRoundRobinScheduler.cpp" />
     <ClCompile Include="TestWeightRoundRobinScheduler.cpp" />
     <ClCompile Include="TestMain.cpp" />
+    <ClCompile Include="Deadline.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Consts.h" />
@@ -23,6 +24,7 @@
     <ClInclude Include="Task.h" />
     <ClInclude Include="Timer.h" />
     <ClInclude Include="WeightRoundRobinScheduler.h" />
+    <ClInclude Include="Deadline.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="cpp.hint" />

@@ -1,4 +1,5 @@
 #include "Scheduler.h"
+#include "Deadline.h"
 
 int Scheduler::totalRunningTask = 0;
 unsigned int Scheduler::taskIds = 0;
@@ -14,7 +15,7 @@ WeightRoundRobinScheduler Scheduler::wrrQueuesScheduler;
  * @param task Pointer to the task to be executed.
  */
 void Scheduler::execute(shared_ptr<Task> task) {
-
+	DeadlineTask::deadlineMechanism(); 
 	spdlog::info("Executing task with ID: {}", task->getId());
 	task->setStatus(TaskStatus::RUNNING);
 	// Continue executing the task while it has remaining running time
@@ -89,11 +90,11 @@ void Scheduler::init() {
 
 	spdlog::info(Logger::LoggerInfo::START_SCHEDULER);
 	try {
-		std::thread readtasksFromJSON_Thread([this]() {
-			SetThreadDescription(GetCurrentThread(), L"createTasksFromJSONWithDelay");
-			spdlog::info("read tasks From JSON thread started.");
-			ReadFromJSON::createTasksFromJSONWithDelay(Scenario::SCENARIO_1_FILE_PATH, 3, 15);
-			});		// Create a thread for the InsertTask function
+		//std::thread readtasksFromJSON_Thread([this]() {
+		//	SetThreadDescription(GetCurrentThread(), L"createTasksFromJSONWithDelay");
+		//	spdlog::info("read tasks From JSON thread started.");
+		//	ReadFromJSON::createTasksFromJSONWithDelay(Scenario::SCENARIO_1_FILE_PATH, 3, 15);
+		//	});		// Create a thread for the InsertTask function
 		std::thread insertTask_Thread([this]() {
 			SetThreadDescription(GetCurrentThread(), L"InsertTask");
 			spdlog::info(Logger::LoggerInfo::START_THREAD, "InsertTask");
@@ -192,7 +193,6 @@ shared_ptr<Task> Scheduler::input()
 
 void Scheduler::insertTask(shared_ptr<Task> newTask)
 {
-	
 	if (newTask == nullptr) {
 		std::cerr << "Error: Invalid task input. Please try again." << std::endl;
 		spdlog::error("Error: Invalid task input. Skipping task insertion.");
@@ -204,5 +204,6 @@ void Scheduler::insertTask(shared_ptr<Task> newTask)
 	else {
 		wrrQueuesScheduler.addTask(newTask); // Add task to Weighted Round Robin scheduler for non-real-time tasks
 		spdlog::info(Logger::LoggerInfo::ADD_NON_CRITICAL_TASK, newTask->getId(), newTask->getPriority());
+
 	}
 }
