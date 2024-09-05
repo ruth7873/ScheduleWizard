@@ -114,7 +114,7 @@ void Scheduler::init() {
 		std::thread readtasksFromJSON_Thread([this]() {
 			SetThreadDescription(GetCurrentThread(), L"createTasksFromJSONWithDelay");
 			spdlog::info("read tasks From JSON thread started.");
-			ReadFromJSON::createTasksFromJSONWithDelay(Scenario::SCENARIO_9_FILE_PATH, 3, 15);
+			ReadFromJSON::createTasksFromJSONWithDelay(Scenario::SCENARIO_10_FILE_PATH, 8, 15);
 			});		// Create a thread for the InsertTask function
 		std::thread insertTask_Thread([this]() {
 			SetThreadDescription(GetCurrentThread(), L"InsertTask");

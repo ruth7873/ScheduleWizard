@@ -76,7 +76,7 @@ void ReadFromJSON::createTasksFromJSONWithDelay(const string& filePath, int line
 			// Check if the number of lines read equals the specified lines to read
 			if (linesRead == linesToRead) {
 				// Wait for the specified delay between reading tasks
-				auto startTime = std::chrono::steady_clock::now();
+				//auto startTime = std::chrono::steady_clock::now();
 				//checkLoopTimeout(startTime, delaySeconds, message);
 				std::this_thread::sleep_for(std::chrono::seconds(delaySeconds));  // busy-wait
 

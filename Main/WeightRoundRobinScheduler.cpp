@@ -79,7 +79,7 @@ void WeightRoundRobinScheduler::weightRoundRobinFunction()
 			while (!taskQueue->queue.empty() && countTasks < taskCountToRun) {
 				shared_ptr<Task> task = taskQueue->queue.front();
 
-				auto startTime = std::chrono::steady_clock::now();
+				//auto startTime = std::chrono::steady_clock::now();
 
 				// Wait until the mutex is released
 				{

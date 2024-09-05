@@ -25,4 +25,5 @@ const string Scenario::SCENARIO_6_FILE_PATH = "tests/scenario_6.json";
 const string Scenario::SCENARIO_7_FILE_PATH = "tests/scenario_7.json";
 const string Scenario::SCENARIO_8_FILE_PATH = "tests/scenario_8.json";
 const string Scenario::SCENARIO_9_FILE_PATH = "tests/scenario_9.json";
+const string Scenario::SCENARIO_10_FILE_PATH = "tests/scenario_10.json";
 
