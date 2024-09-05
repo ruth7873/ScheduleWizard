@@ -28,27 +28,31 @@ class Scheduler
 private:
 	static RealTimeScheduler realTimeScheduler;
 	static WeightRoundRobinScheduler wrrQueuesScheduler;
-    //const unsigned int MAX_TASKS = std::numeric_limits<unsigned int>::max();
-public:
-    static mutex rtLock;
-    static int totalRunningTask;
-    static unsigned int taskIds;
-    
-    void init();
-    void insertTaskFromInput();
-    static void insertTask(shared_ptr<Task>);
-    static void execute(shared_ptr<Task> task);
-    static void displayMessage(const Task* task);
-    static void preemptive(shared_ptr<Task> task);
-    static RealTimeScheduler& getRealTimeScheduler() {
-        return realTimeScheduler;
-    }
-  
-    static WeightRoundRobinScheduler& getWrrQueuesScheduler() {
-        return wrrQueuesScheduler;
-    }
-	//static WeightRoundRobinScheduler wrrQueues;
-	const unsigned int MAX_TASKS = std::numeric_limits<unsigned int>::max();
-	shared_ptr<Task> input();
+	static std::mutex coutMutex;
 
+public:
+	static const unsigned int MAX_TASKS = std::numeric_limits<unsigned int>::max();
+	static mutex rtLock;
+	static int totalRunningTask;
+	static unsigned int taskIds;
+
+	void init();
+	void insertTaskFromInput();
+
+	static void printAtomically(const string& message);
+	static void insertTask(shared_ptr<Task>);
+	static void execute(shared_ptr<Task> task);
+	static void displayMessage(const Task* task);
+	static void preemptive(shared_ptr<Task> task);
+
+	static void popTaskFromItsQueue(shared_ptr<Task> taskToPop);
+	static void addTaskToItsQueue(shared_ptr<Task> taskToAdd);
+
+	static RealTimeScheduler& getRealTimeScheduler() {
+		return realTimeScheduler;
+	}
+
+	static WeightRoundRobinScheduler& getWrrQueuesScheduler() {
+		return wrrQueuesScheduler;
+	}
 };

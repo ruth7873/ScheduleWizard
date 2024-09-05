@@ -1,0 +1,22 @@
+{
+    "title": "Tasks with Changing Conditions",
+    "objective": "To test that critical tasks continue until completion, even if long tasks are preventing the completion of critical tasks in a timely manner.",
+    "tasks": [
+        {
+            "priority": "Critical",
+            "runningTime": 5
+        },
+        {
+            "priority": "Middle",
+            "runningTime": 7
+        },
+        {
+            "priority": "Lower",
+            "runningTime": 3
+        },
+        {
+            "priority": "Critical",
+            "runningTime": 2
+        }
+    ]
+}

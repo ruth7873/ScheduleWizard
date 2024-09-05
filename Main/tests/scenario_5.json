@@ -1,0 +1,22 @@
+{
+    "title": "Short Running Tasks",
+    "objective": "To test that all tasks are executed smoothly without issues when running times are very short.",
+    "tasks": [
+        {
+            "priority": "Critical",
+            "runningTime": 1
+        },
+        {
+            "priority": "Higher",
+            "runningTime": 1
+        },
+        {
+            "priority": "Middle",
+            "runningTime": 1
+        },
+        {
+            "priority": "Lower",
+            "runningTime": 1
+        }
+    ]
+}

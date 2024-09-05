@@ -56,7 +56,10 @@ void ReadFromJSON::createTasksFromJSONWithDelay(const string& filePath, int line
 
 		// Access the "tasks" array in the JSON object
 		json tasksData = jsonData["tasks"];
-
+		json title = jsonData["title"];
+		json objective = jsonData["objective"];
+		spdlog::debug("execute scenario " + to_string(title) + " the objective is: " + to_string(objective));
+		cout << "execute scenario " << to_string(title) << " the objective is : " << to_string(objective) << endl;
 		// Variable to keep track of the number of lines read
 		int linesRead = 0;
 
