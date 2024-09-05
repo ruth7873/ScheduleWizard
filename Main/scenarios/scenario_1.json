@@ -1,4 +1,6 @@
 {
+    "title": "general scenario",
+    "objective": "execute tasks",
     "tasks": [
         {
             "priority": "Middle",

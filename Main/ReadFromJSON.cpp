@@ -9,30 +9,30 @@
  * @param filePath The path to the JSON file containing task data.
  */
 void ReadFromJSON::createTasksFromJSON(const string& filePath) {
-    try {
-        // Read data from JSON file
-        std::ifstream file(filePath);
-        json jsonData;
-        file >> jsonData;
+	try {
+		// Read data from JSON file
+		std::ifstream file(filePath);
+		json jsonData;
+		file >> jsonData;
 
-        // Access the "tasks" array in the JSON object
-        json tasksData = jsonData["tasks"];
+		// Access the "tasks" array in the JSON object
+		json tasksData = jsonData["tasks"];
 
         // Iterate over the tasks array and create Task objects
         for (const auto& task : tasksData) {
             // Create a new Task object using data from JSON
             shared_ptr<Task> newTask(new Task(Scheduler::taskIds++, task["priority"], task["runningTime"], task["status"]));
 
-            // Insert the new Task into the Scheduler's queues
-            Scheduler::insertTask(newTask);
-        }
-    }
-    catch (const std::exception& e) {
-        // Handle exceptions thrown during JSON parsing or task creation
-        std::cerr << "An exception occurred: " << e.what() << std::endl;
-        // Log the exception
-        spdlog::error("An exception occurred: {}", e.what());
-    }
+			// Insert the new Task into the Scheduler's queues
+			Scheduler::insertTask(newTask);
+		}
+	}
+	catch (const std::exception& e) {
+		// Handle exceptions thrown during JSON parsing or task creation
+		std::cerr << "An exception occurred: " << e.what() << std::endl;
+		// Log the exception
+		spdlog::error("An exception occurred: {}", e.what());
+	}
 }
 
 /**
@@ -44,6 +44,7 @@ void ReadFromJSON::createTasksFromJSON(const string& filePath) {
  * @param filePath The path to the JSON file containing task data.
  * @param message Message to display while waiting.
  */
+
 void ReadFromJSON::createTasksFromJSONWithDelay(const string& filePath, string message) {
     try {
         // Read data from JSON file
@@ -51,16 +52,23 @@ void ReadFromJSON::createTasksFromJSONWithDelay(const string& filePath, string m
         json jsonData;
         file >> jsonData;
 
-        // Access the "tasks" array in the JSON object
-        json tasksData = jsonData["tasks"];
 
-        // Iterate over the tasks array and create Task objects
-        for (const auto& task : tasksData) {
-            // Create a new Task object using data from JSON
-            shared_ptr<Task> newTask(new Task(Scheduler::taskIds++, task["priority"], task["runningTime"]));
+		// Access the "tasks" array in the JSON object
+		json tasksData = jsonData["tasks"];
+		json title = jsonData["title"];
+		json objective = jsonData["objective"];
+		spdlog::debug("execute scenario " + to_string(title) + " the objective is: " + to_string(objective));
+		cout << "execute scenario " << to_string(title) << " the objective is : " << to_string(objective) << endl;
+		// Variable to keep track of the number of lines read
+		int linesRead = 0;
 
-            // Insert the new Task into the Scheduler's queues
-            Scheduler::insertTask(newTask);
+		// Iterate over the tasks array and create Task objects
+		for (const auto& task : tasksData) {
+			// Create a new Task object using data from JSON
+			shared_ptr<Task> newTask(new Task(Scheduler::taskIds++, task["priority"], task["runningTime"]));
+
+			// Insert the new Task into the Scheduler's queues
+			Scheduler::insertTask(newTask);
 
             // Check if the "delay" field exists for a task object
             if (task.find("delay") != task.end()) {

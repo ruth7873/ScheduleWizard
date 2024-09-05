@@ -1,8 +1,12 @@
-#ifndef LOGGER_H
-#define LOGGER_H
+#pragma once
 #include <string>
 #include <spdlog/sinks/daily_file_sink.h>
 #include <spdlog/spdlog.h>
+#include <spdlog/formatter.h>
+#include <spdlog/details/log_msg.h>
+#include <sstream>
+#include <iomanip>
+#include <chrono>
 using namespace std;
 
 class Logger {
@@ -31,7 +35,3 @@ public:
 		static const string TASK_TERMINATED;
 	};
 };
-
-
-
-#endif // LOGGER_H

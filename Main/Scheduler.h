@@ -26,21 +26,34 @@ class Scheduler
 {
 private:
 	static RealTimeScheduler realTimeScheduler;
-	static WeightRoundRobinScheduler wrrQueues;
+
+	static WeightRoundRobinScheduler wrrQueuesScheduler;
+
+	static std::mutex coutMutex;
 
 public:
 	static const unsigned int MAX_TASKS = std::numeric_limits<unsigned int>::max();
-
 	static mutex rtLock;
 	static int totalRunningTask;
 	static unsigned int taskIds;
 
-	static shared_ptr<Task> input();
 	void init();
 	void insertTaskFromInput();
 
+	static void printAtomically(const string& message);
 	static void insertTask(shared_ptr<Task>);
 	static void execute(shared_ptr<Task> task);
-	static void displayMessage(Task* task);
+	static void displayMessage(const Task* task);
 	static void preemptive(shared_ptr<Task> task);
+
+	static void popTaskFromItsQueue(shared_ptr<Task> taskToPop);
+	static void addTaskToItsQueue(shared_ptr<Task> taskToAdd);
+
+	static RealTimeScheduler& getRealTimeScheduler() {
+		return realTimeScheduler;
+	}
+
+	static WeightRoundRobinScheduler& getWrrQueuesScheduler() {
+		return wrrQueuesScheduler;
+	}
 };

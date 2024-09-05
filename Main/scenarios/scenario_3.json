@@ -1,0 +1,18 @@
+{
+    "title": "Equal Priority Tasks with Different Durations",
+    "objective": "To ensure that tasks with the same priority are handled according to their arrival order and that there are no unnecessary delays or pauses.",
+    "tasks": [
+        {
+            "priority": "Lower",
+            "runningTime": 5
+        },
+        {
+            "priority": "Lower",
+            "runningTime": 3
+        },
+        {
+            "priority": "Lower",
+            "runningTime": 4
+        }
+    ]
+}

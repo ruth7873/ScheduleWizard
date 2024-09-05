@@ -1,0 +1,40 @@
+{
+    "title": "Wrr scheduler",
+    "objective": "Verify task execution correctly by the wrr scheduler",
+    "tasks": [
+        {
+            "priority": "Lower",
+            "runningTime": 4
+        },
+        {
+            "priority": "Middle",
+            "runningTime": 10
+        },
+        {
+            "priority": "Higher",
+            "runningTime": 3
+        },
+        {
+            "priority": "Higher",
+            "runningTime": 7
+        },
+        {
+            "priority": "Higher",
+            "runningTime": 6
+        },
+        {
+            "priority": "Higher",
+            "runningTime": 2
+        },
+        {
+            "priority": "Middle",
+            "runningTime": 3
+        },
+        {
+            "priority": "Lower",
+            "runningTime": 4
+        }
+
+    
+    ]
+}
