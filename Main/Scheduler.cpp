@@ -112,11 +112,11 @@ void Scheduler::init() {
 
 	spdlog::info(Logger::LoggerInfo::START_SCHEDULER);
 	try {
-		std::thread readtasksFromJSON_Thread([this]() {
+		/*std::thread readtasksFromJSON_Thread([this]() {
 			SetThreadDescription(GetCurrentThread(), L"createTasksFromJSONWithDelay");
 			spdlog::info("read tasks From JSON thread started.");
 			ReadFromJSON::createTasksFromJSONWithDelay(Scenario::SCENARIO_10_FILE_PATH, 8, 15);
-			});		// Create a thread for the InsertTask function
+			});		*/// Create a thread for the InsertTask function
 
 		std::thread insertTask_Thread([this]() {
 			SetThreadDescription(GetCurrentThread(), L"InsertTask");
@@ -138,7 +138,7 @@ void Scheduler::init() {
 			wrrQueuesScheduler.weightRoundRobinFunction();
 			});
 		
-		readtasksFromJSON_Thread.join();
+		//readtasksFromJSON_Thread.join();
 		insertTask_Thread.join();
 		RTScheduler_Thread.join();
 		WRRScheduler_Thread.join();
