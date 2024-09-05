@@ -1,7 +1,4 @@
 #include "Scheduler.h"
-#include "Consts.h"
-#include "Task.h"
-#include "ReadFromJSON.h"
 
 int Scheduler::totalRunningTask = 0;
 unsigned int Scheduler::taskIds = 0;
@@ -59,7 +56,7 @@ void Scheduler::execute(shared_ptr<Task> task) {
  * @param task Pointer to the task whose status is to be displayed.
  */
 void Scheduler::displayMessage(const Task* task) {
-   std::cout << "task " << task->getId() <<" with priority: " << task->getPriority()<< " is " << task->getStatus() << std::endl;
+	std::cout << "task " << task->getId() << " with priority: " << task->getPriority() << " is " << task->getStatus() << std::endl;
 }
 
 /**
@@ -74,8 +71,6 @@ void Scheduler::preemptive(shared_ptr<Task> task) {
     spdlog::info("Task with ID: {} suspended and added back to WRR queue.", task->getId());
 }
 
-
-
 /**
  * @brief Initiates the scheduling process by creating and managing threads for various scheduler functions.
  *
@@ -88,11 +83,11 @@ void Scheduler::init() {
 
 	spdlog::info(Logger::LoggerInfo::START_SCHEDULER);
 	try {
-    std::thread readtasksFromJSON_Thread([this]() {
-      SetThreadDescription(GetCurrentThread(), L"createTasksFromJSONWithDelay");
-      spdlog::info("read tasks From JSON thread started.");
-      ReadFromJSON::createTasksFromJSONWithDelay(Scenario::SCENARIO_1_FILE_PATH, 3, 15);
-      });		// Create a thread for the InsertTask function
+		std::thread readtasksFromJSON_Thread([this]() {
+			SetThreadDescription(GetCurrentThread(), L"createTasksFromJSONWithDelay");
+			spdlog::info("read tasks From JSON thread started.");
+			ReadFromJSON::createTasksFromJSONWithDelay(Scenario::SCENARIO_1_FILE_PATH, 3, 15);
+			});		// Create a thread for the InsertTask function
 		std::thread insertTask_Thread([this]() {
 			SetThreadDescription(GetCurrentThread(), L"InsertTask");
 			spdlog::info(Logger::LoggerInfo::START_THREAD, "InsertTask");
@@ -125,11 +120,10 @@ void Scheduler::init() {
 
 void Scheduler::insertTaskFromInput()
 {
-    while (true) {
-        insertTask(input());
-    }
+	while (true) {
+		insertTask(input());
+	}
 }
-
 
 
 /**
@@ -149,6 +143,7 @@ shared_ptr<Task> Scheduler::input()
 	// Input validation for priority
 	while (priority != PrioritiesLevel::CRITICAL && priority != PrioritiesLevel::HIGHER &&
 		priority != PrioritiesLevel::MIDDLE && priority != PrioritiesLevel::LOWER) {
+		spdlog::error("Invalid priority. Please enter one of the specified options.");
 		std::cout << "Invalid priority. Please enter one of the specified options." << std::endl;
 		std::cout << "Enter the priority for the task. Options: Critical, Higher, Middle, Lower: ";
 		std::cin >> priority;
@@ -208,5 +203,6 @@ void Scheduler::insertTask(shared_ptr<Task> newTask)
 	catch (const std::invalid_argument& e) {
 		std::cerr << "Error: " << e.what() << std::endl;
 		spdlog::error("Error: {}", e.what());
+
 	}
 }

@@ -11,6 +11,8 @@
 #include "RealTimeScheduler.h"
 #include "WeightRoundRobinScheduler.h"
 #include "Logger.h"
+#include "Consts.h"
+#include "ReadFromJSON.h"
 
 
 class RealTimeScheduler;
@@ -26,7 +28,6 @@ class WeightRoundRobinScheduler;
 class Scheduler
 {
 private:
-
 	static RealTimeScheduler realTimeScheduler;
 	static WeightRoundRobinScheduler wrrQueuesScheduler;
 	shared_ptr<Task> input();

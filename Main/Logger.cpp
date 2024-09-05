@@ -1,25 +1,73 @@
+#define _CRT_SECURE_NO_WARNINGS
 #include "Logger.h"
 
+class HtmlFormatter : public spdlog::formatter {
+public:
+	void format(const spdlog::details::log_msg& msg, spdlog::memory_buf_t& dest) override {
+		// Determine color based on log level
+		std::string color;
+		switch (msg.level) {
+		case spdlog::level::info:
+			color = "green";
+			break;
+		case spdlog::level::warn:
+			color = "yellow";
+			break;
+		case spdlog::level::err:
+			color = "red";
+			break;
+		case spdlog::level::debug:
+			color = "blue";
+			break;
+		default:
+			color = "black";
+			break;
+		}
+
+		// Create HTML formatted log message
+		std::ostringstream oss;
+
+		// Get current time
+		auto now = std::chrono::system_clock::now();
+		std::time_t now_c = std::chrono::system_clock::to_time_t(now);
+		std::tm now_tm = *std::localtime(&now_c);
+
+		// Format time and date
+		oss << "<p style=\"color:" << color << "\">";
+		oss << "[" << std::put_time(&now_tm, "%Y-%m-%d %H:%M:%S") << "] ";
+		oss << "[" << spdlog::level::to_string_view(msg.level).data() << "] ";
+		oss << msg.payload.data();
+		oss << "</p>\n";
+
+		// Append formatted message to destination buffer
+		std::string formatted_msg = oss.str();
+		dest.append(formatted_msg.data(), formatted_msg.data() + formatted_msg.size());
+	}
+
+	std::unique_ptr<spdlog::formatter> clone() const override {
+		return std::make_unique<HtmlFormatter>();
+	}
+};
 
 void Logger::initialize_logger() {
-    // Create a daily logger to create a new file every day
-    auto daily_logger = spdlog::daily_logger_mt("daily_logger", "logs/daily_log.txt", 0, 0); // Midnight rollover
+	// Create a daily logger to create a new file every day
+	auto daily_logger = spdlog::daily_logger_mt("daily_logger", "logs/daily_log.html", 0, 0); // Midnight rollover
+
+	// Set the custom HTML formatter
+	daily_logger->set_formatter(std::make_unique<HtmlFormatter>());
+
     spdlog::set_default_logger(daily_logger);
-    spdlog::set_level(spdlog::level::info);
-    spdlog::set_pattern("[%Y-%m-%d %H:%M:%S.%e] [%l] %v");
+    spdlog::set_level(spdlog::level::debug);
+    spdlog::get("daily_logger")->debug("Logger initialized and logging to daily and hourly files");
 
-    spdlog::get("daily_logger")->info("Logger initialized and logging to daily and hourly files");
-
-    std::thread([]() {
-        while (true) {
-            std::this_thread::sleep_for(std::chrono::seconds(10));
-            spdlog::get("daily_logger")->flush();
-            spdlog::get("daily_logger")->info("Starting new hourly log file");
-        }
-        }).detach();
+	std::thread([]() {
+		while (true) {
+			std::this_thread::sleep_for(std::chrono::seconds(10));
+			spdlog::get("daily_logger")->flush();
+			spdlog::get("daily_logger")->debug("Starting new hourly log file");
+		}
+		}).detach();
 }
-
-
 //Logger Info
 const string Logger::LoggerInfo::START_SCHEDULER = "Starting scheduling process.";
 const string Logger::LoggerInfo::START_THREAD = "{} thread started.";
