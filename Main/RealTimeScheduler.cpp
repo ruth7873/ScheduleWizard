@@ -2,7 +2,6 @@
 
 RealTimeScheduler::~RealTimeScheduler() {
 	while (!realTimeQueue.empty()) {
-		//delete realTimeQueue.front();
 		realTimeQueue.pop();
 	}
 }

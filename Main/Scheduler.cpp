@@ -36,6 +36,7 @@ void Scheduler::addTaskToItsQueue(shared_ptr<Task> taskToAdd) {
  * @param task Pointer to the task to be executed.
  */
 void Scheduler::execute(shared_ptr<Task> task) {
+
    	LongTaskHandler::calculateAverageLength();
 	LongTaskHandler::setNumOfSeconds(0);
 	spdlog::info("Executing task with ID: {}", task->getId());
@@ -84,6 +85,7 @@ void Scheduler::execute(shared_ptr<Task> task) {
  *
  * @param task Pointer to the task whose status is to be displayed.
  */
+
 void Scheduler::displayMessage(const Task* task) {
 	printAtomically("task " + to_string(task->getId()) + " with priority: " + task->getPriority() + " and running time " + std::to_string(task->getRunningTime()) + " is " + task->getStatus() + "\n");
 }
@@ -112,11 +114,11 @@ void Scheduler::init() {
 
 	spdlog::info(Logger::LoggerInfo::START_SCHEDULER);
 	try {
-		/*std::thread readtasksFromJSON_Thread([this]() {
-			SetThreadDescription(GetCurrentThread(), L"createTasksFromJSONWithDelay");
-			spdlog::info("read tasks From JSON thread started.");
-			ReadFromJSON::createTasksFromJSONWithDelay(Scenario::SCENARIO_10_FILE_PATH, 8, 15);
-			});		*/// Create a thread for the InsertTask function
+    std::thread readtasksFromJSON_Thread([this]() {
+      SetThreadDescription(GetCurrentThread(), L"createTasksFromJSONWithDelay");
+      spdlog::info("read tasks From JSON thread started.");
+      ReadFromJSON::createTasksFromJSONWithDelay(Scenario::SCENARIO_1_FILE_PATH);
+      });		// Create a thread for the InsertTask function
 
 		std::thread insertTask_Thread([this]() {
 			SetThreadDescription(GetCurrentThread(), L"InsertTask");

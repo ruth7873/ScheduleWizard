@@ -26,6 +26,7 @@ class Scheduler
 {
 private:
 	static RealTimeScheduler realTimeScheduler;
+
 	static WeightRoundRobinScheduler wrrQueuesScheduler;
 
 	static std::mutex coutMutex;

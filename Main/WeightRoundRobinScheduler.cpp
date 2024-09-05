@@ -28,7 +28,6 @@ WeightRoundRobinScheduler::WeightRoundRobinScheduler() {
 WeightRoundRobinScheduler::~WeightRoundRobinScheduler() {
 	for (auto& pair : WRRQueues) {
 		while (!pair.second.queue.empty()) {
-			//delete pair.second.queue.front();
 			pair.second.queue.pop();
 		}
 	}
