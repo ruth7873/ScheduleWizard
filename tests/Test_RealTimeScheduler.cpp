@@ -26,7 +26,7 @@ TEST_CASE("Test RealTimeScheduler::realTimeSchedulerFunction") {
 		CHECK_EQ(task2->getStatus(), TaskStatus::COMPLETED);
 		// Here you might want to add more checks to verify task execution
 	}
-
+	 
 	SUBCASE("Empty Real-Time Queue - Blocking Behavior") {
 		// Start the real-time scheduler in a separate thread
 		std::thread schedulerThread([&scheduler]() {
