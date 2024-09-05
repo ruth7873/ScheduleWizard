@@ -44,7 +44,7 @@ void DeadlineTask::deadlineMechanism() {
 
         // Check if the current time is close to the task's deadline
         if (currentTime >= earliestTask.getDeadline() - earliestTask.getRunningTime() && earliestTask.getStatus() != TaskStatus::COMPLETED && earliestTask.getStatus() != TaskStatus::RUNNING) {
-            cout << " Deadline --- " << endl;
+            cout << " ----- DEADLINE COMMIMG ----- " << endl;
             cout << " The Task id: " << earliestTask.getId() << " became ciritcal "<<endl;
             // Change the status of the task
             earliestTask.setPriority(PrioritiesLevel::CRITICAL);

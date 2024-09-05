@@ -1,5 +1,6 @@
 #include "Scheduler.h"
-#include "Deadline.h"
+#include "DeadlineTask.h"
+#include "DeadlineTaskManager.h"
 #include "TaskFactory.h"
 #include "LongTaskHandler.h"
 
@@ -37,16 +38,20 @@ void Scheduler::addTaskToItsQueue(shared_ptr<Task> taskToAdd) {
  * @param task Pointer to the task to be executed.
  */
 void Scheduler::execute(shared_ptr<Task> task) {
-	DeadlineTask::deadlineMechanism(); 
+
+	DeadlineTaskManager::deadlineMechanism();
    	LongTaskHandler::calculateAverageLength();
 	LongTaskHandler::setNumOfSeconds(0);
 	spdlog::info("Executing task with ID: {}", task->getId());
 	task->setStatus(TaskStatus::RUNNING);
+
 	// Continue executing the task while it has remaining running time
 	while (true) {
 		if (task->getRunningTime() == 0) {//the task has finished 
-			// Set the task status to COMPLETED when execution is finished
+
 			task->setStatus(TaskStatus::COMPLETED);
+
+
 			popTaskFromItsQueue(task);
 			totalRunningTask--;
 			spdlog::info("Task with ID: {} completed.", task->getId());
@@ -61,6 +66,7 @@ void Scheduler::execute(shared_ptr<Task> task) {
 			preemptive(task);
 			return;
 		}
+
 		try {
 			// Simulate task execution by decrementing running time
 			task->setRunningTime(task->getRunningTime() - 1);
@@ -78,7 +84,7 @@ void Scheduler::execute(shared_ptr<Task> task) {
 		}
 	}
 
-    task->setStatus(TaskStatus::COMPLETED);
+    //task->setStatus(TaskStatus::COMPLETED);
 
      if (task->getPriority() == PrioritiesLevel::CRITICAL&& !realTimeScheduler.getRealTimeQueue().empty()) {
       realTimeScheduler.getRealTimeQueue().pop();
@@ -88,7 +94,6 @@ void Scheduler::execute(shared_ptr<Task> task) {
   }
     spdlog::info("Task with ID: {} completed.", task->getId());
 
-	spdlog::info("Task with ID: {} completed.", task->getId());
 	/* if (task != nullptr) {
 		 delete task;
 	 }*/
@@ -131,11 +136,11 @@ void Scheduler::init() {
 
 	spdlog::info(Logger::LoggerInfo::START_SCHEDULER);
 	try {
-		//std::thread readtasksFromJSON_Thread([this]() {
-		//	SetThreadDescription(GetCurrentThread(), L"createTasksFromJSONWithDelay");
-		//	spdlog::info("read tasks From JSON thread started.");
-		//	ReadFromJSON::createTasksFromJSONWithDelay(Scenario::SCENARIO_1_FILE_PATH, 3, 15);
-		//	});		// Create a thread for the InsertTask function
+		std::thread readtasksFromJSON_Thread([this]() {
+			SetThreadDescription(GetCurrentThread(), L"createTasksFromJSONWithDelay");
+			spdlog::info("read tasks From JSON thread started.");
+			ReadFromJSON::createTasksFromJSONWithDelay(Scenario::SCENARIO_1_FILE_PATH, 3, 15);
+			});		// Create a thread for the InsertTask function
 
 		std::thread insertTask_Thread([this]() {
 			SetThreadDescription(GetCurrentThread(), L"InsertTask");
@@ -171,12 +176,16 @@ void Scheduler::init() {
 void Scheduler::insertTaskFromInput()
 {
 	while (true) {
-		cout << "Enter task type. basic/deadline/iterative:" << endl;
+		cout << "Enter task type. basic/deadLine/iterative:" << endl;
 		string type;
 		cin >> type;
 
+		if (type == "aa"){
+			shared_ptr<Task> newTask = TaskFactory::createTask(TaskType::DEAD_LINE);
+			insertTask(newTask);
+		}
 		// Validate the input task type
-		if (type == TaskType::BASIC || type == TaskType::DEAD_LINE || type == TaskType::ITERATIVE) {
+		if (type == TaskType::BASIC || type == TaskType::DEAD_LINE || type == TaskType::ITERATIVE ) {
 			shared_ptr<Task> newTask = TaskFactory::createTask(type);
 			insertTask(newTask);
 		}
@@ -195,25 +204,19 @@ void Scheduler::insertTaskFromInput()
  * Tasks with Critical priority are added to the real-time scheduler, while others are added to the Weighted Round Robin scheduler.
  */
 
+
+
 void Scheduler::insertTask(shared_ptr<Task> newTask)
 {
 	if (newTask == nullptr) {
 		std::cout << "Error: Invalid task input. Please try again." << std::endl;
 		spdlog::error("Error: Invalid task input. Skipping task insertion.");
 	}
-	else if (newTask->getPriority() == PrioritiesLevel::CRITICAL) {
-		realTimeScheduler.addTask(newTask); // Add task to real-time scheduler for real-time tasks
-		spdlog::info(Logger::LoggerInfo::ADD_CRITICAL_TASK, newTask->getId());
-	}
-	else {
-		wrrQueuesScheduler.addTask(newTask); // Add task to Weighted Round Robin scheduler for non-real-time tasks
-		spdlog::info(Logger::LoggerInfo::ADD_NON_CRITICAL_TASK, newTask->getId(), newTask->getPriority());
-
-	}
 	addTaskToItsQueue(newTask);
 	totalRunningTask++;
 	LongTaskHandler::addSumOfAllSeconds(newTask->getRunningTime());
 }
+
 
 void Scheduler::printAtomically(const string& message) {
 	std::lock_guard<std::mutex> lock(coutMutex);

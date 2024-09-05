@@ -1,5 +1,4 @@
-#ifndef DEADLINE_H
-#define DEADLINE_H
+
 
 #include "Task.h"
 #include <queue>
@@ -43,4 +42,3 @@ public:
     static void deadlineMechanism();
 };
 
-#endif // DEADLINE_H

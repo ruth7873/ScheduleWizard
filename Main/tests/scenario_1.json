@@ -3,23 +3,23 @@
     "objective": "execute tasks",
     "tasks": [
         {
-            "priority": "Critical",
-            "runningTime": 2
+            "priority": "Lower",
+            "runningTime": 10
         },
         {
             "priority": "Lower",
-            "runningTime": 2
+            "runningTime": 5
         },
         {
             "priority": "Middle",
-            "runningTime": 2
+            "runningTime": 22
         },
         {
             "priority": "Higher",
-            "runningTime": 1
+            "runningTime": 5
         },
         {
-            "priority": "Critical",
+            "priority": "Lower",
             "runningTime": 2
         },
         {

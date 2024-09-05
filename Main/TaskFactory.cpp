@@ -19,7 +19,7 @@ Task TaskFactory::basicInput()
 			priority != PrioritiesLevel::MIDDLE && priority != PrioritiesLevel::LOWER) {
 			spdlog::error("Invalid priority. Please enter one of the specified options.");
 			std::cout << "Invalid priority. Please enter one of the specified options." << std::endl;
-			std::cout << "Enter the priority for the task. Options: Critical, Higher, Middle, Lower: ";
+			std::cout << "Enter the priority for the task. Options: Critical, Higher, Middle, Lower: \n";
 			std::cin >> priority;
 		}
 
@@ -40,7 +40,9 @@ shared_ptr<DeadLineTask> TaskFactory::deadLineTaskInput()
 {
 	Task basicTask = basicInput();
 	int dealLineTime = Utility::integerValidation("Enter the Dead line:", "Dead line", 0);
-	return shared_ptr<DeadLineTask>(new DeadLineTask(basicTask, dealLineTime));
+	// Create some DeadlineTask objects
+	time_t now = time(nullptr);
+	return shared_ptr<DeadLineTask>(new DeadLineTask(basicTask, now+dealLineTime));
 }
 
 shared_ptr<IterativeTask> TaskFactory::iterativeTaskInput()

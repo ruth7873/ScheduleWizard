@@ -94,9 +94,17 @@ void WeightRoundRobinScheduler::weightRoundRobinFunction()
 					std::unique_lock<std::mutex> lock(Scheduler::rtLock);  // Lock the rtLock
 				}// The mutex will be automatically released at the end of this scope
 
-					// Check if the task is not null and execute it
-				if (task != nullptr) {
+				// check if the task is not a deadline task that removed to Critical Q 
+				while (task != nullptr && task->getPriority() == PrioritiesLevel::CRITICAL) {
+					if (!taskQueue->queue.empty()) {
+						taskQueue->queue.pop();
+					}
+					shared_ptr<Task> task = taskQueue->queue.front();
+				}
+				// Check if the task is not null and execute it
+				if (task != nullptr ) {
 					Scheduler::execute(task);
+
 				}
 
 				countTasks++;
