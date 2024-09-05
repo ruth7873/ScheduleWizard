@@ -182,14 +182,6 @@ void Scheduler::insertTask(shared_ptr<Task> newTask)
 		std::cout << "Error: Invalid task input. Please try again." << std::endl;
 		spdlog::error("Error: Invalid task input. Skipping task insertion.");
 	}
-	else if (newTask->getPriority() == PrioritiesLevel::CRITICAL) {
-		realTimeScheduler.addTask(newTask); // Add task to real-time scheduler for real-time tasks
-		spdlog::info(Logger::LoggerInfo::ADD_CRITICAL_TASK, newTask->getId());
-	}
-	else {
-		wrrQueuesScheduler.addTask(newTask); // Add task to Weighted Round Robin scheduler for non-real-time tasks
-		spdlog::info(Logger::LoggerInfo::ADD_NON_CRITICAL_TASK, newTask->getId(), newTask->getPriority());
-	}
 	addTaskToItsQueue(newTask);
 	totalRunningTask++;
 	LongTaskHandler::addSumOfAllSeconds(newTask->getRunningTime());
