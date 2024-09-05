@@ -117,6 +117,7 @@ void Scheduler::init() {
 			spdlog::info("read tasks From JSON thread started.");
 			ReadFromJSON::createTasksFromJSONWithDelay(Scenario::SCENARIO_9_FILE_PATH, 3, 15);
 			});		// Create a thread for the InsertTask function
+
 		std::thread insertTask_Thread([this]() {
 			SetThreadDescription(GetCurrentThread(), L"InsertTask");
 			spdlog::info(Logger::LoggerInfo::START_THREAD, "InsertTask");
@@ -136,7 +137,8 @@ void Scheduler::init() {
 			spdlog::info(Logger::LoggerInfo::START_THREAD, "WeightRoundRobinScheduler");
 			wrrQueuesScheduler.weightRoundRobinFunction();
 			});
-
+		
+		readtasksFromJSON_Thread.join();
 		insertTask_Thread.join();
 		RTScheduler_Thread.join();
 		WRRScheduler_Thread.join();
@@ -185,7 +187,7 @@ void Scheduler::insertTask(shared_ptr<Task> newTask)
 		spdlog::info(Logger::LoggerInfo::ADD_CRITICAL_TASK, newTask->getId());
 	}
 	else {
-		wrrQueues.addTask(newTask); // Add task to Weighted Round Robin scheduler for non-real-time tasks
+		wrrQueuesScheduler.addTask(newTask); // Add task to Weighted Round Robin scheduler for non-real-time tasks
 		spdlog::info(Logger::LoggerInfo::ADD_NON_CRITICAL_TASK, newTask->getId(), newTask->getPriority());
 	}
 	addTaskToItsQueue(newTask);
