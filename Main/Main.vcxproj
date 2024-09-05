@@ -131,6 +131,7 @@
     <ClCompile Include="Consts.cpp" />
     <ClCompile Include="DeadLineTask.cpp" />
     <ClCompile Include="IterativeTask.cpp" />
+    <ClCompile Include="IterativeTaskHandler.cpp" />
     <ClCompile Include="Logger.cpp" />
     <ClCompile Include="LongTaskHandler.cpp" />
     <ClCompile Include="Main.cpp" />
@@ -139,13 +140,13 @@
     <ClCompile Include="Scheduler.cpp" />
     <ClCompile Include="Task.cpp" />
     <ClCompile Include="TaskFactory.cpp" />
-    <ClCompile Include="Timer.cpp" />
     <ClCompile Include="Utility.cpp" />
     <ClCompile Include="WeightRoundRobinScheduler.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Consts.h" />
     <ClInclude Include="DeadLineTask.h" />
+    <ClInclude Include="IterativeTaskHandler.h" />
     <ClInclude Include="IterativeTask.h" />
     <ClInclude Include="Logger.h" />
     <ClInclude Include="LongTaskHandler.h" />

@@ -8,6 +8,9 @@ mutex Scheduler::coutMutex;
 mutex Scheduler::rtLock;
 RealTimeScheduler Scheduler::realTimeScheduler;
 WeightRoundRobinScheduler Scheduler::wrrQueuesScheduler;
+IterativeTaskHandler Scheduler::iterativeTaskHandler;
+
+class IterativeTask;
 
 void Scheduler::popTaskFromItsQueue(shared_ptr<Task> taskToPop) {
 	if (taskToPop->getPriority() == PrioritiesLevel::CRITICAL && !realTimeScheduler.getRealTimeQueue().empty()) {
@@ -138,10 +141,18 @@ void Scheduler::init() {
 			wrrQueuesScheduler.weightRoundRobinFunction();
 			});
 		
-		readtasksFromJSON_Thread.join();
+		// Create a thread for WRR Scheduler
+		std::thread IterativeTaskHandler_Thread([this]() {
+			SetThreadDescription(GetCurrentThread(), L"IterativeTaskHandler");
+			spdlog::info(Logger::LoggerInfo::START_THREAD, "IterativeTaskHandler");
+			this->timerOfIterativeTask();
+			});
+
 		insertTask_Thread.join();
 		RTScheduler_Thread.join();
 		WRRScheduler_Thread.join();
+		readtasksFromJSON_Thread.join();
+		IterativeTaskHandler_Thread.join();
 	}
 	catch (const std::exception& ex) {
 		// Handle any exceptions that might occur during thread creation
@@ -167,6 +178,16 @@ void Scheduler::insertTaskFromInput()
 	}
 }
 
+void Scheduler::timerOfIterativeTask()
+{
+	while (true) {
+		while (!iterativeTaskHandler.isEmpty());
+
+		iterativeTaskHandler.checkTime();
+		std::this_thread::sleep_for(std::chrono::seconds(1));
+	}
+}
+
 
 /**
  * @brief Continuously prompts the user to input task details and inserts the tasks into the appropriate scheduler.
@@ -179,20 +200,21 @@ void Scheduler::insertTaskFromInput()
 void Scheduler::insertTask(shared_ptr<Task> newTask)
 {
 	if (newTask == nullptr) {
-		std::cout << "Error: Invalid task input. Please try again." << std::endl;
+		std::cerr << "Error: Invalid task input. Please try again." << std::endl;
 		spdlog::error("Error: Invalid task input. Skipping task insertion.");
 	}
-	else if (newTask->getPriority() == PrioritiesLevel::CRITICAL) {
-		realTimeScheduler.addTask(newTask); // Add task to real-time scheduler for real-time tasks
-		spdlog::info(Logger::LoggerInfo::ADD_CRITICAL_TASK, newTask->getId());
-	}
 	else {
-		wrrQueuesScheduler.addTask(newTask); // Add task to Weighted Round Robin scheduler for non-real-time tasks
-		spdlog::info(Logger::LoggerInfo::ADD_NON_CRITICAL_TASK, newTask->getId(), newTask->getPriority());
+		addTaskToItsQueue(newTask);
+		totalRunningTask++;
+		LongTaskHandler::addSumOfAllSeconds(newTask->getRunningTime());
+
+		if (shared_ptr< IterativeTask> iterativeTask = dynamic_pointer_cast<IterativeTask>(newTask)) {
+			// Check if dynamic_pointer_cast succeeded
+			if (iterativeTask) {
+				iterativeTaskHandler.pushIterativeTask(iterativeTask);
+			}
+		}
 	}
-	addTaskToItsQueue(newTask);
-	totalRunningTask++;
-	LongTaskHandler::addSumOfAllSeconds(newTask->getRunningTime());
 }
 
 void Scheduler::printAtomically(const string& message) {

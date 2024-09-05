@@ -48,6 +48,7 @@ shared_ptr<IterativeTask> TaskFactory::iterativeTaskInput()
 	Task basicTask = basicInput();
 	int iterationsRemaining = Utility::integerValidation("Enter the number of repetitions:", "repetition", 0);
 	int executionInterval = Utility::integerValidation("Enter the Execution interval between tasks:", "Execution interval", 0);
+
 	return shared_ptr<IterativeTask>(new IterativeTask(basicTask, iterationsRemaining, executionInterval));
 }
 
@@ -58,10 +59,10 @@ shared_ptr<Task> TaskFactory::createTask(string type)
         return basicTaskInput();
     }
     else if (type == TaskType::DEAD_LINE) {
-        return deadLineTaskInput();
+        return dynamic_pointer_cast<Task>(deadLineTaskInput());
     }
     else if (type == TaskType::ITERATIVE) {
-        return iterativeTaskInput();
+        return dynamic_pointer_cast<Task>(iterativeTaskInput());
     }
 	else{
 		cout << "i dont need to print this!!" << endl;
