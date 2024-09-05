@@ -3,14 +3,17 @@
 #include <thread>
 #include <chrono>    
 #include <string>
-#include <memory>
 #include <mutex>
+#include <memory>
 #include "Task.h"
+#include "spdlog/spdlog.h"
+#include "spdlog/sinks/daily_file_sink.h"
 #include "RealTimeScheduler.h"
 #include "WeightRoundRobinScheduler.h"
 #include "Logger.h"
 #include "Consts.h"
 #include "ReadFromJSON.h"
+
 
 class RealTimeScheduler;
 class Task;
@@ -26,20 +29,25 @@ class Scheduler
 {
 private:
 	static RealTimeScheduler realTimeScheduler;
-	static WeightRoundRobinScheduler wrrQueues;
-	const unsigned int MAX_TASKS = std::numeric_limits<unsigned int>::max();
+	static WeightRoundRobinScheduler wrrQueuesScheduler;
 	shared_ptr<Task> input();
-
+    const unsigned int MAX_TASKS = std::numeric_limits<unsigned int>::max();
 public:
-	static mutex rtLock;
-	static int totalRunningTask;
-	static unsigned int taskIds;
-
-	void init();
-	void insertTaskFromInput();
-
-	static void insertTask(shared_ptr<Task>);
-	static void execute(shared_ptr<Task> task);
-	static void displayMessage(const Task* task);
-	static void preemptive(shared_ptr<Task> task);
+    static mutex rtLock;
+    static int totalRunningTask;
+    static unsigned int taskIds;
+    
+    void init();
+    void insertTaskFromInput();
+    static void insertTask(shared_ptr<Task>);
+    static void execute(shared_ptr<Task> task);
+    static void displayMessage(const Task* task);
+    static void preemptive(shared_ptr<Task> task);
+    static RealTimeScheduler& getRealTimeScheduler() {
+        return realTimeScheduler;
+    }
+  
+    static WeightRoundRobinScheduler& getWrrQueuesScheduler() {
+        return wrrQueuesScheduler;
+    }
 };

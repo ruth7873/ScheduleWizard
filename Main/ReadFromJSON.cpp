@@ -18,6 +18,7 @@ void ReadFromJSON::createTasksFromJSON(const string& filePath) {
 		// Access the "tasks" array in the JSON object
 		json tasksData = jsonData["tasks"];
 
+
 		// Iterate over the tasks array and create Task objects
 		for (const auto& task : tasksData) {
 			// Create a new Task object using data from JSON
@@ -58,6 +59,7 @@ void ReadFromJSON::createTasksFromJSONWithDelay(const string& filePath, int line
 
 		// Variable to keep track of the number of lines read
 		int linesRead = 0;
+
 
 		// Iterate over the tasks array and create Task objects
 		for (const auto& task : tasksData) {

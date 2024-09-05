@@ -14,6 +14,7 @@ using namespace std;
  * Each queue is associated with a weight defined in the Consts header.
  */
 WeightRoundRobinScheduler::WeightRoundRobinScheduler() {
+
 	WRRQueues[PrioritiesLevel::HIGHER] = Queue{ std::queue<shared_ptr<Task>>(), WeightPrecents::HIGHER_WEIGHT };
 	WRRQueues[PrioritiesLevel::MIDDLE] = Queue{ std::queue<shared_ptr<Task>>(), WeightPrecents::MIDDLE_WEIGHT };
 	WRRQueues[PrioritiesLevel::LOWER] = Queue{ std::queue<shared_ptr<Task>>(), WeightPrecents::LOWER_WEIGHT };
@@ -26,12 +27,11 @@ WeightRoundRobinScheduler::WeightRoundRobinScheduler() {
  * This ensures that no memory leaks occur when the scheduler is destroyed.
  */
 WeightRoundRobinScheduler::~WeightRoundRobinScheduler() {
-	for (auto& pair : WRRQueues) {
-		while (!pair.second.queue.empty()) {
-			//delete pair.second.queue.front();
-			pair.second.queue.pop();
-		}
-	}
+    for (auto& pair : WRRQueues) {
+        while (!pair.second.queue.empty()) {
+            pair.second.queue.pop();
+        }
+    }
 }
 
 /**
