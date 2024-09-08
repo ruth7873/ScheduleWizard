@@ -8,6 +8,9 @@ mutex Scheduler::coutMutex;
 mutex Scheduler::rtLock;
 RealTimeScheduler Scheduler::realTimeScheduler;
 WeightRoundRobinScheduler Scheduler::wrrQueuesScheduler;
+IterativeTaskHandler Scheduler::iterativeTaskHandler;
+
+class IterativeTask;
 
 void Scheduler::popTaskFromItsQueue(shared_ptr<Task> taskToPop) {
 	if (taskToPop->getPriority() == PrioritiesLevel::CRITICAL && !realTimeScheduler.getRealTimeQueue().empty()) {
@@ -140,10 +143,18 @@ void Scheduler::init() {
 			wrrQueuesScheduler.weightRoundRobinFunction();
 			});
 		
-		//readtasksFromJSON_Thread.join();
+    // Create a thread for Iterative task manager
+		std::thread IterativeTaskHandler_Thread([this]() {
+			SetThreadDescription(GetCurrentThread(), L"IterativeTaskHandler");
+			spdlog::info(Logger::LoggerInfo::START_THREAD, "IterativeTaskHandler");
+			this->iterativeTaskHandler.checkTime();
+			});
+
+		readtasksFromJSON_Thread.join();
 		insertTask_Thread.join();
 		RTScheduler_Thread.join();
 		WRRScheduler_Thread.join();
+		IterativeTaskHandler_Thread.join();
 	}
 	catch (const std::exception& ex) {
 		// Handle any exceptions that might occur during thread creation
@@ -169,6 +180,11 @@ void Scheduler::insertTaskFromInput()
 	}
 }
 
+void Scheduler::timerOfIterativeTask()
+{
+	iterativeTaskHandler.checkTime();
+}
+
 
 /**
  * @brief Continuously prompts the user to input task details and inserts the tasks into the appropriate scheduler.
@@ -181,12 +197,21 @@ void Scheduler::insertTaskFromInput()
 void Scheduler::insertTask(shared_ptr<Task> newTask)
 {
 	if (newTask == nullptr) {
-		std::cout << "Error: Invalid task input. Please try again." << std::endl;
+		std::cerr << "Error: Invalid task input. Please try again." << std::endl;
 		spdlog::error("Error: Invalid task input. Skipping task insertion.");
 	}
-	addTaskToItsQueue(newTask);
-	totalRunningTask++;
-	LongTaskHandler::addSumOfAllSeconds(newTask->getRunningTime());
+	else {
+		addTaskToItsQueue(newTask);
+		totalRunningTask++;
+		LongTaskHandler::addSumOfAllSeconds(newTask->getRunningTime());
+
+		if (shared_ptr< IterativeTask> iterativeTask = dynamic_pointer_cast<IterativeTask>(newTask)) {
+			// Check if dynamic_pointer_cast succeeded
+			if (iterativeTask) {
+				iterativeTaskHandler.pushIterativeTask(iterativeTask);
+			}
+		}
+	}
 }
 
 void Scheduler::printAtomically(const string& message) {

@@ -3,6 +3,7 @@
 #include <ctime>
 #include <chrono>
 #include "Scheduler.h"
+
 using namespace std;
 
 class Task
@@ -17,21 +18,21 @@ private:
 public:
 	//c'tors
 	Task(int id, string priority, int runningTime, string status);
-	Task(int, string priority, int runningTime);
+	Task(int id, string priority, int runningTime);
 
 	//getters & setters
-	int getId() const;
-	void setId(int newId);
+	virtual int getId() const;
+	virtual void setId(int newId);
 
-	const string& getPriority() const;
-	void setPriority(const string& newPriority);
+	virtual const string& getPriority() const;
+	virtual void setPriority(const string& newPriority);
 
-	int getRunningTime() const;
-	void setRunningTime(int newRunningTime);
+	virtual int getRunningTime() const;
+	virtual void setRunningTime(int newRunningTime);
 
-	const string& getStatus() const;
-	void setStatus(const string& newStatus);
+	virtual const string& getStatus() const;
+	virtual void setStatus(const string& newStatus);
 
-	time_t getEntryTime() const;
-	void setEntryTime(time_t newEntryTime);
+	virtual time_t getEntryTime() const;
+	virtual void setEntryTime(time_t newEntryTime);
 };

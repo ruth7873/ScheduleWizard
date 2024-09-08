@@ -27,6 +27,9 @@ public:
 
 		static const string ADD_CRITICAL_TASK;
 		static const string ADD_NON_CRITICAL_TASK;
+
+		static const string PUSH_ITERATIVE_TASK_TO_HEAP;
+		static const string POP_ITERATIVE_TASK_FROM_HEAP;
 	};
 
 	class LoggerError {

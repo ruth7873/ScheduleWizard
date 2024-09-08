@@ -11,6 +11,7 @@
 #include "Logger.h"
 #include "Consts.h"
 #include "ReadFromJSON.h"
+#include "IterativeTaskHandler.h"
 
 class RealTimeScheduler;
 class Task;
@@ -28,8 +29,9 @@ private:
 	static RealTimeScheduler realTimeScheduler;
 
 	static WeightRoundRobinScheduler wrrQueuesScheduler;
-
 	static std::mutex coutMutex;
+	static IterativeTaskHandler iterativeTaskHandler;
+
 
 public:
 	static const unsigned int MAX_TASKS = std::numeric_limits<unsigned int>::max();
@@ -39,6 +41,7 @@ public:
 
 	void init();
 	void insertTaskFromInput();
+	void timerOfIterativeTask();
 
 	static void printAtomically(const string& message);
 	static void insertTask(shared_ptr<Task>);
@@ -55,5 +58,9 @@ public:
 
 	static WeightRoundRobinScheduler& getWrrQueuesScheduler() {
 		return wrrQueuesScheduler;
+	}
+
+	static IterativeTaskHandler& getIterativeTaskHandler() {
+		return iterativeTaskHandler;
 	}
 };

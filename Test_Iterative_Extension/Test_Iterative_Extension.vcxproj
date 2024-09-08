@@ -21,8 +21,8 @@
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{ab20f38a-8850-4e13-afc7-2f10f9c6fd8f}</ProjectGuid>
-    <RootNamespace>Main</RootNamespace>
+    <ProjectGuid>{117b5c4d-fda9-449e-b4fc-bafc0ed77f03}</ProjectGuid>
+    <RootNamespace>TestIterativeExtension</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -104,7 +104,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\Users\user1\Desktop\bootcamp\Main\spdlog\include\spdlog</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\Bootcamp\part 2\Scheduler Project\ScheduleWizard\Main;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -119,6 +119,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>D:\Bootcamp\part 2\Scheduler Project\ScheduleWizard\Main;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -128,39 +129,38 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Consts.cpp" />
-    <ClCompile Include="DeadLineTask.cpp" />
-    <ClCompile Include="IterativeTask.cpp" />
-    <ClCompile Include="IterativeTaskHandler.cpp" />
-    <ClCompile Include="Logger.cpp" />
-    <ClCompile Include="LongTaskHandler.cpp" />
-    <ClCompile Include="Main.cpp" />
-    <ClCompile Include="ReadFromJSON.cpp" />
-    <ClCompile Include="RealTimeScheduler.cpp" />
-    <ClCompile Include="Scheduler.cpp" />
-    <ClCompile Include="Task.cpp" />
-    <ClCompile Include="Test_LongTask.cpp" />
-    <ClCompile Include="Test_Main.cpp" />
-    <ClCompile Include="TaskFactory.cpp" />
-    <ClCompile Include="Utility.cpp" />
-    <ClCompile Include="WeightRoundRobinScheduler.cpp" />
+    <ClCompile Include="..\Main\Consts.cpp" />
+    <ClCompile Include="..\Main\DeadLineTask.cpp" />
+    <ClCompile Include="..\Main\IterativeTask.cpp" />
+    <ClCompile Include="..\Main\IterativeTaskHandler.cpp" />
+    <ClCompile Include="..\Main\Logger.cpp" />
+    <ClCompile Include="..\Main\LongTaskHandler.cpp" />
+    <ClCompile Include="..\Main\ReadFromJSON.cpp" />
+    <ClCompile Include="..\Main\RealTimeScheduler.cpp" />
+    <ClCompile Include="..\Main\Scheduler.cpp" />
+    <ClCompile Include="..\Main\Task.cpp" />
+    <ClCompile Include="..\Main\TaskFactory.cpp" />
+    <ClCompile Include="..\Main\Utility.cpp" />
+    <ClCompile Include="..\Main\WeightRoundRobinScheduler.cpp" />
+    <ClCompile Include="Test.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Consts.h" />
+    <ClInclude Include="..\Main\Consts.h" />
+    <ClInclude Include="..\Main\DeadLineTask.h" />
+    <ClInclude Include="..\Main\IterativeTask.h" />
+    <ClInclude Include="..\Main\IterativeTaskHandler.h" />
+    <ClInclude Include="..\Main\Logger.h" />
+    <ClInclude Include="..\Main\LongTaskHandler.h" />
+    <ClInclude Include="..\Main\ReadFromJSON.h" />
+    <ClInclude Include="..\Main\RealTimeScheduler.h" />
+    <ClInclude Include="..\Main\Scheduler.h" />
+    <ClInclude Include="..\Main\Task.h" />
+    <ClInclude Include="..\Main\TaskFactory.h" />
+    <ClInclude Include="..\Main\TaskFectory.h" />
+    <ClInclude Include="..\Main\Timer.h" />
+    <ClInclude Include="..\Main\Utility.h" />
+    <ClInclude Include="..\Main\WeightRoundRobinScheduler.h" />
     <ClInclude Include="doctest.h" />
-    <ClInclude Include="DeadLineTask.h" />
-    <ClInclude Include="IterativeTaskHandler.h" />
-    <ClInclude Include="IterativeTask.h" />
-    <ClInclude Include="Logger.h" />
-    <ClInclude Include="LongTaskHandler.h" />
-    <ClInclude Include="ReadFromJSON.h" />
-    <ClInclude Include="RealTimeScheduler.h" />
-    <ClInclude Include="Scheduler.h" />
-    <ClInclude Include="Task.h" />
-    <ClInclude Include="TaskFactory.h" />
-    <ClInclude Include="Timer.h" />
-    <ClInclude Include="Utility.h" />
-    <ClInclude Include="WeightRoundRobinScheduler.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
