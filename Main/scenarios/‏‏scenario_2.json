@@ -1,0 +1,13 @@
+{
+    "tasks": [
+        {
+            "priority": "Middle",
+            "runningTime": 10,
+            "delay":15
+        },
+        {
+            "priority": "Lower",
+            "runningTime": 2
+        }
+    ]
+}
