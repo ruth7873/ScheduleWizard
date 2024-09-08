@@ -51,6 +51,9 @@ void LongTaskHandler::addSumOfAllSeconds(int value) {
 void LongTaskHandler::increaseNumOfSeconds() {
 	numOfSeconds++;
 }
+void LongTaskHandler::setSumOfAllSeconds(int value) {
+	sumOfAllSeconds = value;
+}
 void LongTaskHandler::setNumOfSeconds(int value) {
 	numOfSeconds = value;
 }
