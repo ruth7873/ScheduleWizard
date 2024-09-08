@@ -1,9 +1,9 @@
 #include "doctest.h"
-#include "RealTimeScheduler.h"
-#include "Scheduler.h"
 #include <thread>
 #include <chrono>
 #include <memory>
+#include "../Main/Scheduler.h"
+#include "../Main/RealTimeScheduler.h"
 
 TEST_CASE("Test RealTimeScheduler::realTimeSchedulerFunction") {
 	Scheduler scheduler;
@@ -42,4 +42,20 @@ TEST_CASE("Test RealTimeScheduler::realTimeSchedulerFunction") {
 		// Detach the thread to prevent blocking the test case
 		schedulerThread.detach();
 	}
+	SUBCASE("Test RealTimeScheduler Destructor") {
+		{
+			RealTimeScheduler rts;
+			shared_ptr<Task> task1(new Task(1, PrioritiesLevel::CRITICAL, 2));
+			shared_ptr<Task> task2(new Task(2, PrioritiesLevel::CRITICAL, 3));
+			rts.addTask(task1);
+			rts.addTask(task2);
+
+			CHECK_EQ(rts.getRealTimeQueue().size(), 2);
+		} // RealTimeScheduler goes out of scope here, destructor is called
+
+		// We can't directly check the queue size after destruction,
+		// but we can verify that the destructor didn't crash
+		CHECK(true); // If we reach here, destructor completed without crashing
+	}
 }
+

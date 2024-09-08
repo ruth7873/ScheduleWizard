@@ -142,7 +142,6 @@
   <ItemGroup>
     <ClCompile Include="..\Main\Consts.cpp" />
     <ClCompile Include="..\Main\Logger.cpp" />
-    <ClCompile Include="..\Main\Main.cpp" />
     <ClCompile Include="..\Main\ReadFromJSON.cpp" />
     <ClCompile Include="..\Main\RealTimeScheduler.cpp" />
     <ClCompile Include="..\Main\Scheduler.cpp" />
@@ -151,7 +150,9 @@
     <ClCompile Include="..\Main\WeightRoundRobinScheduler.cpp" />
     <ClCompile Include="Test_Ececute.cpp" />
     <ClCompile Include="Test_InsertTask.cpp" />
+    <ClCompile Include="Test_Logger.cpp" />
     <ClCompile Include="Test_main.cpp" />
+    <ClCompile Include="Test_ReadFromJson.cpp" />
     <ClCompile Include="Test_RealTimeScheduler.cpp" />
   </ItemGroup>
   <ItemGroup>
