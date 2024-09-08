@@ -68,6 +68,7 @@ void Logger::initialize_logger() {
 		}
 		}).detach();
 }
+
 //Logger Info
 const string Logger::LoggerInfo::START_SCHEDULER = "Starting scheduling process.";
 const string Logger::LoggerInfo::START_THREAD = "{} thread started.";
@@ -81,6 +82,9 @@ const string Logger::LoggerInfo::TASK_SUSPENDED = "Task with ID: {} suspended an
 
 const string Logger::LoggerInfo::ADD_CRITICAL_TASK = "Critical task with ID: {} added to RealTimeScheduler.";
 const string Logger::LoggerInfo::ADD_NON_CRITICAL_TASK = "Task with ID: {} added to {} queue.";
+
+const string Logger::LoggerInfo::PUSH_ITERATIVE_TASK_TO_HEAP = "Task with ID: {} added to iterative min heap. return number: {}";
+const string Logger::LoggerInfo::POP_ITERATIVE_TASK_FROM_HEAP = "Task with ID: {} popped from iterative min heap.";
 
 //Logger Error
 const string Logger::LoggerError::ERROR_CREATE_THREAD = "Error creating threads: {}";

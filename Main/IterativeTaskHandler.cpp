@@ -11,22 +11,23 @@
 void IterativeTaskHandler::pushIterativeTask(shared_ptr<IterativeTask> iterativeTask)
 {
 	// Check if there are iterations remaining for the task
-	int iterationsRemaining = iterativeTask.get()->getIterationsRemaining();
+	int iterationsRemaining = iterativeTask->getIterationsRemaining();
 	if (iterationsRemaining <= 1) {
 		return;
 	}
 
 	// Decrease the remaining iterations count
-	iterativeTask.get()->decreaseIterationsRemaining();
+	iterativeTask->decreaseIterationsRemaining();
 
 	// Calculate the time to wait before executing the task again
 	auto systemTime = std::chrono::system_clock::now();
 	std::time_t currentTime_t = std::chrono::system_clock::to_time_t(systemTime);
-	int waitTime = iterativeTask.get()->getExecutionInterval() + currentTime_t;
-	iterativeTask.get()->setWaitTime(waitTime);
+	int waitTime = iterativeTask->getExecutionInterval() + currentTime_t;
+	iterativeTask->setWaitTime(waitTime);
 
 	// Add the task to the min heap
 	minHeap.emplace(iterativeTask);
+	spdlog::info(Logger::LoggerInfo::PUSH_ITERATIVE_TASK_TO_HEAP, iterativeTask->getId(), iterativeTask->getIterationsRemaining());
 }
 
 /**
@@ -40,9 +41,10 @@ shared_ptr<IterativeTask> IterativeTaskHandler::popIterativeTask()
 		throw "can't pop from empty heap";
 	shared_ptr<IterativeTask> topTask = minHeap.top();
 	minHeap.pop();
+	spdlog::info(Logger::LoggerInfo::POP_ITERATIVE_TASK_FROM_HEAP, topTask->getId());
 
 	// Set the running time of the task
-	topTask.get()->setRunningTime(topTask.get()->getRunTime());
+	topTask->setRunningTime(topTask->getRunTime());
 
 	return topTask;
 }
