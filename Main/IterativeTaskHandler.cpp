@@ -8,7 +8,7 @@
 void IterativeTaskHandler::pushIterativeTask(shared_ptr<IterativeTask> iterativeTask)
 {
 	int iterationsRemaining = iterativeTask.get()->getIterationsRemaining();
-	if (!iterationsRemaining) {
+	if (iterationsRemaining <= 1) {
 		return;
 	}
 
@@ -16,8 +16,10 @@ void IterativeTaskHandler::pushIterativeTask(shared_ptr<IterativeTask> iterative
 	iterativeTask.get()->dereaseIterationsRemaining();
 
 	//add to waitUnitTime the time that need to wait between tasks
-	iterativeTask.get()->addWaitTime(iterativeTask.get()->getExecutionInterval());
-
+	auto systemTime = std::chrono::system_clock::now();
+	std::time_t currentTime_t = std::chrono::system_clock::to_time_t(systemTime);
+	int waitTime = iterativeTask.get()->getExecutionInterval() + currentTime_t;
+	iterativeTask.get()->setWaitTime(waitTime);
 	minHeap.emplace(iterativeTask);
 }
 
@@ -25,6 +27,9 @@ shared_ptr<IterativeTask> IterativeTaskHandler::popIterativeTask()
 {
 	shared_ptr<IterativeTask> topTask = minHeap.top();
 	minHeap.pop();
+
+	topTask.get()->setRunningTime(topTask.get()->getRunTime());
+
 	return topTask;
 }
 

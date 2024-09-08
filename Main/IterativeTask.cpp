@@ -4,5 +4,6 @@ IterativeTask::IterativeTask(const Task& basicTask, int iterationsRemaining, int
     : Task(basicTask.getId(), basicTask.getPriority(), basicTask.getRunningTime(), basicTask.getStatus()),
     iterationsRemaining(iterationsRemaining),
     executionInterval(executionInterval),
-    waitTime(0)
+    waitTime(0),
+    runTime(basicTask.getRunningTime())
 {}

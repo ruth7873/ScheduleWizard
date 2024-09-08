@@ -7,9 +7,18 @@ private:
     int iterationsRemaining;
     int executionInterval;
     time_t waitTime;
+    int runTime;
 
 public:
     IterativeTask(const Task& basictask, int iterationsRemaining, int executionInterval);
+
+    int getRunTime() const {
+        return runTime;
+    }
+
+    void setRunTime(int runTime) {
+        runTime = runTime;
+    }
 
     int getIterationsRemaining() const {
         return iterationsRemaining;
