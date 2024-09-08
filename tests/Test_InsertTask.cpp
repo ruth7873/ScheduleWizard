@@ -1,6 +1,6 @@
 #include "doctest.h"
 #include <memory>
-#include "Scheduler.h"
+#include "../Main/Scheduler.h"
 
 TEST_CASE("Test Scheduler::InsertTask") {
     Scheduler scheduler;
@@ -22,20 +22,26 @@ TEST_CASE("Test Scheduler::InsertTask") {
 
         scheduler.getWrrQueuesScheduler().getWrrQueues()[PrioritiesLevel::LOWER].queue.pop();
     }
-
     SUBCASE("Insert a null task") {
-        try {
-            shared_ptr<Task> nullTask = nullptr;
+        int realTimeQueueSize = scheduler.getRealTimeScheduler().getRealTimeQueue().size();
+        int higherQueueSize = scheduler.getWrrQueuesScheduler().getWrrQueues()[PrioritiesLevel::HIGHER].queue.size();
+        int midddleQueueSize = scheduler.getWrrQueuesScheduler().getWrrQueues()[PrioritiesLevel::MIDDLE].queue.size();
+        int lowerQueueSize = scheduler.getWrrQueuesScheduler().getWrrQueues()[PrioritiesLevel::LOWER].queue.size();
 
-            scheduler.insertTask(nullTask);
-        }
-        catch (const exception& e) {
-            CHECK_EQ("Error: Invalid task input. Please try again.", e.what());
+        int prevTotalRuningTask = Scheduler::totalRunningTask;
 
-            CHECK_EQ(scheduler.getRealTimeScheduler().getRealTimeQueue().size(), 0); // Ensure no task is added to real-time scheduler
-            CHECK_EQ(scheduler.getWrrQueuesScheduler().getWrrQueues()[PrioritiesLevel::HIGHER].queue.size(), 0); // Ensure no task is added to HIGHER queue
-            CHECK_EQ(scheduler.getWrrQueuesScheduler().getWrrQueues()[PrioritiesLevel::MIDDLE].queue.size(), 0); // Ensure no task is added to MIDDLE queue
-            CHECK_EQ(scheduler.getWrrQueuesScheduler().getWrrQueues()[PrioritiesLevel::LOWER].queue.size(), 0); // Ensure no task is added to LOWER queue
-        }
+        shared_ptr<Task> nullTask = nullptr;
+
+        scheduler.insertTask(nullTask);
+
+        // Check that no tasks were added
+        CHECK_EQ(scheduler.getRealTimeScheduler().getRealTimeQueue().size(), realTimeQueueSize);
+        CHECK_EQ(scheduler.getWrrQueuesScheduler().getWrrQueues()[PrioritiesLevel::HIGHER].queue.size(), higherQueueSize);
+        CHECK_EQ(scheduler.getWrrQueuesScheduler().getWrrQueues()[PrioritiesLevel::MIDDLE].queue.size(), midddleQueueSize);
+        CHECK_EQ(scheduler.getWrrQueuesScheduler().getWrrQueues()[PrioritiesLevel::LOWER].queue.size(), lowerQueueSize);
+
+        // You might also want to check that totalRunningTask wasn't incremented
+        // This assumes you have a method to get totalRunningTask
+        CHECK_EQ(Scheduler::totalRunningTask, prevTotalRuningTask);
     }
 }

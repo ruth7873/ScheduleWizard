@@ -1,5 +1,5 @@
 #include "doctest.h"
-#include "Scheduler.h"
+#include "../Main/Scheduler.h"
 
 TEST_CASE("Scheduler::execute") {
 	Scheduler scheduler;
