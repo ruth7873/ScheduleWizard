@@ -32,7 +32,7 @@ public:
         return executionInterval;
     }
 
-    void dereaseIterationsRemaining() {
+    void decreaseIterationsRemaining() {
         iterationsRemaining--;
     }
 

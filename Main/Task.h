@@ -18,7 +18,7 @@ private:
 public:
 	//c'tors
 	Task(int id, string priority, int runningTime, string status);
-	Task(int, string priority, int runningTime);
+	Task(int id, string priority, int runningTime);
 
 	//getters & setters
 	virtual int getId() const;

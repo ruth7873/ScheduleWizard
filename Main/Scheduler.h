@@ -58,4 +58,8 @@ public:
 	static WeightRoundRobinScheduler& getWrrQueuesScheduler() {
 		return wrrQueuesScheduler;
 	}
+
+	static IterativeTaskHandler& getIterativeTaskHandler() {
+		return iterativeTaskHandler;
+	}
 };

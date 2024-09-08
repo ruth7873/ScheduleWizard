@@ -141,11 +141,11 @@ void Scheduler::init() {
 			wrrQueuesScheduler.weightRoundRobinFunction();
 			});
 		
-		// Create a thread for WRR Scheduler
+		// Create a thread for Iterative Task
 		std::thread IterativeTaskHandler_Thread([this]() {
 			SetThreadDescription(GetCurrentThread(), L"IterativeTaskHandler");
 			spdlog::info(Logger::LoggerInfo::START_THREAD, "IterativeTaskHandler");
-			this->timerOfIterativeTask();
+			this->iterativeTaskHandler.checkTime();
 			});
 
 		insertTask_Thread.join();
@@ -180,12 +180,7 @@ void Scheduler::insertTaskFromInput()
 
 void Scheduler::timerOfIterativeTask()
 {
-	while (true) {
-		while (!iterativeTaskHandler.isEmpty());
-
-		iterativeTaskHandler.checkTime();
-		std::this_thread::sleep_for(std::chrono::seconds(1));
-	}
+	iterativeTaskHandler.checkTime();
 }
 
 
