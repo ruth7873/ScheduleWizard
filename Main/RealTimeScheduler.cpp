@@ -2,7 +2,6 @@
 
 RealTimeScheduler::~RealTimeScheduler() {
 	while (!realTimeQueue.empty()) {
-		//delete realTimeQueue.front();
 		realTimeQueue.pop();
 	}
 }
@@ -14,7 +13,6 @@ RealTimeScheduler::~RealTimeScheduler() {
 void RealTimeScheduler::realTimeSchedulerFunction() {
 	while (true)
 	{
-
 		while (realTimeQueue.empty());
 
 		std::unique_lock<std::mutex> lock(Scheduler::rtLock); //lock 

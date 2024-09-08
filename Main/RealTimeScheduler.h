@@ -25,9 +25,7 @@ public:
 	RealTimeScheduler(const RealTimeScheduler& rt) = delete;
 	RealTimeScheduler(RealTimeScheduler&& rt) = delete;
 	~RealTimeScheduler();
-
 	void realTimeSchedulerFunction();
-
 	queue<shared_ptr<Task>>& getRealTimeQueue();
 	void addTask(shared_ptr<Task> task);
 };

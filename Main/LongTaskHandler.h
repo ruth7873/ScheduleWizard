@@ -7,7 +7,7 @@ class LongTaskHandler
 
 	static int sumOfAllSeconds;
 	static int numOfSeconds;
-	static double AverageLength;
+	static double averageLength;
 
 public:
 	static void stopLongTask(shared_ptr<Task>);
@@ -22,6 +22,7 @@ public:
 	// Setters
 	static void addSumOfAllSeconds(int value);
 	static void increaseNumOfSeconds();
+	static void setSumOfAllSeconds(int value);
 	static void setNumOfSeconds(int value);
 	static void setAverageLength(double value);
 };
