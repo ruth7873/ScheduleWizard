@@ -18,13 +18,22 @@ void RealTimeScheduler::realTimeSchedulerFunction() {
 		while (realTimeQueue.empty());
 
 		std::unique_lock<std::mutex> lock(Scheduler::rtLock); // שימוש ב-lock לנעילה אוטומטית
-
+		cout << "---- front----\n";
 		shared_ptr<Task> task = realTimeQueue.front();
+		cout << "---end----\n";
 
 		//shared_ptr<Task> task (realTimeQueue.front());
-
-		if (task != nullptr && task->getStatus() != TaskStatus::COMPLETED) {
-			Scheduler::execute(task);
+		if (task != nullptr) {
+			if (task->getStatus() != TaskStatus::COMPLETED) {
+				cout << "-----\n";
+				cout << " RT running task: " << task->getId() << " with runningtime: " << task->getRunningTime() << endl;
+				Scheduler::execute(task);
+			}
+			else {
+				if (!realTimeQueue.empty()&& task->getStatus() == TaskStatus::COMPLETED) {
+					realTimeQueue.pop();
+				}
+			}
 		}
 	}
 }

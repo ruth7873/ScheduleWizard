@@ -24,16 +24,16 @@ void DeadlineTaskManager::deadlineMechanism() {
             earliestTask->getStatus() != TaskStatus::COMPLETED &&
             earliestTask->getStatus() != TaskStatus::TERMINATED) {
             //add the condition of completed and terminate
-
+            cout << Scheduler::getWrrQueuesScheduler().getWrrQueues()[PrioritiesLevel::LOWER].queue.front()->getPriority() << endl;;
             cout << " ----- DEADLINE COMMIMG ----- " << endl;
             std::cout << "The Task id: " << earliestTask->getId() << " became critical" << std::endl;
 
             // Change the status of the task
             earliestTask->setPriority(PrioritiesLevel::CRITICAL);
+            cout << Scheduler::getWrrQueuesScheduler().getWrrQueues()[PrioritiesLevel::LOWER].queue.front()->getPriority() << endl;;
 
             // Insert the task into the scheduler
-            std::shared_ptr<Task> taskPtr = std::make_shared<DeadLineTask>(*earliestTask);
-            Scheduler::insertTask(taskPtr);
+            Scheduler::insertTask(dynamic_pointer_cast<Task>(earliestTask));
             // Remove the task from the heap
             minHeap.pop();
         }

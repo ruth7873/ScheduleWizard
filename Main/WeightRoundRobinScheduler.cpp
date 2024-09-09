@@ -85,7 +85,9 @@ void WeightRoundRobinScheduler::weightRoundRobinFunction()
 
 
 			while (!taskQueue->queue.empty() && countTasks < taskCountToRun) {
+				cout << "33333\n";
 				shared_ptr<Task> task = taskQueue->queue.front();
+				cout << "444444\n";
 
 				auto startTime = std::chrono::steady_clock::now();
 
@@ -95,17 +97,28 @@ void WeightRoundRobinScheduler::weightRoundRobinFunction()
 				}// The mutex will be automatically released at the end of this scope
 
 				// check if the task is not a deadline task that removed to Critical Q 
-				while (task != nullptr && task->getPriority() == PrioritiesLevel::CRITICAL) {
+				while (task != nullptr && (task->getPriority() == PrioritiesLevel::CRITICAL || task->getStatus() == TaskStatus::COMPLETED)) {
 					if (!taskQueue->queue.empty()) {
 						taskQueue->queue.pop();
 					}
-					shared_ptr<Task> task = taskQueue->queue.front();
+				//	cout << "11111\n";
+					if (!taskQueue->queue.empty())
+					{
+						shared_ptr<Task> task = taskQueue->queue.front();
+						cout << "222222\n";
+					}
+					else {
+						task = nullptr;
+					}
+					//cout << "5555555\n";
 				}
 				// Check if the task is not null and execute it
-				if (task != nullptr ) {
+				if (task != nullptr && task->getPriority() != PrioritiesLevel::CRITICAL &&task->getStatus() != TaskStatus::COMPLETED) {
+					cout << "-----\n";
+					cout << " WRR running task: " << task->getId() << "with runningtime: " << task->getRunningTime() << endl;
 					Scheduler::execute(task);
-
 				}
+				
 
 				countTasks++;
 			}

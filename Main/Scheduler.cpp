@@ -69,6 +69,7 @@ void Scheduler::execute(shared_ptr<Task> task) {
 			popTaskFromItsQueue(task);
 			totalRunningTask--;
 			spdlog::info("Task with ID: {} completed.", task->getId());
+			cout << "the size of the Q "<< getWrrQueuesScheduler().getWrrQueues().size()<< endl;
 			break;
 		}
 		if (LongTaskHandler::haveToSuspendLongTask(task)) {//long task-suspend 
@@ -86,7 +87,8 @@ void Scheduler::execute(shared_ptr<Task> task) {
 			task->setRunningTime(task->getRunningTime() - 1);
 			LongTaskHandler::increaseNumOfSeconds();
 			LongTaskHandler::addSumOfAllSeconds(-1);
-			//std::this_thread::sleep_for(std::chrono::seconds(1));
+			cout << "the Running time: " << task->getRunningTime() << " of task id: " << task->getId() << endl;
+			std::this_thread::sleep_for(std::chrono::seconds(1));
 		}
 		catch (const std::exception& e) {
 			// Handle any exceptions that occur during execution
@@ -143,11 +145,11 @@ void Scheduler::init() {
 
 	spdlog::info(Logger::LoggerInfo::START_SCHEDULER);
 	try {
-		std::thread readtasksFromJSON_Thread([this]() {
+			std::thread readtasksFromJSON_Thread([this]() {
 			SetThreadDescription(GetCurrentThread(), L"createTasksFromJSONWithDelay");
 			spdlog::info("read tasks From JSON thread started.");
 			ReadFromJSON::createTasksFromJSON(Scenario::SCENARIO_1_FILE_PATH);
-			});		// Create a thread for the InsertTask function
+			});	// Create a thread for the InsertTask function
 
 		std::thread insertTask_Thread([this]() {
 			SetThreadDescription(GetCurrentThread(), L"InsertTask");
