@@ -12,13 +12,13 @@
     <ClCompile Include="WeightRoundRobinScheduler.cpp" />
     <ClCompile Include="TestWeightRoundRobinScheduler.cpp" />
     <ClCompile Include="TestMain.cpp" />
-    <ClCompile Include="Deadline.cpp" />
     <ClCompile Include="DeadLineTask.cpp" />
     <ClCompile Include="IterativeTask.cpp" />
     <ClCompile Include="LongTaskHandler.cpp" />
     <ClCompile Include="TaskFactory.cpp" />
     <ClCompile Include="Utility.cpp" />
     <ClCompile Include="DeadlineTaskManager.cpp" />
+    <ClCompile Include="TestDeadline.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Consts.h" />
@@ -30,7 +30,6 @@
     <ClInclude Include="Task.h" />
     <ClInclude Include="Timer.h" />
     <ClInclude Include="WeightRoundRobinScheduler.h" />
-    <ClInclude Include="Deadline.h" />
     <ClInclude Include="DeadLineTask.h" />
     <ClInclude Include="IterativeTask.h" />
     <ClInclude Include="LongTaskHandler.h" />

@@ -8,6 +8,7 @@
 #include "Task.h"
 #include "RealTimeScheduler.h"
 #include "WeightRoundRobinScheduler.h"
+#include "DeadlineTaskManager.h"
 #include "Logger.h"
 #include <memory>
 #include "Consts.h"
@@ -16,6 +17,7 @@
 class RealTimeScheduler;
 class Task;
 class WeightRoundRobinScheduler;
+class DeadlineTaskManager;
 
 /**
  * @class Scheduler
@@ -28,7 +30,10 @@ class Scheduler
 private:
 	static RealTimeScheduler realTimeScheduler;
 	static WeightRoundRobinScheduler wrrQueuesScheduler;
-	static std::mutex coutMutex;
+	static DeadlineTaskManager deadlineTaskManager;
+	static mutex coutMutex;
+	static mutex realTimeQueueMutex;
+	static mutex wrrQueueMutex;
 
 public:
 	static const unsigned int MAX_TASKS = std::numeric_limits<unsigned int>::max();
@@ -54,5 +59,9 @@ public:
 
 	static WeightRoundRobinScheduler& getWrrQueuesScheduler() {
 		return wrrQueuesScheduler;
+	}
+
+	static DeadlineTaskManager& getDeadlineTaskManager() {
+		return deadlineTaskManager;
 	}
 };

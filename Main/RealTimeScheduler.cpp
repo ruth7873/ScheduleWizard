@@ -23,7 +23,7 @@ void RealTimeScheduler::realTimeSchedulerFunction() {
 
 		//shared_ptr<Task> task (realTimeQueue.front());
 
-		if (task != nullptr) {
+		if (task != nullptr && task->getStatus() != TaskStatus::COMPLETED) {
 			Scheduler::execute(task);
 		}
 	}

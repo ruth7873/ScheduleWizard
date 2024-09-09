@@ -1,4 +1,6 @@
 #include "ReadFromJSON.h"
+#include "TaskFactory.h" 
+#include "Consts.h"
 
 /**
  * @brief Reads task data from a JSON file and creates Task objects from it.
@@ -8,6 +10,9 @@
  *
  * @param filePath The path to the JSON file containing task data.
  */
+#include "ReadFromJSON.h"
+#include "TaskFactory.h"  // Include TaskFactory to use it for creating tasks
+
 void ReadFromJSON::createTasksFromJSON(const string& filePath) {
 	try {
 		// Read data from JSON file
@@ -18,14 +23,22 @@ void ReadFromJSON::createTasksFromJSON(const string& filePath) {
 		// Access the "tasks" array in the JSON object
 		json tasksData = jsonData["tasks"];
 
-        // Iterate over the tasks array and create Task objects
-        for (const auto& task : tasksData) {
-            // Create a new Task object using data from JSON
-            shared_ptr<Task> newTask (new Task(Scheduler::taskIds++, task["priority"], task["runningTime"], task["status"]));
-	
+		// Iterate over the tasks array and create Task objects
+		for (const auto& task : tasksData) {
+			// Get the task type from JSON
+			std::string taskType = task["type"];
+
+			// Use TaskFactory to create the correct type of task based on the taskType
+			shared_ptr<Task> newTask = TaskFactory::createTask(task);
 
 			// Insert the new Task into the Scheduler's queues
-			Scheduler::insertTask(newTask);
+			if (newTask) {
+				Scheduler::insertTask(newTask);
+			}
+			else {
+				std::cerr << "Task creation failed for task type: " << taskType << std::endl;
+				spdlog::error("Task creation failed for task type: {}", taskType);
+			}
 		}
 	}
 	catch (const std::exception& e) {
@@ -35,6 +48,7 @@ void ReadFromJSON::createTasksFromJSON(const string& filePath) {
 		spdlog::error("An exception occurred: {}", e.what());
 	}
 }
+
 
 /**
  * @brief Reads task data from a JSON file and creates Task objects from it with a delay between reads.
@@ -56,20 +70,25 @@ void ReadFromJSON::createTasksFromJSONWithDelay(const string& filePath, int line
 
 		// Access the "tasks" array in the JSON object
 		json tasksData = jsonData["tasks"];
-		json title = jsonData["title"];
-		json objective = jsonData["objective"];
-		spdlog::debug("execute scenario " + to_string(title) + " the objective is: " + to_string(objective));
-		cout << "execute scenario " << to_string(title) << " the objective is : " << to_string(objective) << endl;
+
 		// Variable to keep track of the number of lines read
 		int linesRead = 0;
 
 		// Iterate over the tasks array and create Task objects
 		for (const auto& task : tasksData) {
-			// Create a new Task object using data from JSON
-			shared_ptr<Task> newTask(new Task(Scheduler::taskIds++, task["priority"], task["runningTime"]));
+			// Get the task type from JSON
+			std::string taskType = task["type"];
 
-			// Insert the new Task into the Scheduler's queues
-			Scheduler::insertTask(newTask);
+			// Use TaskFactory to create the correct type of task based on the taskType
+			shared_ptr<Task> newTask = TaskFactory::createTask(task);
+
+			if (newTask) {
+				Scheduler::insertTask(newTask);
+			}
+			else {
+				std::cerr << "Task creation failed for task type: " << taskType << std::endl;
+				spdlog::error("Task creation failed for task type: {}", taskType);
+			}
 
 			// Increment the lines read
 			linesRead++;
