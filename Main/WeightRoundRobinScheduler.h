@@ -1,5 +1,4 @@
 #pragma once
-#include <queue>
 #include <unordered_map>
 #include <string>
 #include <memory>
@@ -15,7 +14,7 @@
 class Task;
 typedef struct Q {
 	queue<shared_ptr<Task>> queue;
-	int weight;
+    int weight;
 } Queue;
 
 class WeightRoundRobinScheduler
@@ -31,6 +30,6 @@ public:
 	~WeightRoundRobinScheduler();
 
 	void addTask(shared_ptr<Task> task);
+	std::unordered_map< std::string, Queue>& getWrrQueues();
 	void weightRoundRobinFunction();
-	std::unordered_map<std::string, Queue>& getWrrQueues();
 };

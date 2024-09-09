@@ -104,7 +104,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\Users\user1\Desktop\bootcamp\Main\spdlog\include\spdlog</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\user1\Desktop\bootcamp\Main\spdlog\include\spdlog;C:\Users\מיכל\Documents\BootCamp\ExternalLib\spdlog\include\spdlog;C:\Users\מיכל\Documents\BootCamp\OurProject\boost_1_85_0</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -130,6 +130,7 @@
   <ItemGroup>
     <ClCompile Include="Consts.cpp" />
     <ClCompile Include="DeadLineTask.cpp" />
+    <ClCompile Include="DeadlineTaskManager.cpp" />
     <ClCompile Include="IterativeTask.cpp" />
     <ClCompile Include="IterativeTaskHandler.cpp" />
     <ClCompile Include="Logger.cpp" />
@@ -141,12 +142,16 @@
     <ClCompile Include="Task.cpp" />
     <ClCompile Include="Test_LongTask.cpp" />
     <ClCompile Include="Test_Main.cpp" />
+    <ClCompile Include="TestDeadline.cpp" />
+    <ClCompile Include="TestMain.cpp" />
+    <ClCompile Include="TestWeightRoundRobinScheduler.cpp" />
     <ClCompile Include="TaskFactory.cpp" />
     <ClCompile Include="Utility.cpp" />
     <ClCompile Include="WeightRoundRobinScheduler.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Consts.h" />
+    <ClInclude Include="DeadlineTaskManager.h" />
     <ClInclude Include="doctest.h" />
     <ClInclude Include="DeadLineTask.h" />
     <ClInclude Include="IterativeTaskHandler.h" />

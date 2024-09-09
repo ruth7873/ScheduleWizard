@@ -1,6 +1,7 @@
-#include "TaskFactory.h"
+#include "../Main/TaskFactory.h"
+#include "Scheduler.h"
 
-
+using namespace std;
 /**
  * @brief This function allows the user to input details for a new task, including priority and running time.
  *
@@ -19,7 +20,7 @@ Task TaskFactory::basicInput()
 			priority != PrioritiesLevel::MIDDLE && priority != PrioritiesLevel::LOWER) {
 			spdlog::error("Invalid priority. Please enter one of the specified options.");
 			std::cout << "Invalid priority. Please enter one of the specified options." << std::endl;
-			std::cout << "Enter the priority for the task. Options: Critical, Higher, Middle, Lower: ";
+			std::cout << "Enter the priority for the task. Options: Critical, Higher, Middle, Lower: \n";
 			std::cin >> priority;
 		}
 
@@ -40,7 +41,9 @@ shared_ptr<DeadLineTask> TaskFactory::deadLineTaskInput()
 {
 	Task basicTask = basicInput();
 	int dealLineTime = Utility::integerValidation("Enter the Dead line:", "Dead line", 0);
-	return shared_ptr<DeadLineTask>(new DeadLineTask(basicTask, dealLineTime));
+	// Create some DeadlineTask objects
+	time_t now = time(nullptr);
+	return shared_ptr<DeadLineTask>(new DeadLineTask(basicTask, now+dealLineTime));
 }
 
 shared_ptr<IterativeTask> TaskFactory::iterativeTaskInput()
@@ -51,21 +54,88 @@ shared_ptr<IterativeTask> TaskFactory::iterativeTaskInput()
 
 	return shared_ptr<IterativeTask>(new IterativeTask(basicTask, iterationsRemaining, executionInterval));
 }
-
 shared_ptr<Task> TaskFactory::createTask(string type)
 {
-    if (type == TaskType::BASIC) {
-		cout << "enter to build basic" << endl;
-        return basicTaskInput();
-    }
-    else if (type == TaskType::DEAD_LINE) {
-        return dynamic_pointer_cast<Task>(deadLineTaskInput());
-    }
-    else if (type == TaskType::ITERATIVE) {
-        return dynamic_pointer_cast<Task>(iterativeTaskInput());
-    }
-	else{
-		cout << "i dont need to print this!!" << endl;
+	if (type == TaskType::BASIC) {
+		return basicTaskInput();
+	}
+	else if (type == TaskType::DEAD_LINE) {
+		return dynamic_pointer_cast<Task>(deadLineTaskInput());
+	}
+	else if (type == TaskType::ITERATIVE) {
+		return dynamic_pointer_cast<Task>(iterativeTaskInput());
+	}
+	else {
 		return nullptr;
 	}
+}
+
+
+
+
+
+shared_ptr<Task> TaskFactory::createTask( const nlohmann::json& taskData)
+{
+	try {
+		std::string taskType = taskData["type"];
+
+		// Check if taskData contains the required keys for a basic task
+		if (taskType == TaskType::BASIC) {
+			if (taskData.contains("priority") && taskData.contains("runningTime")) {
+				// Make sure priority is treated as a string
+				return std::make_shared<Task>(
+					Scheduler::taskIds++,
+					taskData.at("priority").get<std::string>(),  // Priority is a string
+					taskData.at("runningTime").get<int>()        // Running time is an integer
+				);
+			}
+			else {
+				std::cerr << "Missing required fields for BASIC task!" << std::endl;
+			}
+		}
+		// Check if taskData contains the required keys for a deadline task
+		else if (taskType == TaskType::DEAD_LINE) {
+			if (taskData.contains("priority") && taskData.contains("runningTime") && taskData.contains("deadLine")) {
+				Task basicTask(
+					Scheduler::taskIds++,
+					taskData.at("priority").get<std::string>(),  // Priority is a string
+					taskData.at("runningTime").get<int>()        // Running time is an integer
+				);
+				int deadLineTime = taskData.at("deadLine").get<int>();  // Deadline is an integer
+
+				auto task =  std::make_shared<DeadLineTask>(basicTask, deadLineTime);
+				return dynamic_pointer_cast<Task>(task);
+			}
+			else {
+				std::cerr << "Missing required fields for DEAD_LINE task!" << std::endl;
+			}
+		}
+		// Check if taskData contains the required keys for an iterative task
+		else if (taskType == TaskType::ITERATIVE) {
+			if (taskData.contains("priority") && taskData.contains("runningTime") && taskData.contains("iterationsRemaining") && taskData.contains("executionInterval")) {
+				Task basicTask(
+					Scheduler::taskIds++,
+					taskData.at("priority").get<std::string>(),  // Priority is a string
+					taskData.at("runningTime").get<int>()        // Running time is an integer
+				);
+				int iterationsRemaining = taskData.at("iterationsRemaining").get<int>();  // Integer
+				int executionInterval = taskData.at("executionInterval").get<int>();      // Integer
+				return std::make_shared<IterativeTask>(basicTask, iterationsRemaining, executionInterval);
+			}
+			else {
+				std::cerr << "Missing required fields for ITERATIVE task!" << std::endl;
+			}
+		}
+		else {
+			std::cout << "Invalid task type!" << std::endl;
+			return nullptr;
+		}
+	}
+	catch (const std::exception& e) {
+		// Handle exceptions thrown during JSON parsing or task creation
+		std::cerr << "An exception occurred: " << e.what() << std::endl;
+		spdlog::error("An exception occurred: {}", e.what());
+	}
+
+	return nullptr; // Return nullptr if something goes wrong
 }

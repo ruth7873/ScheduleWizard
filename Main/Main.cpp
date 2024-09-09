@@ -1,6 +1,9 @@
 #include "Scheduler.h"
 
 int main() {
-	Scheduler s;
-	s.init();
+
+    Scheduler s;
+    s.init();
 }
+
+

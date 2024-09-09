@@ -14,9 +14,10 @@ using namespace std;
  * Each queue is associated with a weight defined in the Consts header.
  */
 WeightRoundRobinScheduler::WeightRoundRobinScheduler() {
-	WRRQueues[PrioritiesLevel::HIGHER] = Queue{ std::queue<shared_ptr<Task>>(), WeightPrecents::HIGHER_WEIGHT };
-	WRRQueues[PrioritiesLevel::MIDDLE] = Queue{ std::queue<shared_ptr<Task>>(), WeightPrecents::MIDDLE_WEIGHT };
-	WRRQueues[PrioritiesLevel::LOWER] = Queue{ std::queue<shared_ptr<Task>>(), WeightPrecents::LOWER_WEIGHT };
+    WRRQueues[PrioritiesLevel::HIGHER] = Queue{ std::queue<shared_ptr<Task>>(), WeightPrecents::HIGHER_WEIGHT };
+    WRRQueues[PrioritiesLevel::MIDDLE] = Queue{ std::queue<shared_ptr<Task>>(), WeightPrecents::MIDDLE_WEIGHT };
+    WRRQueues[PrioritiesLevel::LOWER] = Queue{ std::queue<shared_ptr<Task>>(), WeightPrecents::LOWER_WEIGHT };
+
 }
 
 /**
@@ -26,6 +27,11 @@ WeightRoundRobinScheduler::WeightRoundRobinScheduler() {
  * This ensures that no memory leaks occur when the scheduler is destroyed.
  */
 WeightRoundRobinScheduler::~WeightRoundRobinScheduler() {
+    for (auto& pair : WRRQueues) {
+        while (!pair.second.queue.empty()) {
+            pair.second.queue.pop();
+        }
+    }
 	for (auto& pair : WRRQueues) {
 		while (!pair.second.queue.empty()) {
 			pair.second.queue.pop();
@@ -41,8 +47,9 @@ WeightRoundRobinScheduler::~WeightRoundRobinScheduler() {
  * The task is pushed into the queue corresponding to its priority (HIGHER, MIDDLE, LOWER).
  */
 void WeightRoundRobinScheduler::addTask(shared_ptr<Task> task) {
-	WRRQueues[task->getPriority()].queue.push(task);
-	spdlog::info(Logger::LoggerInfo::ADD_NON_CRITICAL_TASK, task->getId(), task->getPriority());
+    WRRQueues[task->getPriority()].queue.push(task);
+    spdlog::info(Logger::LoggerInfo::ADD_NON_CRITICAL_TASK, task->getId(), task->getPriority());
+
 }
 
 std::unordered_map<std::string, Queue>& WeightRoundRobinScheduler::getWrrQueues() {
@@ -75,8 +82,11 @@ void WeightRoundRobinScheduler::weightRoundRobinFunction()
 			// Ensure at least one task runs if the queue is not empty
 			taskCountToRun = (taskCountToRun == 0 && !taskQueue->queue.empty()) ? 1 : taskCountToRun;
 
+
 			while (!taskQueue->queue.empty() && countTasks < taskCountToRun) {
+				cout << "33333\n";
 				shared_ptr<Task> task = taskQueue->queue.front();
+				cout << "444444\n";
 
 				//auto startTime = std::chrono::steady_clock::now();
 
@@ -85,10 +95,29 @@ void WeightRoundRobinScheduler::weightRoundRobinFunction()
 					std::unique_lock<std::mutex> lock(Scheduler::rtLock);  // Lock the rtLock
 				}// The mutex will be automatically released at the end of this scope
 
-					// Check if the task is not null and execute it
-				if (task != nullptr) {
+				// check if the task is not a deadline task that removed to Critical Q 
+				while (task != nullptr && (task->getPriority() == PrioritiesLevel::CRITICAL || task->getStatus() == TaskStatus::COMPLETED)) {
+					if (!taskQueue->queue.empty()) {
+						taskQueue->queue.pop();
+					}
+				//	cout << "11111\n";
+					if (!taskQueue->queue.empty())
+					{
+						shared_ptr<Task> task = taskQueue->queue.front();
+						cout << "222222\n";
+					}
+					else {
+						task = nullptr;
+					}
+					//cout << "5555555\n";
+				}
+				// Check if the task is not null and execute it
+				if (task != nullptr && task->getPriority() != PrioritiesLevel::CRITICAL &&task->getStatus() != TaskStatus::COMPLETED) {
+					cout << "-----\n";
+					cout << " WRR running task: " << task->getId() << "with runningtime: " << task->getRunningTime() << endl;
 					Scheduler::execute(task);
 				}
+				
 
 				countTasks++;
 			}

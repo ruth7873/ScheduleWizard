@@ -48,3 +48,4 @@ public:
 	static const string DEAD_LINE;
 	static const string ITERATIVE;
 };
+
