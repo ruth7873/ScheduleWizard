@@ -1,8 +1,7 @@
-#define DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN
 #include "doctest.h"
-#include <Scheduler.h>
+#include "Scheduler.h"
+#include "IterativeTask.h"
 #include <memory>
-#include <IterativeTask.h>
 
 TEST_CASE("Unit Test Of Iterative Task Handler") {
     Scheduler s;

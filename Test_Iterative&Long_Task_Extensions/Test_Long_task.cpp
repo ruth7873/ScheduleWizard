@@ -4,7 +4,7 @@
 #include "Scheduler.h"
 
 TEST_CASE("Testing LongTaskHandler functionality") {
-     //Clear the static variables before each test
+    //Clear the static variables before each test
     LongTaskHandler::setSumOfAllSeconds(0);
     LongTaskHandler::setNumOfSeconds(0);
     LongTaskHandler::setAverageLength(0.0);

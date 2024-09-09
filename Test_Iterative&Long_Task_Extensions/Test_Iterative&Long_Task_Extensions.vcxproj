@@ -21,8 +21,8 @@
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{117b5c4d-fda9-449e-b4fc-bafc0ed77f03}</ProjectGuid>
-    <RootNamespace>TestIterativeExtension</RootNamespace>
+    <ProjectGuid>{0092cfff-0a28-4029-b014-fc18f5ce5925}</ProjectGuid>
+    <RootNamespace>TestIterativeLongTaskExtensions</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -142,7 +142,9 @@
     <ClCompile Include="..\Main\TaskFactory.cpp" />
     <ClCompile Include="..\Main\Utility.cpp" />
     <ClCompile Include="..\Main\WeightRoundRobinScheduler.cpp" />
-    <ClCompile Include="Test.cpp" />
+    <ClCompile Include="Test_Iterative_Task.cpp" />
+    <ClCompile Include="Test_Iterative&amp;Long_Task_Extensions.cpp" />
+    <ClCompile Include="Test_Long_task.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Main\Consts.h" />
