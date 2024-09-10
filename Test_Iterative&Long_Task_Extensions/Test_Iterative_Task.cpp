@@ -2,9 +2,11 @@
 #include "../Main/Scheduler.h"
 #include "../Main/IterativeTask.h"
 #include <memory>
+#include "Helper.h"
 
 TEST_CASE("Unit Test Of Iterative Task Handler") {
     Scheduler s;
+    PopAllTheQueue(s);
 
     SUBCASE("Push Iterative Task") {
         // Create and add a new iterative task to the handler
@@ -70,6 +72,7 @@ TEST_CASE("Unit Test Of Iterative Task Handler") {
 
 TEST_CASE("System Test Of Iterative Task Handler") {
     Scheduler s;
+    PopAllTheQueue(s);
 
     SUBCASE("Iterative Task Handling") {
         // Create and insert a new iterative task into the scheduler
