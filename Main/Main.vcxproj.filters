@@ -46,6 +46,11 @@
     </ClCompile>
     <ClCompile Include="OrderedTaskHandler.cpp">
       <Filter>Task_Handlers\Sources</Filter>
+    <ClCompile Include="TCPServer.cpp">
+      <Filter>Server\Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="WebSocketSession.cpp">
+      <Filter>Server\Sources</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -135,6 +140,11 @@
     </ClInclude>
     <ClInclude Include="OrderedTaskHandler.h">
       <Filter>Task_Handlers\Headers</Filter>
+    <ClInclude Include="TCPServer.h">
+      <Filter>Server\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="WebSocketSession.h">
+      <Filter>Server\Headers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -185,6 +195,15 @@
     </Filter>
     <Filter Include="Logging\Sources">
       <UniqueIdentifier>{bf5d4e71-0f44-4436-acae-a25fe8b0ff14}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Server">
+      <UniqueIdentifier>{7c13150c-93b9-40b0-b4ce-cfcdce6f9f01}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Server\Sources">
+      <UniqueIdentifier>{345d7e74-b3ef-4fcb-a9f3-0a0925da82b3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Server\Headers">
+      <UniqueIdentifier>{9cff7135-55db-4e7d-ad6d-b820fad27239}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

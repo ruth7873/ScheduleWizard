@@ -4,6 +4,9 @@
 #include "Scheduler.h"
 #include <thread>
 #include <chrono>
+#include <memory>
+#include "IterativeTask.h"
+
 
 using namespace std;
 
@@ -34,11 +37,7 @@ WeightRoundRobinScheduler::~WeightRoundRobinScheduler() {
     }
 	for (auto& pair : WRRQueues) {
 		while (!pair.second.queue.empty()) {
-			cout << ">>>>>>>>>>>>>>>>>>>>3" << endl;
-
 			pair.second.queue.pop();
-			cout << ">>>>>>>>>>>>>>>>>>>>4" << endl;
-
 		}
 	}
 }
@@ -84,28 +83,36 @@ void WeightRoundRobinScheduler::weightRoundRobinFunction()
 			// Ensure at least one task runs if the queue is not empty
 			taskCountToRun = (taskCountToRun == 0 && !taskQueue->queue.empty()) ? 1 : taskCountToRun;
 
-
 			while (!taskQueue->queue.empty() && countTasks < taskCountToRun) {
 				shared_ptr<Task> task = taskQueue->queue.front();
+
+				if (shared_ptr<IterativeTask> iterativeTask = dynamic_pointer_cast<IterativeTask>(task)) {
+					// Check if dynamic_pointer_cast succeeded
+					if (iterativeTask){
+						task->setStatus(TaskStatus::CREATION);
+					}
+				}
+				else {
+					// check if the task is not a deadline task that removed to Critical Q 
+					while (task != nullptr && (task->getPriority() == PrioritiesLevel::CRITICAL || task->getStatus() == TaskStatus::COMPLETED)) {
+						if (!taskQueue->queue.empty()) {
+							taskQueue->queue.pop();
+						}
+						if (!taskQueue->queue.empty())
+						{
+							shared_ptr<Task> task = taskQueue->queue.front();
+						}
+						else {
+							task = nullptr;
+						}
+					}
+				}
 
 				// Wait until the mutex is released
 				{
 					std::unique_lock<std::mutex> lock(Scheduler::rtLock);  // Lock the rtLock
 				}// The mutex will be automatically released at the end of this scope
 
-				// check if the task is not a deadline task that removed to Critical Q 
-				while (task != nullptr && (task->getPriority() == PrioritiesLevel::CRITICAL || task->getStatus() == TaskStatus::COMPLETED)) {
-					if (!taskQueue->queue.empty()) {
-						taskQueue->queue.pop();
-					}
-					if (!taskQueue->queue.empty())
-					{
-						shared_ptr<Task> task = taskQueue->queue.front();
-					}
-					else {
-						task = nullptr;
-					}
-				}
 				// Check if the task is not null and execute it
 				if (task != nullptr && task->getPriority() != PrioritiesLevel::CRITICAL &&task->getStatus() != TaskStatus::COMPLETED) {
 					Scheduler::execute(task);
