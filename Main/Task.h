@@ -13,16 +13,14 @@ private:
 	string priority;
 	int runningTime;
 	string status;
-	time_t entryTime;
-
+	bool isOrdered;
 public:
 	//c'tors
-	Task(int id, string priority, int runningTime, string status);
-	Task(int id, string priority, int runningTime);
+	Task(int id, string priority, int runningTime, string status, bool isOrdered = false);
+	Task(int id, string priority, int runningTime, bool isOrdered = false);
 
 	//getters & setters
 	virtual int getId() const;
-	virtual void setId(int newId);
 
 	virtual const string& getPriority() const;
 	virtual void setPriority(const string& newPriority);
@@ -32,7 +30,6 @@ public:
 
 	virtual const string& getStatus() const;
 	virtual void setStatus(const string& newStatus);
-
-	virtual time_t getEntryTime() const;
-	virtual void setEntryTime(time_t newEntryTime);
+	
+	virtual bool getIsOrdered()const;
 };

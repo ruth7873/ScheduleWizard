@@ -8,7 +8,7 @@ class TaskFactory
 {
 private:
 	static Task basicInput();
-	static shared_ptr<Task> basicTaskInput();
+	static shared_ptr<Task> basicTaskInput(bool);
 	static shared_ptr<DeadLineTask> deadLineTaskInput();
 	static shared_ptr<IterativeTask> iterativeTaskInput();
 

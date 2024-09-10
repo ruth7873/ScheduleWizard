@@ -1,23 +1,19 @@
 #include "Task.h"
 
-Task::Task(int id, string priority, int runningTime, string status)
-	: id(id), priority(priority), runningTime(runningTime), status(status)
+Task::Task(int id, string priority, int runningTime, string status, bool isOrdered)
+	: id(id), priority(priority), runningTime(runningTime), status(status), isOrdered(isOrdered)
 {
 	auto currentTime = std::chrono::system_clock::now();
 	// Convert the time point to std::time_t
-	entryTime = std::chrono::system_clock::to_time_t(currentTime);
+	//entryTime = std::chrono::system_clock::to_time_t(currentTime);
 }
 
-Task::Task(int id, string priority, int runningTime)
-	: Task(id, priority, runningTime, TaskStatus::CREATION)
+Task::Task(int id, string priority, int runningTime, bool isOrdered)
+	: Task(id, priority, runningTime, TaskStatus::CREATION, isOrdered)
 {}
 
 int Task::getId() const {
 	return id;
-}
-
-void Task::setId(int newId) {
-	id = newId;
 }
 
 const string& Task::getPriority() const {
@@ -46,10 +42,6 @@ void Task::setStatus(const string& newStatus) {
 	Scheduler::displayMessage(this);
 }
 
-time_t Task::getEntryTime() const {
-	return entryTime;
-}
-
-void Task::setEntryTime(time_t newEntryTime) {
-	entryTime = newEntryTime;
+bool Task::getIsOrdered()const {
+	return isOrdered;
 }

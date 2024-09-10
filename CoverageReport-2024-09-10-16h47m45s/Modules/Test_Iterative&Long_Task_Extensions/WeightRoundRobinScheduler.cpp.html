@@ -1,0 +1,144 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+        <meta charset="utf-8"/>
+	    <title>WeightRoundRobinScheduler.cpp</title>
+	    <link href="../../third-party/google-code-prettify/prettify-CppCoverage.css" type="text/css" rel="stylesheet" />
+	    <script type="text/javascript" src="../../third-party/google-code-prettify/prettify.js"></script>
+	</head>
+    <body onload="prettyPrint()">
+        <h4></h4>
+        <pre class="prettyprint lang-cpp linenums">
+#include "WeightRoundRobinScheduler.h"
+#include "Consts.h"
+#include "queue"
+#include "Scheduler.h"
+#include &lt;thread&gt;
+#include &lt;chrono&gt;
+
+using namespace std;
+
+/**
+ * @brief Constructor for WeightRoundRobinScheduler.
+ *
+ * Initializes the WRRQueues map with three priority levels: HIGHER, MIDDLE, and LOWER.
+ * Each queue is associated with a weight defined in the Consts header.
+ */
+<span style = "background-color:#dfd">WeightRoundRobinScheduler::WeightRoundRobinScheduler() {
+    WRRQueues[PrioritiesLevel::HIGHER] = Queue{ std::queue&lt;shared_ptr&lt;Task&gt;&gt;(), WeightPrecents::HIGHER_WEIGHT };
+    WRRQueues[PrioritiesLevel::MIDDLE] = Queue{ std::queue&lt;shared_ptr&lt;Task&gt;&gt;(), WeightPrecents::MIDDLE_WEIGHT };
+    WRRQueues[PrioritiesLevel::LOWER] = Queue{ std::queue&lt;shared_ptr&lt;Task&gt;&gt;(), WeightPrecents::LOWER_WEIGHT };</span>
+
+<span style = "background-color:#dfd">}</span>
+
+/**
+ * @brief Destructor for WeightRoundRobinScheduler.
+ *
+ * Cleans up all dynamically allocated Task objects in the WRRQueues map.
+ * This ensures that no memory leaks occur when the scheduler is destroyed.
+ */
+<span style = "background-color:#dfd">WeightRoundRobinScheduler::~WeightRoundRobinScheduler() {
+    for (auto&amp; pair : WRRQueues) {
+        while (!pair.second.queue.empty()) {
+            pair.second.queue.pop();
+        }
+    }
+	for (auto&amp; pair : WRRQueues) {
+		while (!pair.second.queue.empty()) {</span>
+<span style = "background-color:#fdd">			cout &lt;&lt; "&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;3" &lt;&lt; endl;</span>
+
+<span style = "background-color:#fdd">			pair.second.queue.pop();
+			cout &lt;&lt; "&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;4" &lt;&lt; endl;</span>
+
+<span style = "background-color:#fdd">		}</span>
+<span style = "background-color:#dfd">	}
+}</span>
+
+/**
+ * @brief Adds a task to the appropriate queue based on its priority.
+ *
+ * @param task A pointer to the Task object to be added to the queue.
+ *
+ * The task is pushed into the queue corresponding to its priority (HIGHER, MIDDLE, LOWER).
+ */
+<span style = "background-color:#dfd">void WeightRoundRobinScheduler::addTask(shared_ptr&lt;Task&gt; task) {
+    WRRQueues[task-&gt;getPriority()].queue.push(task);
+    spdlog::info(Logger::LoggerInfo::ADD_NON_CRITICAL_TASK, task-&gt;getId(), task-&gt;getPriority());</span>
+
+<span style = "background-color:#dfd">}</span>
+
+<span style = "background-color:#dfd">std::unordered_map&lt;std::string, Queue&gt;&amp; WeightRoundRobinScheduler::getWrrQueues() {
+	return WRRQueues;
+}</span>
+
+/**
+ * @brief Executes tasks in the queues using the Weighted Round Robin scheduling algorithm.
+ *
+ * This function continuously iterates through the WRRQueues map, executing tasks based on their queue's weight.
+ * For each queue, it calculates the number of tasks to run proportionally to the queue's weight.
+ * Real-time delays (sleep_for) are introduced between task executions.
+ *
+ * The function handles tasks in a fair and efficient manner, ensuring that higher-priority tasks are given more processing time.
+ */
+void WeightRoundRobinScheduler::weightRoundRobinFunction()
+<span style = "background-color:#fdd">{
+	while (true) {  // Infinite loop to continuously process tasks
+		int countTasks = 0;</span>
+
+<span style = "background-color:#fdd">		for (auto&amp; pair : WRRQueues) {  // Iterate through each priority queue
+			Queue* taskQueue = &amp;pair.second;</span>
+
+<span style = "background-color:#fdd">			int weight = taskQueue-&gt;weight;</span>
+			// Calculate the number of tasks to run based on the queue's weight
+<span style = "background-color:#fdd">			int taskCountToRun = static_cast&lt;int&gt;(Scheduler::totalRunningTask * (weight / 100.0));</span>
+
+			// Ensure at least one task runs if the queue is not empty
+<span style = "background-color:#fdd">			taskCountToRun = (taskCountToRun == 0 &amp;&amp; !taskQueue-&gt;queue.empty()) ? 1 : taskCountToRun;</span>
+
+
+<span style = "background-color:#fdd">			while (!taskQueue-&gt;queue.empty() &amp;&amp; countTasks &lt; taskCountToRun) {
+				shared_ptr&lt;Task&gt; task = taskQueue-&gt;queue.front();</span>
+
+				// Wait until the mutex is released
+				{
+<span style = "background-color:#fdd">					std::unique_lock&lt;std::mutex&gt; lock(Scheduler::rtLock);  // Lock the rtLock
+				}// The mutex will be automatically released at the end of this scope</span>
+
+				// check if the task is not a deadline task that removed to Critical Q 
+<span style = "background-color:#fdd">				while (task != nullptr &amp;&amp; (task-&gt;getPriority() == PrioritiesLevel::CRITICAL || task-&gt;getStatus() == TaskStatus::COMPLETED)) {
+					if (!taskQueue-&gt;queue.empty()) {
+						taskQueue-&gt;queue.pop();</span>
+					}
+<span style = "background-color:#fdd">					if (!taskQueue-&gt;queue.empty())</span>
+					{
+<span style = "background-color:#fdd">						shared_ptr&lt;Task&gt; task = taskQueue-&gt;queue.front();
+					}</span>
+					else {
+<span style = "background-color:#fdd">						task = nullptr;</span>
+					}
+<span style = "background-color:#fdd">				}</span>
+				// Check if the task is not null and execute it
+<span style = "background-color:#fdd">				if (task != nullptr &amp;&amp; task-&gt;getPriority() != PrioritiesLevel::CRITICAL &amp;&amp;task-&gt;getStatus() != TaskStatus::COMPLETED) {
+					Scheduler::execute(task);</span>
+				}
+<span style = "background-color:#fdd">				countTasks++;
+			}
+			countTasks = 0;  // Reset the task count for the next queue
+		}
+	}
+}</span></pre>
+        <hr />
+        <table width="100%">
+            <thead>
+                <tr>
+                    <th align="center">
+                        <small>Generated by</small>
+                        <a href="https://github.com/OpenCppCoverage/OpenCppCoverage/releases">
+                            <strong>OpenCppCoverage (Version: 0.9.9.0)</strong>
+                        </a>
+                    </th>
+                </tr>
+            </thead>
+        </table>
+    </body>
+</html>
