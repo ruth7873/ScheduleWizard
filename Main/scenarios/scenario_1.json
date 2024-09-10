@@ -1,32 +1,27 @@
 {
-    "title": "general scenario",
-    "objective": "execute tasks",
-    "tasks": [
-        {
-            "priority": "Middle",
-            "runningTime": 10,
-            "delay":15
-        },
-        {
-            "priority": "Lower",
-            "runningTime": 2
-        },
-        {
-            "priority": "Middle",
-            "runningTime": 2
-        },
-        {
-            "priority": "Higher",
-            "runningTime": 1,
-            "delay":3
-        },
-        {
-            "priority": "Lower",
-            "runningTime": 2
-        },
-        {
-            "priority": "Lower",
-            "runningTime": 2
-        }
-    ]
+  "title": "Deadline Task Execution",
+  "objective": "To verify that tasks are executed in the correct order based on their priority and that long tasks are handled properly.",
+  "tasks": [
+    {
+      "type": "basic",
+      "priority": "Middle",
+      "runningTime": 5
+    },
+    {
+      "type": "basic",
+      "priority": "Middle",
+      "runningTime": 3
+    },
+    {
+      "type": "basic",
+      "priority": "Middle",
+      "runningTime": 5
+    },
+    {
+      "type": "deadLine",
+      "priority": "Lower",
+      "runningTime": 5,
+      "deadLine": 1
+    }
+  ]
 }

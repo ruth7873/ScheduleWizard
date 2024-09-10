@@ -39,6 +39,7 @@ shared_ptr<IterativeTask> IterativeTaskHandler::popIterativeTask()
 {
 	if (isEmpty())
 		throw "can't pop from empty heap";
+
 	shared_ptr<IterativeTask> topTask = minHeap.top();
 	minHeap.pop();
 	spdlog::info(Logger::LoggerInfo::POP_ITERATIVE_TASK_FROM_HEAP, topTask->getId());
@@ -50,7 +51,7 @@ shared_ptr<IterativeTask> IterativeTaskHandler::popIterativeTask()
 }
 
 /**
- * @brief Checks the current time and executes tasks if their wait time has elapsed
+ * @brief Checks the current time and insert task if their wait time has elapsed
  */
 void IterativeTaskHandler::checkTime()
 {
@@ -62,7 +63,7 @@ void IterativeTaskHandler::checkTime()
 		if (!this->isEmpty()) {
 			std::time_t waitTime = minHeap.top()->getWaitTime();
 
-			// If the current time is greater than or equal to the task's wait time, execute the task
+			// If the current time is greater than or equal to the task's wait time, insert the task again
 			if (currentTime_t >= waitTime) {
 				Scheduler::insertTask(dynamic_pointer_cast<Task>(popIterativeTask()));
 			}

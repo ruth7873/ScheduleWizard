@@ -17,6 +17,7 @@ public:
 	public:
 		static const string START_SCHEDULER;
 		static const string START_THREAD;
+		static const string START_READ_FROM_JSON_THREAD;
 		static const string START_EXECUTE;
 
 		static const string CREATE_NEW_TASK;
@@ -24,6 +25,7 @@ public:
 		static const string TASK_COMPLITED;
 		static const string TASK_PREEMPTITVE;
 		static const string TASK_SUSPENDED;
+		static const string LONG_TASK_SUSPENDED;
 
 		static const string ADD_CRITICAL_TASK;
 		static const string ADD_NON_CRITICAL_TASK;

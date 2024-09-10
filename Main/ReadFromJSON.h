@@ -3,7 +3,6 @@
 #include <fstream>
 #include <nlohmann/json.hpp>
 #include "Scheduler.h"
-#include "Timer.h"
 
 class ReadFromJSON
 {
