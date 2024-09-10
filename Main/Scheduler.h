@@ -1,21 +1,23 @@
 #pragma once
-#include <iostream>
 #include <thread>
 #include <chrono>    
 #include <string>
 #include <memory>
 #include <mutex>
+#include <iostream>
 #include "Task.h"
-#include "RealTimeScheduler.h"
-#include "WeightRoundRobinScheduler.h"
 #include "Logger.h"
 #include "Consts.h"
 #include "ReadFromJSON.h"
+#include "RealTimeScheduler.h"
+#include "DeadlineTaskManager.h"
 #include "IterativeTaskHandler.h"
+#include "WeightRoundRobinScheduler.h"
 
 class RealTimeScheduler;
 class Task;
 class WeightRoundRobinScheduler;
+class DeadlineTaskManager;
 
 /**
  * @class Scheduler
@@ -27,11 +29,12 @@ class Scheduler
 {
 private:
 	static RealTimeScheduler realTimeScheduler;
-
-	static WeightRoundRobinScheduler wrrQueuesScheduler;
-	static std::mutex coutMutex;
 	static IterativeTaskHandler iterativeTaskHandler;
-
+	static WeightRoundRobinScheduler wrrQueuesScheduler;
+	static DeadlineTaskManager deadlineTaskManager;
+	static mutex coutMutex;
+	static mutex realTimeQueueMutex;
+	static mutex wrrQueueMutex;
 
 public:
 	static const unsigned int MAX_TASKS = std::numeric_limits<unsigned int>::max();
@@ -41,7 +44,6 @@ public:
 
 	void init();
 	void insertTaskFromInput();
-	void timerOfIterativeTask();
 
 	static void printAtomically(const string& message);
 	static void insertTask(shared_ptr<Task>);
@@ -52,15 +54,8 @@ public:
 	static void popTaskFromItsQueue(shared_ptr<Task> taskToPop);
 	static void addTaskToItsQueue(shared_ptr<Task> taskToAdd);
 
-	static RealTimeScheduler& getRealTimeScheduler() {
-		return realTimeScheduler;
-	}
-
-	static WeightRoundRobinScheduler& getWrrQueuesScheduler() {
-		return wrrQueuesScheduler;
-	}
-
-	static IterativeTaskHandler& getIterativeTaskHandler() {
-		return iterativeTaskHandler;
-	}
+	static RealTimeScheduler& getRealTimeScheduler();
+	static WeightRoundRobinScheduler& getWrrQueuesScheduler();
+	static IterativeTaskHandler& getIterativeTaskHandler();
+	static DeadlineTaskManager& getDeadlineTaskManager();
 };

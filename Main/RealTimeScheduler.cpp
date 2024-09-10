@@ -5,6 +5,7 @@ RealTimeScheduler::~RealTimeScheduler() {
 		realTimeQueue.pop();
 	}
 }
+
 /**
 * @brief Function that manages the execution of real-time tasks.
 *
@@ -15,17 +16,27 @@ void RealTimeScheduler::realTimeSchedulerFunction() {
 	{
 		while (realTimeQueue.empty());
 
-		std::unique_lock<std::mutex> lock(Scheduler::rtLock); //lock 
-		shared_ptr<Task> task (realTimeQueue.front());
+		std::unique_lock<std::mutex> lock(Scheduler::rtLock);
+
+		shared_ptr<Task> task = realTimeQueue.front();
 
 		if (task != nullptr) {
-			Scheduler::execute(task);
+			if (task->getStatus() != TaskStatus::RUNNING && task->getStatus() != TaskStatus::COMPLETED) {
+				Scheduler::execute(task);
+			}
+			else {
+				if (!realTimeQueue.empty()&& task->getStatus() == TaskStatus::COMPLETED) {
+					realTimeQueue.pop();
+				}
+			}
 		}
 	}
 }
+
 queue<shared_ptr<Task>>& RealTimeScheduler::getRealTimeQueue() {
 	return realTimeQueue;
 }
+
 void RealTimeScheduler::addTask(shared_ptr<Task> task) {
 	realTimeQueue.push(task);
 }

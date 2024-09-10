@@ -4,7 +4,7 @@
 #include "Scheduler.h"
 #include <thread>
 #include <chrono>
-#include "Timer.h"
+
 using namespace std;
 
 /**
@@ -14,9 +14,10 @@ using namespace std;
  * Each queue is associated with a weight defined in the Consts header.
  */
 WeightRoundRobinScheduler::WeightRoundRobinScheduler() {
-	WRRQueues[PrioritiesLevel::HIGHER] = Queue{ std::queue<shared_ptr<Task>>(), WeightPrecents::HIGHER_WEIGHT };
-	WRRQueues[PrioritiesLevel::MIDDLE] = Queue{ std::queue<shared_ptr<Task>>(), WeightPrecents::MIDDLE_WEIGHT };
-	WRRQueues[PrioritiesLevel::LOWER] = Queue{ std::queue<shared_ptr<Task>>(), WeightPrecents::LOWER_WEIGHT };
+    WRRQueues[PrioritiesLevel::HIGHER] = Queue{ std::queue<shared_ptr<Task>>(), WeightPrecents::HIGHER_WEIGHT };
+    WRRQueues[PrioritiesLevel::MIDDLE] = Queue{ std::queue<shared_ptr<Task>>(), WeightPrecents::MIDDLE_WEIGHT };
+    WRRQueues[PrioritiesLevel::LOWER] = Queue{ std::queue<shared_ptr<Task>>(), WeightPrecents::LOWER_WEIGHT };
+
 }
 
 /**
@@ -26,9 +27,18 @@ WeightRoundRobinScheduler::WeightRoundRobinScheduler() {
  * This ensures that no memory leaks occur when the scheduler is destroyed.
  */
 WeightRoundRobinScheduler::~WeightRoundRobinScheduler() {
+    for (auto& pair : WRRQueues) {
+        while (!pair.second.queue.empty()) {
+            pair.second.queue.pop();
+        }
+    }
 	for (auto& pair : WRRQueues) {
 		while (!pair.second.queue.empty()) {
+			cout << ">>>>>>>>>>>>>>>>>>>>3" << endl;
+
 			pair.second.queue.pop();
+			cout << ">>>>>>>>>>>>>>>>>>>>4" << endl;
+
 		}
 	}
 }
@@ -41,14 +51,14 @@ WeightRoundRobinScheduler::~WeightRoundRobinScheduler() {
  * The task is pushed into the queue corresponding to its priority (HIGHER, MIDDLE, LOWER).
  */
 void WeightRoundRobinScheduler::addTask(shared_ptr<Task> task) {
-	WRRQueues[task->getPriority()].queue.push(task);
-	spdlog::info(Logger::LoggerInfo::ADD_NON_CRITICAL_TASK, task->getId(), task->getPriority());
+    WRRQueues[task->getPriority()].queue.push(task);
+    spdlog::info(Logger::LoggerInfo::ADD_NON_CRITICAL_TASK, task->getId(), task->getPriority());
+
 }
 
 std::unordered_map<std::string, Queue>& WeightRoundRobinScheduler::getWrrQueues() {
 	return WRRQueues;
 }
-
 
 /**
  * @brief Executes tasks in the queues using the Weighted Round Robin scheduling algorithm.
@@ -59,7 +69,6 @@ std::unordered_map<std::string, Queue>& WeightRoundRobinScheduler::getWrrQueues(
  *
  * The function handles tasks in a fair and efficient manner, ensuring that higher-priority tasks are given more processing time.
  */
-
 void WeightRoundRobinScheduler::weightRoundRobinFunction()
 {
 	while (true) {  // Infinite loop to continuously process tasks
@@ -75,24 +84,34 @@ void WeightRoundRobinScheduler::weightRoundRobinFunction()
 			// Ensure at least one task runs if the queue is not empty
 			taskCountToRun = (taskCountToRun == 0 && !taskQueue->queue.empty()) ? 1 : taskCountToRun;
 
+
 			while (!taskQueue->queue.empty() && countTasks < taskCountToRun) {
 				shared_ptr<Task> task = taskQueue->queue.front();
-
-				//auto startTime = std::chrono::steady_clock::now();
 
 				// Wait until the mutex is released
 				{
 					std::unique_lock<std::mutex> lock(Scheduler::rtLock);  // Lock the rtLock
 				}// The mutex will be automatically released at the end of this scope
 
-					// Check if the task is not null and execute it
-				if (task != nullptr) {
+				// check if the task is not a deadline task that removed to Critical Q 
+				while (task != nullptr && (task->getPriority() == PrioritiesLevel::CRITICAL || task->getStatus() == TaskStatus::COMPLETED)) {
+					if (!taskQueue->queue.empty()) {
+						taskQueue->queue.pop();
+					}
+					if (!taskQueue->queue.empty())
+					{
+						shared_ptr<Task> task = taskQueue->queue.front();
+					}
+					else {
+						task = nullptr;
+					}
+				}
+				// Check if the task is not null and execute it
+				if (task != nullptr && task->getPriority() != PrioritiesLevel::CRITICAL &&task->getStatus() != TaskStatus::COMPLETED) {
 					Scheduler::execute(task);
 				}
-
 				countTasks++;
 			}
-
 			countTasks = 0;  // Reset the task count for the next queue
 		}
 	}

@@ -1,18 +1,49 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Source Files">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
-    </Filter>
-    <Filter Include="Header Files">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
-    </Filter>
-    <Filter Include="Resource Files">
-      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
-      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
-    </Filter>
+    <ClCompile Include="Main.cpp" />
+    <ClCompile Include="DeadlineTaskManager.cpp">
+      <Filter>Task_Handlers\Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="IterativeTaskHandler.cpp">
+      <Filter>Task_Handlers\Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Consts.cpp">
+      <Filter>Utilities\Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="ReadFromJSON.cpp">
+      <Filter>Utilities\Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Utility.cpp">
+      <Filter>Utilities\Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="TaskFactory.cpp">
+      <Filter>Utilities\Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="IterativeTask.cpp">
+      <Filter>Task_Type\Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="DeadLineTask.cpp">
+      <Filter>Task_Type\Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Task.cpp">
+      <Filter>Task_Type\Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="LongTaskHandler.cpp">
+      <Filter>Task_Handlers\Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="RealTimeScheduler.cpp">
+      <Filter>Schedulers\Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Scheduler.cpp">
+      <Filter>Schedulers\Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="WeightRoundRobinScheduler.cpp">
+      <Filter>Schedulers\Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Logger.cpp">
+      <Filter>Logging\Sources</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -54,55 +85,100 @@
     <ClCompile Include="Utility.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="IterativeTaskHandler.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Consts.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Scheduler.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="RealTimeScheduler.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Task.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="WeightRoundRobinScheduler.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ReadFromJSON.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Timer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
+    <ClInclude Include="DeadLineTask.h" />
     <ClInclude Include="DeadLineTask.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="IterativeTaskHandler.h">
-      <Filter>Header Files</Filter>
+      <Filter>Task_Type\Headers</Filter>
     </ClInclude>
     <ClInclude Include="IterativeTask.h">
-      <Filter>Header Files</Filter>
+      <Filter>Task_Type\Headers</Filter>
     </ClInclude>
-    <ClInclude Include="Logger.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="Task.h">
+      <Filter>Task_Type\Headers</Filter>
     </ClInclude>
-    <ClInclude Include="LongTaskHandler.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="ReadFromJSON.h">
+      <Filter>Utilities\Headers</Filter>
     </ClInclude>
     <ClInclude Include="TaskFactory.h">
-      <Filter>Header Files</Filter>
+      <Filter>Utilities\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="DeadlineTaskManager.h">
+      <Filter>Task_Handlers\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="IterativeTaskHandler.h">
+      <Filter>Task_Handlers\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="LongTaskHandler.h">
+      <Filter>Task_Handlers\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Scheduler.h">
+      <Filter>Schedulers\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="RealTimeScheduler.h">
+      <Filter>Schedulers\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="WeightRoundRobinScheduler.h">
+      <Filter>Schedulers\Headers</Filter>
     </ClInclude>
     <ClInclude Include="Utility.h">
-      <Filter>Header Files</Filter>
+      <Filter>Utilities\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Logger.h">
+      <Filter>Logging\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Consts.h">
+      <Filter>Utilities\Headers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Task_Type">
+      <UniqueIdentifier>{f7906789-66e7-4494-ae16-8cdc4fc77690}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Task_Type\Headers">
+      <UniqueIdentifier>{0e0f8cf0-3a78-4ee6-98c2-0732631ff331}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Task_Type\Sources">
+      <UniqueIdentifier>{9183ea93-d622-463f-880e-181e7dbcb734}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Task_Handlers">
+      <UniqueIdentifier>{137cc1d7-8217-470e-b2b1-2c1f819556ff}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Task_Handlers\Headers">
+      <UniqueIdentifier>{c0439d6e-f7e0-48dd-a807-a9450205853f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Task_Handlers\Sources">
+      <UniqueIdentifier>{41ac2803-4621-4809-931c-a5d6d5cb9610}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Schedulers">
+      <UniqueIdentifier>{a4bfdb84-71a0-4759-b4f2-13f587fbbc70}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Schedulers\Headers">
+      <UniqueIdentifier>{f5042055-171c-424d-8322-6c8b896ef537}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Schedulers\Sources">
+      <UniqueIdentifier>{f1196f40-3870-4bcc-a603-efca9583cdca}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Utilities">
+      <UniqueIdentifier>{7fc8a27e-0459-4a4e-9552-7646d949ca87}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Utilities\Headers">
+      <UniqueIdentifier>{c506e702-aaf9-41f6-bc51-bcaef434b29e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Utilities\Sources">
+      <UniqueIdentifier>{412e0736-821d-46f7-94f7-c2353a357653}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Logging">
+      <UniqueIdentifier>{1c444a8a-1210-4c78-b01e-bfa24e1bc85c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Logging\Headers">
+      <UniqueIdentifier>{be733884-4944-4f8f-95ae-4e8c0cb23e17}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Logging\Sources">
+      <UniqueIdentifier>{bf5d4e71-0f44-4436-acae-a25fe8b0ff14}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
 </Project>
