@@ -1,29 +1,18 @@
-#pragma once
 #ifndef TCPSERVER_H
 #define TCPSERVER_H
+
 #include <boost/asio.hpp>
 #include <memory>
-#include <thread>
-#include "Scheduler.h"
 
-// TCPServer class is responsible for setting up a TCP server
-// that listens for incoming connections and creates new WebSocket sessions.
 class TCPServer {
 public:
-    // Constructor: initializes the acceptor to listen on the given port.
-    TCPServer(boost::asio::io_context& ioc, short port, Scheduler& scheduler);
-
-    // Starts the asynchronous accept loop.
-    void start_accepting();
+    TCPServer(boost::asio::io_context& io_context, short port);
 
 private:
-    void do_session(boost::asio::ip::tcp::socket socket);
+    void start_accept();
 
+    boost::asio::io_context& io_context_;  // Reference to the io_context
     boost::asio::ip::tcp::acceptor acceptor_;
-    Scheduler& scheduler_;  // Reference to the scheduler
-    boost::asio::io_context& ioc_;  // Reference to the I/O context (ADD THIS LINE)
-
 };
 
-
-#endif
+#endif // TCPSERVER_H
