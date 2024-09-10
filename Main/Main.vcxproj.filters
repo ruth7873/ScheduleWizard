@@ -8,29 +8,17 @@
     <ClCompile Include="IterativeTaskHandler.cpp">
       <Filter>Task_Handlers\Sources</Filter>
     </ClCompile>
-    <ClCompile Include="Consts.cpp">
-      <Filter>Utilities\Sources</Filter>
-    </ClCompile>
-    <ClCompile Include="ReadFromJSON.cpp">
-      <Filter>Utilities\Sources</Filter>
-    </ClCompile>
-    <ClCompile Include="Utility.cpp">
-      <Filter>Utilities\Sources</Filter>
-    </ClCompile>
-    <ClCompile Include="TaskFactory.cpp">
-      <Filter>Utilities\Sources</Filter>
-    </ClCompile>
-    <ClCompile Include="IterativeTask.cpp">
-      <Filter>Task_Type\Sources</Filter>
+    <ClCompile Include="LongTaskHandler.cpp">
+      <Filter>Task_Handlers\Sources</Filter>
     </ClCompile>
     <ClCompile Include="DeadLineTask.cpp">
       <Filter>Task_Type\Sources</Filter>
     </ClCompile>
-    <ClCompile Include="Task.cpp">
+    <ClCompile Include="IterativeTask.cpp">
       <Filter>Task_Type\Sources</Filter>
     </ClCompile>
-    <ClCompile Include="LongTaskHandler.cpp">
-      <Filter>Task_Handlers\Sources</Filter>
+    <ClCompile Include="Task.cpp">
+      <Filter>Task_Type\Sources</Filter>
     </ClCompile>
     <ClCompile Include="RealTimeScheduler.cpp">
       <Filter>Schedulers\Sources</Filter>
@@ -43,6 +31,21 @@
     </ClCompile>
     <ClCompile Include="Logger.cpp">
       <Filter>Logging\Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Consts.cpp">
+      <Filter>Utilities\Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="ReadFromJSON.cpp">
+      <Filter>Utilities\Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="TaskFactory.cpp">
+      <Filter>Utilities\Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Utility.cpp">
+      <Filter>Utilities\Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="OrderedTaskHandler.cpp">
+      <Filter>Task_Handlers\Sources</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -129,6 +132,9 @@
     </ClInclude>
     <ClInclude Include="Consts.h">
       <Filter>Utilities\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="OrderedTaskHandler.h">
+      <Filter>Task_Handlers\Headers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

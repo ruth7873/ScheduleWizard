@@ -10,40 +10,107 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\Main\Consts.cpp" />
-    <ClCompile Include="..\Main\DeadLineTask.cpp" />
-    <ClCompile Include="..\Main\DeadlineTaskManager.cpp" />
-    <ClCompile Include="..\Main\IterativeTask.cpp" />
-    <ClCompile Include="..\Main\IterativeTaskHandler.cpp" />
-    <ClCompile Include="..\Main\Logger.cpp" />
-    <ClCompile Include="..\Main\LongTaskHandler.cpp" />
-    <ClCompile Include="..\Main\ReadFromJSON.cpp" />
-    <ClCompile Include="..\Main\RealTimeScheduler.cpp" />
-    <ClCompile Include="..\Main\Scheduler.cpp" />
-    <ClCompile Include="..\Main\Task.cpp" />
-    <ClCompile Include="..\Main\TaskFactory.cpp" />
-    <ClCompile Include="..\Main\Utility.cpp" />
-    <ClCompile Include="..\Main\WeightRoundRobinScheduler.cpp" />
     <ClCompile Include="Test_Dead_Line.cpp" />
     <ClCompile Include="Test_Iterative&amp;Long_Task_Extensions.cpp" />
     <ClCompile Include="Test_Iterative_Task.cpp" />
     <ClCompile Include="Test_Long_task.cpp" />
+    <ClCompile Include="..\Main\Consts.cpp">
+      <Filter>Resource Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Main\DeadLineTask.cpp">
+      <Filter>Resource Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Main\DeadlineTaskManager.cpp">
+      <Filter>Resource Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Main\IterativeTask.cpp">
+      <Filter>Resource Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Main\IterativeTaskHandler.cpp">
+      <Filter>Resource Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Main\Logger.cpp">
+      <Filter>Resource Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Main\LongTaskHandler.cpp">
+      <Filter>Resource Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Main\ReadFromJSON.cpp">
+      <Filter>Resource Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Main\RealTimeScheduler.cpp">
+      <Filter>Resource Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Main\Scheduler.cpp">
+      <Filter>Resource Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Main\Task.cpp">
+      <Filter>Resource Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Main\TaskFactory.cpp">
+      <Filter>Resource Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Main\Utility.cpp">
+      <Filter>Resource Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Main\WeightRoundRobinScheduler.cpp">
+      <Filter>Resource Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Main\OrderedTaskHandler.cpp">
+      <Filter>Resource Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Test_Ordered_Task.cpp" />
+    <ClCompile Include="Helper.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\Main\Consts.h" />
-    <ClInclude Include="..\Main\DeadLineTask.h" />
-    <ClInclude Include="..\Main\DeadlineTaskManager.h" />
-    <ClInclude Include="..\Main\IterativeTask.h" />
-    <ClInclude Include="..\Main\IterativeTaskHandler.h" />
-    <ClInclude Include="..\Main\Logger.h" />
-    <ClInclude Include="..\Main\LongTaskHandler.h" />
-    <ClInclude Include="..\Main\ReadFromJSON.h" />
-    <ClInclude Include="..\Main\RealTimeScheduler.h" />
-    <ClInclude Include="..\Main\Scheduler.h" />
-    <ClInclude Include="..\Main\Task.h" />
-    <ClInclude Include="..\Main\TaskFactory.h" />
-    <ClInclude Include="..\Main\Timer.h" />
-    <ClInclude Include="..\Main\Utility.h" />
-    <ClInclude Include="..\Main\WeightRoundRobinScheduler.h" />
+    <ClInclude Include="..\Main\Consts.h">
+      <Filter>Resource Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Main\DeadLineTask.h">
+      <Filter>Resource Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Main\DeadlineTaskManager.h">
+      <Filter>Resource Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Main\IterativeTask.h">
+      <Filter>Resource Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Main\IterativeTaskHandler.h">
+      <Filter>Resource Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Main\Logger.h">
+      <Filter>Resource Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Main\LongTaskHandler.h">
+      <Filter>Resource Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Main\ReadFromJSON.h">
+      <Filter>Resource Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Main\RealTimeScheduler.h">
+      <Filter>Resource Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Main\Scheduler.h">
+      <Filter>Resource Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Main\Task.h">
+      <Filter>Resource Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Main\TaskFactory.h">
+      <Filter>Resource Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Main\Timer.h">
+      <Filter>Resource Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Main\Utility.h">
+      <Filter>Resource Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Main\WeightRoundRobinScheduler.h">
+      <Filter>Resource Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Main\OrderedTaskHandler.h">
+      <Filter>Resource Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Helper.h" />
   </ItemGroup>
 </Project>

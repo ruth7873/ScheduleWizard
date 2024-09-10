@@ -13,12 +13,13 @@
 #include "DeadlineTaskManager.h"
 #include "IterativeTaskHandler.h"
 #include "WeightRoundRobinScheduler.h"
+#include "OrderedTaskHandler.h"
 
 class RealTimeScheduler;
 class Task;
 class WeightRoundRobinScheduler;
 class DeadlineTaskManager;
-
+class OrderedTaskHandler;
 /**
  * @class Scheduler
  * @brief Manages task scheduling and execution.
@@ -32,9 +33,11 @@ private:
 	static IterativeTaskHandler iterativeTaskHandler;
 	static WeightRoundRobinScheduler wrrQueuesScheduler;
 	static DeadlineTaskManager deadlineTaskManager;
+	static OrderedTaskHandler orderedTaskHandler;
 	static mutex coutMutex;
 	static mutex realTimeQueueMutex;
 	static mutex wrrQueueMutex;
+
 
 public:
 	static const unsigned int MAX_TASKS = std::numeric_limits<unsigned int>::max();
@@ -58,4 +61,5 @@ public:
 	static WeightRoundRobinScheduler& getWrrQueuesScheduler();
 	static IterativeTaskHandler& getIterativeTaskHandler();
 	static DeadlineTaskManager& getDeadlineTaskManager();
+	static OrderedTaskHandler& getOrderedTaskHandler();
 };

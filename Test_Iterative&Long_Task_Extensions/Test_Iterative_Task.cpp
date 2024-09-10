@@ -1,6 +1,6 @@
 #include "doctest.h"
-#include "Scheduler.h"
-#include "IterativeTask.h"
+#include "../Main/Scheduler.h"
+#include "../Main/IterativeTask.h"
 #include <memory>
 
 TEST_CASE("Unit Test Of Iterative Task Handler") {
@@ -108,4 +108,5 @@ TEST_CASE("System Test Of Iterative Task Handler") {
         // Remove the task from the scheduler's queue
         s.getWrrQueuesScheduler().getWrrQueues()[PrioritiesLevel::HIGHER].queue.pop();
     }
+
 }

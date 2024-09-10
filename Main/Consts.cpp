@@ -16,6 +16,7 @@ const int WeightPrecents::MIDDLE_WEIGHT = 30;
 const int WeightPrecents::HIGHER_WEIGHT = 50;
 
 const string TaskType::BASIC = "basic";
+const string TaskType::ORDERED = "ordered";
 const string TaskType::DEAD_LINE = "deadLine";
 const string TaskType::ITERATIVE = "iterative";
 

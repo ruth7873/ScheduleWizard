@@ -12,6 +12,8 @@ RealTimeScheduler Scheduler::realTimeScheduler;
 WeightRoundRobinScheduler Scheduler::wrrQueuesScheduler;
 IterativeTaskHandler Scheduler::iterativeTaskHandler;
 DeadlineTaskManager Scheduler::deadlineTaskManager;
+OrderedTaskHandler Scheduler::orderedTaskHandler;
+
 
 /**
  * @brief Initiates the scheduling process by creating and managing threads for various scheduler functions.
@@ -75,12 +77,12 @@ void Scheduler::init() {
 void Scheduler::insertTaskFromInput()
 {
 	while (true) {
-		cout << "Enter task type. basic/deadLine/iterative:" << endl;
+		cout << "Enter task type. basic/deadLine/iterative/ordered:" << endl;
 		string type;
 		cin >> type;
 
 		// Validate the input task type
-		if (type == TaskType::BASIC || type == TaskType::DEAD_LINE || type == TaskType::ITERATIVE) {
+		if (type == TaskType::BASIC || type == TaskType::DEAD_LINE || type == TaskType::ITERATIVE || type == TaskType::ORDERED) {
 			shared_ptr<Task> newTask = TaskFactory::createTask(type);
 			insertTask(newTask);
 		}
@@ -102,6 +104,9 @@ void Scheduler::insertTask(shared_ptr<Task> newTask)
 	if (newTask == nullptr) {
 		std::cerr << "Error: Invalid task input. Please try again." << std::endl;
 		spdlog::error("Error: Invalid task input. Skipping task insertion.");
+	}
+	else if (newTask->getIsOrdered() && orderedTaskHandler.frontOrderedTask()!=newTask) {
+		orderedTaskHandler.addOrderedtask(newTask);
 	}
 	else {
 		addTaskToItsQueue(newTask);
@@ -184,6 +189,8 @@ void Scheduler::execute(shared_ptr<Task> task) {
 			popTaskFromItsQueue(task);
 			totalRunningTask--;
 			spdlog::info(Logger::LoggerInfo::TASK_COMPLITED, task->getId());
+			if (task->getIsOrdered())
+				orderedTaskHandler.popOrderedTask();
 			break;
 		}
 		if (LongTaskHandler::haveToSuspendLongTask(task)) {//long task-suspend 
@@ -259,3 +266,8 @@ IterativeTaskHandler& Scheduler::getIterativeTaskHandler() {
 DeadlineTaskManager& Scheduler::getDeadlineTaskManager() {
 	return deadlineTaskManager;
 }
+
+OrderedTaskHandler& Scheduler::getOrderedTaskHandler() {
+	return orderedTaskHandler;
+}
+
