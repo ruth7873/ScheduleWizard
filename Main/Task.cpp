@@ -42,6 +42,7 @@ const string& Task::getStatus() const {
 
 void Task::setStatus(const string& newStatus) {
 	status = newStatus;
+	if(newStatus != TaskStatus::CREATION)
 	Scheduler::displayMessage(this);
 }
 
