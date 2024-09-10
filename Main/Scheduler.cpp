@@ -179,7 +179,6 @@ void Scheduler::execute(shared_ptr<Task> task) {
 	// Continue executing the task while it has remaining running time
 	while (true) {
 		if (task->getRunningTime() == 0) {//the task has finished 
-
 			task->setStatus(TaskStatus::COMPLETED);
 			popTaskFromItsQueue(task);
 			totalRunningTask--;
