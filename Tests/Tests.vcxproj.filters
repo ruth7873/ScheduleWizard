@@ -87,20 +87,20 @@
     <ClCompile Include="Test_ReadFromJson.cpp">
       <Filter>Tests</Filter>
     </ClCompile>
-    <ClCompile Include="..\Test_Iterative&amp;Long_Task_Extensions\Test_Dead_Line.cpp">
+    <ClCompile Include="Test_Dead_Line.cpp">
       <Filter>Tests</Filter>
     </ClCompile>
-    <ClCompile Include="..\Test_Iterative&amp;Long_Task_Extensions\Test_Iterative_Task.cpp">
+    <ClCompile Include="Test_Iterative_Task.cpp">
       <Filter>Tests</Filter>
     </ClCompile>
-    <ClCompile Include="..\Test_Iterative&amp;Long_Task_Extensions\Test_Long_task.cpp">
+    <ClCompile Include="Test_Long_task.cpp">
       <Filter>Tests</Filter>
     </ClCompile>
-    <ClCompile Include="..\Test_Iterative&amp;Long_Task_Extensions\Test_Ordered_Task.cpp">
+    <ClCompile Include="Test_Ordered_Task.cpp">
       <Filter>Tests</Filter>
     </ClCompile>
-    <ClCompile Include="..\Test_Iterative&amp;Long_Task_Extensions\Helper.cpp">
-      <Filter>Resource Files</Filter>
+    <ClCompile Include="Helper.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -158,8 +158,8 @@
     <ClInclude Include="doctest.h">
       <Filter>Tests</Filter>
     </ClInclude>
-    <ClInclude Include="..\Test_Iterative&amp;Long_Task_Extensions\Helper.h">
-      <Filter>Resource Files</Filter>
+    <ClInclude Include="Helper.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

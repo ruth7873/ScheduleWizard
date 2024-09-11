@@ -105,6 +105,7 @@ void Scheduler::insertTask(shared_ptr<Task> newTask)
 		std::cerr << "Error: Invalid task input. Please try again." << std::endl;
 		spdlog::error("Error: Invalid task input. Skipping task insertion.");
 	}
+
 	else if (newTask->getIsOrdered() && orderedTaskHandler.frontOrderedTask()!=newTask) {
 		orderedTaskHandler.addOrderedtask(newTask);
 	}
