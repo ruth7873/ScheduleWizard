@@ -145,15 +145,15 @@
     <ClCompile Include="..\Main\Utility.cpp" />
     <ClCompile Include="..\Main\WebSocketSession.cpp" />
     <ClCompile Include="..\Main\WeightRoundRobinScheduler.cpp" />
-    <ClCompile Include="..\Test_Iterative&amp;Long_Task_Extensions\Helper.cpp" />
-    <ClCompile Include="..\Test_Iterative&amp;Long_Task_Extensions\Test_Dead_Line.cpp" />
-    <ClCompile Include="..\Test_Iterative&amp;Long_Task_Extensions\Test_Iterative_Task.cpp" />
-    <ClCompile Include="..\Test_Iterative&amp;Long_Task_Extensions\Test_Long_task.cpp" />
-    <ClCompile Include="..\Test_Iterative&amp;Long_Task_Extensions\Test_Ordered_Task.cpp" />
+    <ClCompile Include="Helper.cpp" />
     <ClCompile Include="Tests_Main.cpp" />
+    <ClCompile Include="Test_Dead_Line.cpp" />
     <ClCompile Include="Test_Ececute.cpp" />
     <ClCompile Include="Test_InsertTask.cpp" />
+    <ClCompile Include="Test_Iterative_Task.cpp" />
     <ClCompile Include="Test_Logger.cpp" />
+    <ClCompile Include="Test_Long_task.cpp" />
+    <ClCompile Include="Test_Ordered_Task.cpp" />
     <ClCompile Include="Test_ReadFromJson.cpp" />
     <ClCompile Include="Test_RealTimeScheduler.cpp" />
   </ItemGroup>
@@ -175,8 +175,8 @@
     <ClInclude Include="..\Main\Utility.h" />
     <ClInclude Include="..\Main\WebSocketSession.h" />
     <ClInclude Include="..\Main\WeightRoundRobinScheduler.h" />
-    <ClInclude Include="..\Test_Iterative&amp;Long_Task_Extensions\Helper.h" />
     <ClInclude Include="doctest.h" />
+    <ClInclude Include="Helper.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
