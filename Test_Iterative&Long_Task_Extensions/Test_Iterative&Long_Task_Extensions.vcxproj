@@ -139,6 +139,7 @@
     <ClCompile Include="..\Main\IterativeTaskHandler.cpp" />
     <ClCompile Include="..\Main\Logger.cpp" />
     <ClCompile Include="..\Main\LongTaskHandler.cpp" />
+    <ClCompile Include="..\Main\OrderedTaskHandler.cpp" />
     <ClCompile Include="..\Main\ReadFromJSON.cpp" />
     <ClCompile Include="..\Main\RealTimeScheduler.cpp" />
     <ClCompile Include="..\Main\Scheduler.cpp" />
@@ -146,10 +147,7 @@
     <ClCompile Include="..\Main\TaskFactory.cpp" />
     <ClCompile Include="..\Main\Utility.cpp" />
     <ClCompile Include="..\Main\WeightRoundRobinScheduler.cpp" />
-    <ClCompile Include="Test_Dead_Line.cpp" />
     <ClCompile Include="Test_Iterative&amp;Long_Task_Extensions.cpp" />
-    <ClCompile Include="Test_Iterative_Task.cpp" />
-    <ClCompile Include="Test_Long_task.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Main\Consts.h" />
@@ -159,6 +157,7 @@
     <ClInclude Include="..\Main\IterativeTaskHandler.h" />
     <ClInclude Include="..\Main\Logger.h" />
     <ClInclude Include="..\Main\LongTaskHandler.h" />
+    <ClInclude Include="..\Main\OrderedTaskHandler.h" />
     <ClInclude Include="..\Main\ReadFromJSON.h" />
     <ClInclude Include="..\Main\RealTimeScheduler.h" />
     <ClInclude Include="..\Main\Scheduler.h" />

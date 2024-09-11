@@ -8,11 +8,14 @@
 #include <iomanip>
 #include <chrono>
 using namespace std;
-
+class HtmlFormatter : public spdlog::formatter {
+public:
+	void format(const spdlog::details::log_msg& msg, spdlog::memory_buf_t& dest) override;
+	std::unique_ptr<spdlog::formatter> clone() const override;
+};
 class Logger {
 public:
 	static void initialize_logger();
-
 	class LoggerInfo {
 	public:
 		static const string START_SCHEDULER;

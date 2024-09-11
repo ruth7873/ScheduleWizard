@@ -1,53 +1,50 @@
 #define _CRT_SECURE_NO_WARNINGS
 #include "Logger.h"
 
-class HtmlFormatter : public spdlog::formatter {
-public:
-	void format(const spdlog::details::log_msg& msg, spdlog::memory_buf_t& dest) override {
-		// Determine color based on log level
-		std::string color;
-		switch (msg.level) {
-		case spdlog::level::info:
-			color = "green";
-			break;
-		case spdlog::level::warn:
-			color = "yellow";
-			break;
-		case spdlog::level::err:
-			color = "red";
-			break;
-		case spdlog::level::debug:
-			color = "blue";
-			break;
-		default:
-			color = "black";
-			break;
-		}
-
-		// Create HTML formatted log message
-		std::ostringstream oss;
-
-		// Get current time
-		auto now = std::chrono::system_clock::now();
-		std::time_t now_c = std::chrono::system_clock::to_time_t(now);
-		std::tm now_tm = *std::localtime(&now_c);
-
-		// Format time and date
-		oss << "<p style=\"color:" << color << "\">";
-		oss << "[" << std::put_time(&now_tm, "%Y-%m-%d %H:%M:%S") << "] ";
-		oss << "[" << spdlog::level::to_string_view(msg.level).data() << "] ";
-		oss << msg.payload.data();
-		oss << "</p>\n";
-
-		// Append formatted message to destination buffer
-		std::string formatted_msg = oss.str();
-		dest.append(formatted_msg.data(), formatted_msg.data() + formatted_msg.size());
+void HtmlFormatter::format(const spdlog::details::log_msg& msg, spdlog::memory_buf_t& dest) {
+	// Determine color based on log level
+	std::string color;
+	switch (msg.level) {
+	case spdlog::level::info:
+		color = "green";
+		break;
+	case spdlog::level::warn:
+		color = "yellow";
+		break;
+	case spdlog::level::err:
+		color = "red";
+		break;
+	case spdlog::level::debug:
+		color = "blue";
+		break;
+	default:
+		color = "black";
+		break;
 	}
 
-	std::unique_ptr<spdlog::formatter> clone() const override {
-		return std::make_unique<HtmlFormatter>();
-	}
-};
+	// Create HTML formatted log message
+	std::ostringstream oss;
+
+	// Get current time
+	auto now = std::chrono::system_clock::now();
+	std::time_t now_c = std::chrono::system_clock::to_time_t(now);
+	std::tm now_tm = *std::localtime(&now_c);
+
+	// Format time and date
+	oss << "<p style=\"color:" << color << "\">";
+	oss << "[" << std::put_time(&now_tm, "%Y-%m-%d %H:%M:%S") << "] ";
+	oss << "[" << spdlog::level::to_string_view(msg.level).data() << "] ";
+	oss << msg.payload.data();
+	oss << "</p>\n";
+
+	// Append formatted message to destination buffer
+	std::string formatted_msg = oss.str();
+	dest.append(formatted_msg.data(), formatted_msg.data() + formatted_msg.size());
+}
+
+std::unique_ptr<spdlog::formatter> HtmlFormatter::clone() const {
+	return std::make_unique<HtmlFormatter>();
+}
 
 void Logger::initialize_logger() {
 	// Create a daily logger to create a new file every day
@@ -56,9 +53,9 @@ void Logger::initialize_logger() {
 	// Set the custom HTML formatter
 	daily_logger->set_formatter(std::make_unique<HtmlFormatter>());
 
-    spdlog::set_default_logger(daily_logger);
-    spdlog::set_level(spdlog::level::debug);
-    spdlog::get("daily_logger")->debug("Logger initialized and logging to daily and hourly files");
+	spdlog::set_default_logger(daily_logger);
+	spdlog::set_level(spdlog::level::debug);
+	spdlog::get("daily_logger")->debug("Logger initialized and logging to daily and hourly files");
 
 	std::thread([]() {
 		while (true) {
