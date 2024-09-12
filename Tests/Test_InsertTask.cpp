@@ -1,6 +1,7 @@
 #include "doctest.h"
 #include <memory>
 #include "../Main/Scheduler.h"
+#include "Helper.h"
 
 TEST_CASE("Test Scheduler::InsertTask") {
     Scheduler scheduler;
@@ -44,4 +45,6 @@ TEST_CASE("Test Scheduler::InsertTask") {
         // This assumes you have a method to get totalRunningTask
         CHECK_EQ(Scheduler::totalRunningTask, prevTotalRuningTask);
     }
+    PopAllTheQueue(scheduler);
+
 }

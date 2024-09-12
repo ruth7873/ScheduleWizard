@@ -1,0 +1,299 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+        <meta charset="utf-8"/>
+	    <title>Scheduler.cpp</title>
+	    <link href="../../third-party/google-code-prettify/prettify-CppCoverage.css" type="text/css" rel="stylesheet" />
+	    <script type="text/javascript" src="../../third-party/google-code-prettify/prettify.js"></script>
+	</head>
+    <body onload="prettyPrint()">
+        <h4></h4>
+        <pre class="prettyprint lang-cpp linenums">
+#include "Scheduler.h"
+#include "TaskFactory.h"
+#include "LongTaskHandler.h"
+
+int Scheduler::totalRunningTask = 0;
+unsigned int Scheduler::taskIds = 0;
+<span style = "background-color:#dfd">mutex Scheduler::coutMutex;
+mutex Scheduler::rtLock;
+mutex Scheduler::realTimeQueueMutex;
+mutex Scheduler::wrrQueueMutex;
+RealTimeScheduler Scheduler::realTimeScheduler;
+WeightRoundRobinScheduler Scheduler::wrrQueuesScheduler;
+IterativeTaskHandler Scheduler::iterativeTaskHandler;</span>
+DeadlineTaskManager Scheduler::deadlineTaskManager;
+<span style = "background-color:#dfd">OrderedTaskHandler Scheduler::orderedTaskHandler;</span>
+
+
+/**
+ * @brief Initiates the scheduling process by creating and managing threads for various scheduler functions.
+ *
+ * This function creates separate threads for inserting tasks, real-time scheduling, and Weighted Round Robin scheduling.
+ * It utilizes threading to allow concurrent execution of these tasks in the Scheduler class context.
+ * Exceptions that may occur during thread creation are caught and handled within the function.
+ */
+<span style = "background-color:#fdd">void Scheduler::init() {
+	Logger::initialize_logger();</span>
+
+<span style = "background-color:#fdd">	spdlog::info(Logger::LoggerInfo::START_SCHEDULER);</span>
+	try {
+		// Create a thread for the read from json file
+<span style = "background-color:#fdd">		std::thread readtasksFromJSON_Thread([this]() {
+			SetThreadDescription(GetCurrentThread(), L"createTasksFromJSONWithDelay");
+			spdlog::info(Logger::LoggerInfo::START_READ_FROM_JSON_THREAD);
+			ReadFromJSON::createTasksFromJSON(Scenario::SCENARIO_1_FILE_PATH);
+			});</span>
+
+		// Create a thread for the InsertTask function
+<span style = "background-color:#fdd">		std::thread insertTask_Thread([this]() {
+			SetThreadDescription(GetCurrentThread(), L"InsertTask");
+			spdlog::info(Logger::LoggerInfo::START_THREAD, "InsertTask");
+			this-&gt;insertTaskFromInput();
+			});</span>
+
+		// Create a thread for real-Time Scheduler
+<span style = "background-color:#fdd">		std::thread RTScheduler_Thread([this]() {
+			SetThreadDescription(GetCurrentThread(), L"RealTimeScheduler");
+			spdlog::info(Logger::LoggerInfo::START_THREAD, "RealTimeScheduler");
+			realTimeScheduler.realTimeSchedulerFunction();
+			});</span>
+
+		// Create a thread for WRR Scheduler
+<span style = "background-color:#fdd">		std::thread WRRScheduler_Thread([this]() {
+			SetThreadDescription(GetCurrentThread(), L"WeightRoundRobinScheduler");
+			spdlog::info(Logger::LoggerInfo::START_THREAD, "WeightRoundRobinScheduler");
+			wrrQueuesScheduler.weightRoundRobinFunction();
+			});</span>
+
+		// Create a thread for Iterative task manager
+<span style = "background-color:#fdd">		std::thread IterativeTaskHandler_Thread([this]() {
+			SetThreadDescription(GetCurrentThread(), L"IterativeTaskHandler");
+			spdlog::info(Logger::LoggerInfo::START_THREAD, "IterativeTaskHandler");
+			this-&gt;iterativeTaskHandler.checkTime();
+			});</span>
+
+<span style = "background-color:#fdd">		readtasksFromJSON_Thread.join();
+		insertTask_Thread.join();
+		RTScheduler_Thread.join();
+		WRRScheduler_Thread.join();
+		IterativeTaskHandler_Thread.join();
+	}
+	catch (const std::exception&amp; ex) {</span>
+		// Handle any exceptions that might occur during thread creation
+<span style = "background-color:#fdd">		spdlog::error(Logger::LoggerError::ERROR_CREATE_THREAD, ex.what());
+	}
+}</span>
+
+void Scheduler::insertTaskFromInput()
+<span style = "background-color:#fdd">{
+	while (true) {
+		cout &lt;&lt; "Enter task type. basic/deadLine/iterative/ordered:" &lt;&lt; endl;
+		string type;
+		cin &gt;&gt; type;</span>
+
+		// Validate the input task type
+<span style = "background-color:#fdd">		if (type == TaskType::BASIC || type == TaskType::DEAD_LINE || type == TaskType::ITERATIVE || type == TaskType::ORDERED) {
+			shared_ptr&lt;Task&gt; newTask = TaskFactory::createTask(type);
+			insertTask(newTask);
+		}</span>
+		else {
+<span style = "background-color:#fdd">			cout &lt;&lt; "Invalid task type." &lt;&lt; endl;</span>
+		}
+<span style = "background-color:#fdd">	}
+}</span>
+
+/**
+ * @brief Continuously prompts the user to input task details and inserts the tasks into the appropriate scheduler.
+ *
+ * This function loops indefinitely, prompting the user to input task details using the Input function.
+ * If the input task is valid, it is added to the corresponding scheduler based on its priority level.
+ * Tasks with Critical priority are added to the real-time scheduler, while others are added to the Weighted Round Robin scheduler.
+ */
+void Scheduler::insertTask(shared_ptr&lt;Task&gt; newTask)
+<span style = "background-color:#dfd">{
+	if (newTask == nullptr) {</span>
+<span style = "background-color:#fdd">		std::cerr &lt;&lt; "Error: Invalid task input. Please try again." &lt;&lt; std::endl;
+		spdlog::error("Error: Invalid task input. Skipping task insertion.");
+	}</span>
+
+<span style = "background-color:#dfd">	else if (newTask-&gt;getIsOrdered() &amp;&amp; orderedTaskHandler.frontOrderedTask()!=newTask) {</span>
+<span style = "background-color:#fdd">		orderedTaskHandler.addOrderedtask(newTask);
+	}</span>
+	else {
+<span style = "background-color:#dfd">		addTaskToItsQueue(newTask);
+		totalRunningTask++;
+		LongTaskHandler::addSumOfAllSeconds(newTask-&gt;getRunningTime());</span>
+
+<span style = "background-color:#dfd">		if (shared_ptr&lt; IterativeTask&gt; iterativeTask = dynamic_pointer_cast&lt;IterativeTask&gt;(newTask)) {</span>
+			// Check if dynamic_pointer_cast succeeded
+<span style = "background-color:#fdd">			if (iterativeTask) {
+				iterativeTaskHandler.pushIterativeTask(iterativeTask);</span>
+			}
+<span style = "background-color:#fdd">		}</span>
+<span style = "background-color:#dfd">		else if (shared_ptr&lt; DeadLineTask&gt; deadLineTask = dynamic_pointer_cast&lt;DeadLineTask&gt;(newTask)) {</span>
+			// Check if dynamic_pointer_cast succeeded
+<span style = "background-color:#fdd">			if (deadLineTask) {
+				deadlineTaskManager.addTask(deadLineTask);</span>
+			}
+<span style = "background-color:#dfd">		}</span>
+	}
+<span style = "background-color:#dfd">}</span>
+
+<span style = "background-color:#dfd">void Scheduler::addTaskToItsQueue(shared_ptr&lt;Task&gt; taskToAdd) {
+	if (taskToAdd-&gt;getPriority() == PrioritiesLevel::CRITICAL) {</span>
+		// Lock the mutex for the real-time queue when adding a task
+<span style = "background-color:#dfd">		std::lock_guard&lt;std::mutex&gt; lock(realTimeQueueMutex);
+		realTimeScheduler.addTask(taskToAdd); // Add task to real-time scheduler
+		spdlog::info(Logger::LoggerInfo::ADD_CRITICAL_TASK, taskToAdd-&gt;getId());
+	}</span>
+	else {
+		// Lock the mutex for the WRR queue when adding a task
+<span style = "background-color:#dfd">		std::lock_guard&lt;std::mutex&gt; lock(wrrQueueMutex);
+		wrrQueuesScheduler.addTask(taskToAdd); // Add task to WRR scheduler
+		spdlog::info(Logger::LoggerInfo::ADD_NON_CRITICAL_TASK, taskToAdd-&gt;getId(), taskToAdd-&gt;getPriority());
+	}
+}</span>
+
+/*
+ * @brief Pop task From its Q.
+ * 
+ * Thread-safe pop operation for task queues
+ * 
+ */ 
+<span style = "background-color:#fdd">void Scheduler::popTaskFromItsQueue(shared_ptr&lt;Task&gt; taskToPop) {
+	if (taskToPop-&gt;getPriority() == PrioritiesLevel::CRITICAL) {</span>
+		// Lock the mutex for the real-time queue
+<span style = "background-color:#fdd">		std::lock_guard&lt;std::mutex&gt; lock(realTimeQueueMutex);
+		if (!realTimeScheduler.getRealTimeQueue().empty()) {
+			realTimeScheduler.getRealTimeQueue().pop();</span>
+		}
+<span style = "background-color:#fdd">	}</span>
+	else {
+		// Lock the mutex for the WRR queue
+<span style = "background-color:#fdd">		std::lock_guard&lt;std::mutex&gt; lock(wrrQueueMutex);
+		if (!wrrQueuesScheduler.getWrrQueues()[taskToPop-&gt;getPriority()].queue.empty()) {
+			wrrQueuesScheduler.getWrrQueues()[taskToPop-&gt;getPriority()].queue.pop();</span>
+		}
+<span style = "background-color:#fdd">	}
+}</span>
+
+/*
+ * @brief Executes a given task.
+ *
+ * This function processes a task by running it and updating its status. If the task is not critical and there are tasks in the real-time scheduler queue, the current task is preempted and a task from the real-time queue is executed. The function also handles exceptions by setting the task status to terminated and printing an error message.
+ *
+ * @param task Pointer to the task to be executed.
+ */
+<span style = "background-color:#fdd">void Scheduler::execute(shared_ptr&lt;Task&gt; task) {</span>
+
+<span style = "background-color:#fdd">	deadlineTaskManager.deadlineMechanism();
+	LongTaskHandler::calculateAverageLength();
+	LongTaskHandler::setNumOfSeconds(0);
+	spdlog::info(Logger::LoggerInfo::START_EXECUTE, task-&gt;getId());
+	task-&gt;setStatus(TaskStatus::RUNNING);</span>
+
+	// Continue executing the task while it has remaining running time
+<span style = "background-color:#fdd">	while (true) {
+		if (task-&gt;getRunningTime() == 0) {//the task has finished 
+			task-&gt;setStatus(TaskStatus::COMPLETED);
+			popTaskFromItsQueue(task);
+			totalRunningTask--;
+			spdlog::info(Logger::LoggerInfo::TASK_COMPLITED, task-&gt;getId());
+			if (task-&gt;getIsOrdered())
+				orderedTaskHandler.popOrderedTask();
+			break;</span>
+		}
+<span style = "background-color:#fdd">		if (LongTaskHandler::haveToSuspendLongTask(task)) {//long task-suspend 
+			LongTaskHandler::stopLongTask(task);
+			break;</span>
+		}
+<span style = "background-color:#fdd">		if (task-&gt;getPriority() != PrioritiesLevel::CRITICAL &amp;&amp; !realTimeScheduler.getRealTimeQueue().empty()) {//preemptive
+			spdlog::info(Logger::LoggerInfo::TASK_PREEMPTITVE, task-&gt;getId());
+			preemptive(task);
+			return;</span>
+		}
+
+		try {
+			// Simulate task execution by decrementing running time
+<span style = "background-color:#fdd">			task-&gt;setRunningTime(task-&gt;getRunningTime() - 1);
+			LongTaskHandler::increaseNumOfSeconds();
+			LongTaskHandler::addSumOfAllSeconds(-1);</span>
+
+<span style = "background-color:#fdd">			std::this_thread::sleep_for(std::chrono::seconds(1));</span>
+		}
+<span style = "background-color:#fdd">		catch (const std::exception&amp; e) {</span>
+			// Handle any exceptions that occur during execution
+<span style = "background-color:#fdd">			spdlog::error(Logger::LoggerError::TASK_TERMINATED, task-&gt;getId(), e.what());
+			task-&gt;setStatus(TaskStatus::TERMINATED);
+			popTaskFromItsQueue(task);
+			totalRunningTask--;
+			break; // Exit the loop if an exception is caught
+		}
+	}
+}</span>
+
+/**
+ * @brief Handles task preemption.
+ *
+ * This function sets the status of the given task to suspended and adds it to the weighted round-robin queue. This is used to preempt the current task when a higher priority task needs to be processed.
+ *
+ * @param task Pointer to the task to be preempted.
+ */
+<span style = "background-color:#fdd">void Scheduler::preemptive(shared_ptr&lt;Task&gt; task) {
+	task-&gt;setStatus(TaskStatus::SUSPENDED);
+	spdlog::info(Logger::LoggerInfo::TASK_SUSPENDED, task-&gt;getId());</span>
+
+<span style = "background-color:#fdd">}</span>
+
+/**
+ * @brief Displays the status of a task.
+ *
+ * This function prints the current status of the specified task to the standard output.
+ *
+ * @param task Pointer to the task whose status is to be displayed.
+ */
+<span style = "background-color:#fdd">void Scheduler::displayMessage(const Task* task) {
+	printAtomically("task " + to_string(task-&gt;getId()) + " with priority: " + task-&gt;getPriority() + " and running time " + std::to_string(task-&gt;getRunningTime()) + " is " + task-&gt;getStatus() + "\n");
+}</span>
+
+<span style = "background-color:#fdd">void Scheduler::printAtomically(const string&amp; message) {
+	std::lock_guard&lt;std::mutex&gt; lock(coutMutex);
+	std::cout &lt;&lt; message;
+}</span>
+
+<span style = "background-color:#dfd">RealTimeScheduler&amp; Scheduler::getRealTimeScheduler() {
+	return realTimeScheduler;
+}</span>
+
+<span style = "background-color:#dfd">WeightRoundRobinScheduler&amp; Scheduler::getWrrQueuesScheduler() {
+	return wrrQueuesScheduler;
+}</span>
+
+<span style = "background-color:#fdd">IterativeTaskHandler&amp; Scheduler::getIterativeTaskHandler() {
+	return iterativeTaskHandler;
+}</span>
+
+<span style = "background-color:#fdd">DeadlineTaskManager&amp; Scheduler::getDeadlineTaskManager() {
+	return deadlineTaskManager;
+}</span>
+
+<span style = "background-color:#fdd">OrderedTaskHandler&amp; Scheduler::getOrderedTaskHandler() {
+	return orderedTaskHandler;
+}</span>
+</pre>
+        <hr />
+        <table width="100%">
+            <thead>
+                <tr>
+                    <th align="center">
+                        <small>Generated by</small>
+                        <a href="https://github.com/OpenCppCoverage/OpenCppCoverage/releases">
+                            <strong>OpenCppCoverage (Version: 0.9.9.0)</strong>
+                        </a>
+                    </th>
+                </tr>
+            </thead>
+        </table>
+    </body>
+</html>

@@ -146,16 +146,17 @@
     <ClCompile Include="..\Main\WebSocketSession.cpp" />
     <ClCompile Include="..\Main\WeightRoundRobinScheduler.cpp" />
     <ClCompile Include="Helper.cpp" />
+    <ClCompile Include="Test1_Execute.cpp" />
+    <ClCompile Include="Test2_RealTimeScheduler.cpp" />
     <ClCompile Include="Tests_Main.cpp" />
     <ClCompile Include="Test_Dead_Line.cpp" />
-    <ClCompile Include="Test_Ececute.cpp" />
     <ClCompile Include="Test_InsertTask.cpp" />
     <ClCompile Include="Test_Iterative_Task.cpp" />
     <ClCompile Include="Test_Logger.cpp" />
     <ClCompile Include="Test_Long_task.cpp" />
     <ClCompile Include="Test_Ordered_Task.cpp" />
     <ClCompile Include="Test_ReadFromJson.cpp" />
-    <ClCompile Include="Test_RealTimeScheduler.cpp" />
+    <ClCompile Include="Test_Utility.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Main\Consts.h" />

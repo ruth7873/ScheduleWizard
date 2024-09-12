@@ -26,6 +26,7 @@ TEST_CASE("Unit Test Of Iterative Task Handler") {
         s.getIterativeTaskHandler().pushIterativeTask(newTask);
         CHECK_EQ(s.getIterativeTaskHandler().getMinHeap().size(), 0);
     }
+    PopAllTheQueue(s);
 
     SUBCASE("Pop Iterative Task") {
         // Create and add a new iterative task to the handler
@@ -44,10 +45,10 @@ TEST_CASE("Unit Test Of Iterative Task Handler") {
         // Try to remove a task when none are left, expecting an exception
         CHECK_THROWS(s.getIterativeTaskHandler().popIterativeTask());
     }
-
+    PopAllTheQueue(s);
     SUBCASE("Check Time Function") {
         // Create and add a new iterative task to the handler
-        std::shared_ptr<IterativeTask> newTask = std::make_shared<IterativeTask>(Task(0, PrioritiesLevel::HIGHER, 2), 4, 1);
+        std::shared_ptr<IterativeTask> newTask = std::make_shared<IterativeTask>(Task(0, PrioritiesLevel::HIGHER, 2),4, 1);
         s.getIterativeTaskHandler().pushIterativeTask(newTask);
 
         // Create and start a thread to run the checkTime function

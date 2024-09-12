@@ -72,12 +72,6 @@
     <ClCompile Include="Tests_Main.cpp">
       <Filter>Tests</Filter>
     </ClCompile>
-    <ClCompile Include="Test_Ececute.cpp">
-      <Filter>Tests</Filter>
-    </ClCompile>
-    <ClCompile Include="Test_RealTimeScheduler.cpp">
-      <Filter>Tests</Filter>
-    </ClCompile>
     <ClCompile Include="Test_InsertTask.cpp">
       <Filter>Tests</Filter>
     </ClCompile>
@@ -101,6 +95,15 @@
     </ClCompile>
     <ClCompile Include="Helper.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Test2_RealTimeScheduler.cpp">
+      <Filter>Tests</Filter>
+    </ClCompile>
+    <ClCompile Include="Test1_Execute.cpp">
+      <Filter>Tests</Filter>
+    </ClCompile>
+    <ClCompile Include="Test_Utility.cpp">
+      <Filter>Tests</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

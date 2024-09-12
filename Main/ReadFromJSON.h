@@ -11,7 +11,5 @@ private:
 
 public:
     static void createTasksFromJSON(const string&);
-
-    static void createTasksFromJSONWithDelay(const string& filePath, string message = "Waiting a long time");
 };
 

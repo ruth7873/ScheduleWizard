@@ -2,13 +2,6 @@
 #include "../Main/Scheduler.h"
 #include "Helper.h"
 
-//TEST_CASE("Unit Test of Ordered Task Handler") {
-//	OrderedTaskHandler orderedTaskHandler;
-//	SUBCASE() {
-//
-//	}
-//}
-
 
 TEST_CASE("OrderedTaskHandler operations") {
     Scheduler s;

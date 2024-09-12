@@ -49,6 +49,8 @@ TEST_CASE("Logger Initialization and Formatting") {
     std::string date_string = get_current_date_string();
     std::string file_path = "logs/daily_log_" + date_string + ".html";
 
+    std::this_thread::sleep_for(std::chrono::seconds(11));//the content is writen once a 10 seconds
+
     // Check if the log file has been created and has the correct content
     const std::string log_content = get_log_contents(file_path);
 
