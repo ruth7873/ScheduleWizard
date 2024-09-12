@@ -1,0 +1,20 @@
+{
+  "title": "Iterative Task Execution",
+  "objective": "To verify that tasks are executed in the correct order based on their priority and that long tasks are handled properly.",
+  "tasks": [
+    {
+      "type": "iterative",
+      "priority": "Lower",
+      "runningTime": 10,
+      "iterationsRemaining":2,
+      "executionInterval":15
+    },     
+    {  
+      "type": "iterative",
+      "priority": "Higher",
+      "runningTime": 10,
+      "iterationsRemaining":2,
+      "executionInterval":20
+    }
+  ]
+}

@@ -1,6 +1,4 @@
 #include "ReadFromJSON.h"
-#include "TaskFactory.h" 
-#include "Consts.h"
 
 /**
  * @brief Reads task data from a JSON file and creates Task objects from it.
@@ -66,7 +64,7 @@ void ReadFromJSON::createTasksFromJSON(const string& filePath) {
  * @param filePath The path to the JSON file containing task data.
  * @param message Message to display while waiting.
  */
-void ReadFromJSON::createTasksFromJSONWithDelay(const string& filePath, string message) {
+void ReadFromJSON::createTasksFromJSONWithDelay(const string& filePath) {
     try {
         // Read data from JSON file
         std::ifstream file(filePath);

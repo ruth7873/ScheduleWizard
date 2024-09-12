@@ -5,7 +5,7 @@
 
 
 int main() {
-    Scheduler s;
+    Scheduler s(new ReadFromJSON(), new Utility());
 
     s.init();
 

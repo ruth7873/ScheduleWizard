@@ -1,5 +1,5 @@
 #include "Utility.h"
-
+#include "Scheduler.h"
 int Utility::integerValidation(string inputMassege, string variableName, bool negative)
 {
 	int numberInput;
@@ -26,3 +26,29 @@ int Utility::integerValidation(string inputMassege, string variableName, bool ne
 	}
     return numberInput;
 }
+
+void Utility::inviteDisplayMessage(Task* task){
+	if (task->getStatus() != TaskStatus::CREATION)
+		Scheduler::displayMessage(task);
+}
+
+void Utility::insertTaskFromInput()
+{
+	TaskFactory taskFactor;
+	while (true) {
+		cout << "Enter task type. basic/deadLine/iterative/ordered:" << endl;
+		string type;
+		cin >> type;
+
+		// Validate the input task type
+		if (type == TaskType::BASIC || type == TaskType::DEAD_LINE || type == TaskType::ITERATIVE || type == TaskType::ORDERED) {
+			shared_ptr<Task> newTask = taskFactor.createTask(type);
+			Scheduler::insertTask(newTask);
+		}
+		else {
+			cout << "Invalid task type." << endl;
+		}
+	}
+}
+
+

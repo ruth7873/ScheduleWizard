@@ -1,5 +1,4 @@
 #include "DeadlineTaskManager.h"
-#include "DeadLineTask.h"
 
 
 // Definition of the static member

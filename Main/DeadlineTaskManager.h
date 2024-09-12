@@ -1,14 +1,10 @@
 #pragma once
-#include "DeadLineTask.h"
 #include <memory>
 #include <queue>
 #include <vector>
 #include "Scheduler.h"
 #include <iostream>
 #include <ctime>
-
-
-//class DeadLineTask;
 
 class DeadlineTaskManager {
 private:
