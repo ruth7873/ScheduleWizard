@@ -1,11 +1,14 @@
 #pragma once
-//#include "IterativeTask.h"
 #include <memory>
 #include <queue>
 #include <vector>
 #include <functional>
+#include <chrono>
+#include "Scheduler.h"
 
+class Task;
 class IterativeTask;
+
 using namespace std;
 
 class IterativeTaskHandler

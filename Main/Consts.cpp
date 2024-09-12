@@ -30,3 +30,4 @@ const string Scenario::SCENARIO_7_FILE_PATH = "scenarios/scenario_7.json";
 const string Scenario::SCENARIO_8_FILE_PATH = "scenarios/scenario_8.json";
 const string Scenario::SCENARIO_9_FILE_PATH = "scenarios/scenario_9.json";
 const string Scenario::SCENARIO_10_FILE_PATH = "scenarios/scenario_10.json";
+const string Scenario::SCENARIO_11_FILE_PATH = "scenarios/scenario_11.json";

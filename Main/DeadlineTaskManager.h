@@ -1,5 +1,4 @@
 #pragma once
-//#include "DeadLineTask.h"
 #include <memory>
 #include <queue>
 #include <vector>
@@ -7,7 +6,7 @@
 #include <iostream>
 #include <ctime>
 
-
+class Task;
 class DeadLineTask;
 
 class DeadlineTaskManager {

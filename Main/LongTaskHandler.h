@@ -1,6 +1,11 @@
 #pragma once
 #include <memory>
 #include "Task.h"
+#include <mutex>
+#include <spdlog/spdlog.h>
+#include "Logger.h"
+#include "Scheduler.h"
+
 class LongTaskHandler
 {
 	static std::mutex longTaskMutex;

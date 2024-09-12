@@ -4,8 +4,10 @@
 #include "IterativeTask.h"
 #include <memory>
 #include <nlohmann/json.hpp>
-class TaskFactory
-{
+#include "Scheduler.h"
+
+
+class TaskFactory {
 private:
 	static Task basicInput();
 	static shared_ptr<Task> basicTaskInput(bool);
@@ -15,5 +17,6 @@ private:
 public:
 	static shared_ptr<Task> createTask(string taskType);
 	static shared_ptr<Task> createTask( const nlohmann::json& taskData);
+
 };
 

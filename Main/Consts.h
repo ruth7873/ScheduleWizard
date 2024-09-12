@@ -38,6 +38,7 @@ public:
 	static const string SCENARIO_8_FILE_PATH;
 	static const string SCENARIO_9_FILE_PATH;
 	static const string SCENARIO_10_FILE_PATH;
+	static const string SCENARIO_11_FILE_PATH;
 
 
 };
