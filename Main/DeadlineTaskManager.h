@@ -5,6 +5,7 @@
 #include "Scheduler.h"
 #include <iostream>
 #include <ctime>
+#include "DeadLineTask.h"
 
 class DeadlineTaskManager {
 private:
