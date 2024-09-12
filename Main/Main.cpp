@@ -6,6 +6,9 @@
 
 int main() {
     Scheduler s;
+
+    s.init();
+
     std::thread schedulerThread([&s]() {
         std::cerr << "Initializing Scheduler...\n";
         s.init();

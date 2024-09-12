@@ -35,11 +35,6 @@ WeightRoundRobinScheduler::~WeightRoundRobinScheduler() {
             pair.second.queue.pop();
         }
     }
-	for (auto& pair : WRRQueues) {
-		while (!pair.second.queue.empty()) {
-			pair.second.queue.pop();
-		}
-	}
 }
 
 /**

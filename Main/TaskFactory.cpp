@@ -10,32 +10,32 @@ using namespace std;
  */
 Task TaskFactory::basicInput()
 {
-		std::string priority;
-		int runningTime;
+	std::string priority;
+	int runningTime;
 
+	std::cout << "Enter the priority for the task. Options: Critical, Higher, Middle, Lower: \n";
+	std::cin >> priority;
+
+	// Input validation for priority
+	while (priority != PrioritiesLevel::CRITICAL && priority != PrioritiesLevel::HIGHER &&
+		priority != PrioritiesLevel::MIDDLE && priority != PrioritiesLevel::LOWER) {
+		spdlog::error("Invalid priority. Please enter one of the specified options.");
+		std::cout << "Invalid priority. Please enter one of the specified options." << std::endl;
 		std::cout << "Enter the priority for the task. Options: Critical, Higher, Middle, Lower: \n";
 		std::cin >> priority;
-
-		// Input validation for priority
-		while (priority != PrioritiesLevel::CRITICAL && priority != PrioritiesLevel::HIGHER &&
-			priority != PrioritiesLevel::MIDDLE && priority != PrioritiesLevel::LOWER) {
-			spdlog::error("Invalid priority. Please enter one of the specified options.");
-			std::cout << "Invalid priority. Please enter one of the specified options." << std::endl;
-			std::cout << "Enter the priority for the task. Options: Critical, Higher, Middle, Lower: \n";
-			std::cin >> priority;
-		}
-
-		// Input validation for runningTime
-		runningTime = Utility::integerValidation("Enter the task Running time:", "running Time", 0);
-		spdlog::info(Logger::LoggerInfo::CREATE_NEW_TASK, priority, runningTime);
-
-		return Task((Scheduler::taskIds++) % Scheduler::MAX_TASKS, priority, runningTime);
 	}
 
-shared_ptr<Task> TaskFactory::basicTaskInput()
+	// Input validation for runningTime
+	runningTime = Utility::integerValidation("Enter the task Running time:", "running Time", 0);
+	spdlog::info(Logger::LoggerInfo::CREATE_NEW_TASK, priority, runningTime);
+
+	return Task((Scheduler::taskIds++) % Scheduler::MAX_TASKS, priority, runningTime);
+}
+
+shared_ptr<Task> TaskFactory::basicTaskInput(bool isOrdered = false)
 {
 	Task basicTask = basicInput();
-    return shared_ptr<Task>(new Task(basicTask.getId(), basicTask.getPriority(), basicTask.getRunningTime()));
+	return shared_ptr<Task>(new Task(basicTask.getId(), basicTask.getPriority(), basicTask.getRunningTime(), isOrdered));
 }
 
 shared_ptr<DeadLineTask> TaskFactory::deadLineTaskInput()
@@ -45,7 +45,7 @@ shared_ptr<DeadLineTask> TaskFactory::deadLineTaskInput()
 
 	// Create some DeadlineTask objects
 	time_t now = time(nullptr);
-	return shared_ptr<DeadLineTask>(new DeadLineTask(basicTask, now+dealLineTime));
+	return shared_ptr<DeadLineTask>(new DeadLineTask(basicTask, now + dealLineTime));
 }
 
 shared_ptr<IterativeTask> TaskFactory::iterativeTaskInput()
@@ -62,6 +62,8 @@ shared_ptr<Task> TaskFactory::createTask(string type)
 	if (type == TaskType::BASIC) {
 		return basicTaskInput();
 	}
+	else if (type == TaskType::ORDERED)
+		return basicTaskInput(true);
 	else if (type == TaskType::DEAD_LINE) {
 		return dynamic_pointer_cast<Task>(deadLineTaskInput());
 	}
@@ -73,19 +75,24 @@ shared_ptr<Task> TaskFactory::createTask(string type)
 	}
 }
 
-shared_ptr<Task> TaskFactory::createTask( const nlohmann::json& taskData)
+shared_ptr<Task> TaskFactory::createTask(const nlohmann::json& taskData)
 {
 	try {
 		std::string taskType = taskData["type"];
 
 		// Check if taskData contains the required keys for a basic task
-		if (taskType == TaskType::BASIC) {
+		if (taskType == TaskType::BASIC || taskType == TaskType::ORDERED) {
 			if (taskData.contains("priority") && taskData.contains("runningTime")) {
 				// Make sure priority is treated as a string
+				bool isOrdered = false;
+				if (taskType == TaskType::ORDERED)
+					isOrdered = true;
+
 				return std::make_shared<Task>(
 					Scheduler::taskIds++,
 					taskData.at("priority").get<std::string>(),  // Priority is a string
-					taskData.at("runningTime").get<int>()        // Running time is an integer
+					taskData.at("runningTime").get<int>(),        // Running time is an integer
+					isOrdered
 				);
 			}
 			else {
@@ -102,7 +109,7 @@ shared_ptr<Task> TaskFactory::createTask( const nlohmann::json& taskData)
 				);
 				int deadLineTime = taskData.at("deadline").get<int>();  // Deadline is an integer
 
-				auto task =  std::make_shared<DeadLineTask>(basicTask, deadLineTime);
+				auto task = std::make_shared<DeadLineTask>(basicTask, deadLineTime);
 				return dynamic_pointer_cast<Task>(task);
 			}
 			else {
