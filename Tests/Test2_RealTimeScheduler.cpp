@@ -7,7 +7,7 @@
 //#include "Helper.h"
 
 TEST_CASE("Test RealTimeScheduler::realTimeSchedulerFunction") {
-	Scheduler scheduler;
+	Scheduler scheduler(new ReadFromJSON(), new Utility());
 	//PopAllTheQueue(scheduler);
 
 	SUBCASE("Successful Execution of Real-Time Tasks") {

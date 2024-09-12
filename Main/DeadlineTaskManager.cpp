@@ -1,17 +1,19 @@
 #include "DeadlineTaskManager.h"
-#include "DeadLineTask.h"
 
 
 // Definition of the static member
-std::priority_queue<std::shared_ptr<DeadLineTask>, std::vector<std::shared_ptr<DeadLineTask>>, std::greater<std::shared_ptr<DeadLineTask>>> DeadlineTaskManager::minHeap;
+std::priority_queue<std::shared_ptr<DeadLineTask>, std::vector<std::shared_ptr<DeadLineTask>>, DeadlineTaskManager::CompareDeadline> DeadlineTaskManager::minHeap;
 
 void DeadlineTaskManager::addTask(const std::shared_ptr<DeadLineTask>& task) {
-    if(task->getPriority() != PrioritiesLevel::CRITICAL)
+    if (task->getPriority() != PrioritiesLevel::CRITICAL)
         minHeap.push(task);
 }
 
- std::shared_ptr<DeadLineTask> DeadlineTaskManager::getUpcomingTask() {
-     return minHeap.top();
+std::shared_ptr<DeadLineTask> DeadlineTaskManager::getUpcomingTask() {
+    if (minHeap.empty())
+        throw "Heap is empty";
+    return minHeap.top();
+    
 }
 
 void DeadlineTaskManager::deadlineMechanism() {
@@ -32,12 +34,12 @@ void DeadlineTaskManager::deadlineMechanism() {
             // Remove the task from the heap
             {
                 std::unique_lock<std::mutex> lock(Scheduler::rtLock);  // Lock the rtLock
-                if(!minHeap.empty())
+                if (!minHeap.empty())
                     minHeap.pop();
             }
         }
         else {
-            if(earliestTask->getPriority() == PrioritiesLevel::CRITICAL ||
+            if (earliestTask->getPriority() == PrioritiesLevel::CRITICAL ||
                 earliestTask->getStatus() == TaskStatus::COMPLETED)
 
                 minHeap.pop();

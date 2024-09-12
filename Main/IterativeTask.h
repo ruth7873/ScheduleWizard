@@ -1,6 +1,8 @@
 #pragma once
 #include "Task.h"
 
+class Task;
+
 class IterativeTask : public Task
 {
 private:

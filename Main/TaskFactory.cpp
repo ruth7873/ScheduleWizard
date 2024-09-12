@@ -1,5 +1,5 @@
 #include "TaskFactory.h"
-#include "Scheduler.h"
+
 
 using namespace std;
 
@@ -107,7 +107,7 @@ shared_ptr<Task> TaskFactory::createTask(const nlohmann::json& taskData)
 					taskData.at("priority").get<std::string>(),  // Priority is a string
 					taskData.at("runningTime").get<int>()        // Running time is an integer
 				);
-				int deadLineTime = taskData.at("deadLine").get<int>();  // Deadline is an integer
+				int deadLineTime = taskData.at("deadline").get<int>();  // Deadline is an integer
 
 				auto task = std::make_shared<DeadLineTask>(basicTask, deadLineTime);
 				return dynamic_pointer_cast<Task>(task);
@@ -126,7 +126,8 @@ shared_ptr<Task> TaskFactory::createTask(const nlohmann::json& taskData)
 				);
 				int iterationsRemaining = taskData.at("iterationsRemaining").get<int>();  // Integer
 				int executionInterval = taskData.at("executionInterval").get<int>();      // Integer
-				return std::make_shared<IterativeTask>(basicTask, iterationsRemaining, executionInterval);
+				auto task = std::make_shared<IterativeTask>(basicTask, iterationsRemaining, executionInterval);
+				return dynamic_pointer_cast<Task>(task);
 			}
 			else {
 				std::cerr << "Missing required fields for ITERATIVE task!" << std::endl;

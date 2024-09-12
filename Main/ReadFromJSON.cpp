@@ -1,6 +1,4 @@
 #include "ReadFromJSON.h"
-#include "TaskFactory.h" 
-#include "Consts.h"
 
 
 /**
@@ -52,5 +50,13 @@ void ReadFromJSON::createTasksFromJSON(const string& filePath) {
 		spdlog::error("An exception occurred: {}", e.what());
 	}
 
-	file.close();
+	if (file.is_open()) {
+		file.close();
+		if (file.is_open()) {
+			// File closure failed
+			std::cerr << "Error: File closure failed." << std::endl;
+			spdlog::error("Error: File closure failed.");
+		}
+	}
 }
+

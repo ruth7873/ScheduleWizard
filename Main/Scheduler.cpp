@@ -1,6 +1,4 @@
 #include "Scheduler.h"
-#include "TaskFactory.h"
-#include "LongTaskHandler.h"
 
 int Scheduler::totalRunningTask = 0;
 unsigned int Scheduler::taskIds = 0;
@@ -14,6 +12,12 @@ IterativeTaskHandler Scheduler::iterativeTaskHandler;
 DeadlineTaskManager Scheduler::deadlineTaskManager;
 OrderedTaskHandler Scheduler::orderedTaskHandler;
 
+
+
+Scheduler::Scheduler(IReadFromJSON* reader, IUtility* utilies)
+	: reader(reader),
+	utilies(utilies)
+{}
 
 /**
  * @brief Initiates the scheduling process by creating and managing threads for various scheduler functions.
@@ -31,14 +35,14 @@ void Scheduler::init() {
 		std::thread readtasksFromJSON_Thread([this]() {
 			SetThreadDescription(GetCurrentThread(), L"createTasksFromJSON");
 			spdlog::info(Logger::LoggerInfo::START_READ_FROM_JSON_THREAD);
-			ReadFromJSON::createTasksFromJSON(Scenario::SCENARIO_1_FILE_PATH);
+			reader->createTasksFromJSON(Scenario::SCENARIO_11_FILE_PATH);
 			});
 
 		// Create a thread for the InsertTask function
 		std::thread insertTask_Thread([this]() {
 			SetThreadDescription(GetCurrentThread(), L"InsertTask");
 			spdlog::info(Logger::LoggerInfo::START_THREAD, "InsertTask");
-			this->insertTaskFromInput();
+			this->utilies->insertTaskFromInput();
 			});
 
 		// Create a thread for real-Time Scheduler
@@ -74,24 +78,6 @@ void Scheduler::init() {
 	}
 }
 
-void Scheduler::insertTaskFromInput()
-{
-	while (true) {
-		cout << "Enter task type. basic/deadLine/iterative/ordered:" << endl;
-		string type;
-		cin >> type;
-
-		// Validate the input task type
-		if (type == TaskType::BASIC || type == TaskType::DEAD_LINE || type == TaskType::ITERATIVE || type == TaskType::ORDERED) {
-			shared_ptr<Task> newTask = TaskFactory::createTask(type);
-			insertTask(newTask);
-		}
-		else {
-			cout << "Invalid task type." << endl;
-		}
-	}
-}
-
 /**
  * @brief Continuously prompts the user to input task details and inserts the tasks into the appropriate scheduler.
  *
@@ -118,6 +104,7 @@ void Scheduler::insertTask(shared_ptr<Task> newTask)
 			// Check if dynamic_pointer_cast succeeded
 			if (iterativeTask) {
 				iterativeTaskHandler.pushIterativeTask(iterativeTask);
+				auto u = iterativeTaskHandler.getMinHeap();
 			}
 		}
 		else if (shared_ptr< DeadLineTask> deadLineTask = dynamic_pointer_cast<DeadLineTask>(newTask)) {
@@ -270,4 +257,3 @@ DeadlineTaskManager& Scheduler::getDeadlineTaskManager() {
 OrderedTaskHandler& Scheduler::getOrderedTaskHandler() {
 	return orderedTaskHandler;
 }
-

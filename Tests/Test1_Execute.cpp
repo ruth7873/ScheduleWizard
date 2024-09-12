@@ -2,7 +2,7 @@
 #include "../Main/Scheduler.h"
 
 TEST_CASE("Scheduler::execute") {
-	Scheduler scheduler;
+	Scheduler scheduler(new ReadFromJSON(), new Utility());
 	SUBCASE("Scheduler::execute - Successful Execution of Critical Task") {
 		shared_ptr<Task> criticalTask(new Task(Scheduler::taskIds++, PrioritiesLevel::CRITICAL, 2));
 

@@ -4,7 +4,7 @@
 
 
 TEST_CASE("OrderedTaskHandler operations") {
-    Scheduler s;
+    Scheduler s(new ReadFromJSON(), new Utility());
     PopAllTheQueue(s);
 
     SUBCASE("Adding tasks") {

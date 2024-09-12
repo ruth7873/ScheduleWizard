@@ -14,6 +14,12 @@
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
     <Filter Include="Tests">
+      <UniqueIdentifier>{3dfa2b69-4286-47be-ac9f-bb829d4fdf57}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Tests\System Test">
+      <UniqueIdentifier>{2b520dea-9cc8-4d3e-b3b7-6e4fff4f691e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Tests\Unit Tests">
       <UniqueIdentifier>{6a61bf9b-3758-485f-a147-40082ff28c05}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -70,32 +76,42 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Tests_Main.cpp">
-      <Filter>Tests</Filter>
+      <Filter>Tests\Unit Tests</Filter>
     </ClCompile>
+<<<<<<< HEAD
+=======
+    <ClCompile Include="Test_Ececute.cpp">
+      <Filter>Tests\Unit Tests</Filter>
+    </ClCompile>
+    <ClCompile Include="Test_RealTimeScheduler.cpp">
+      <Filter>Tests\Unit Tests</Filter>
+    </ClCompile>
+>>>>>>> 3ffbcbb663e58f056ea21f6718a83f9be82cc013
     <ClCompile Include="Test_InsertTask.cpp">
-      <Filter>Tests</Filter>
+      <Filter>Tests\Unit Tests</Filter>
     </ClCompile>
     <ClCompile Include="Test_Logger.cpp">
-      <Filter>Tests</Filter>
+      <Filter>Tests\Unit Tests</Filter>
     </ClCompile>
     <ClCompile Include="Test_ReadFromJson.cpp">
-      <Filter>Tests</Filter>
+      <Filter>Tests\Unit Tests</Filter>
     </ClCompile>
     <ClCompile Include="Test_Dead_Line.cpp">
-      <Filter>Tests</Filter>
+      <Filter>Tests\Unit Tests</Filter>
     </ClCompile>
     <ClCompile Include="Test_Iterative_Task.cpp">
-      <Filter>Tests</Filter>
+      <Filter>Tests\Unit Tests</Filter>
     </ClCompile>
     <ClCompile Include="Test_Long_task.cpp">
-      <Filter>Tests</Filter>
+      <Filter>Tests\Unit Tests</Filter>
     </ClCompile>
     <ClCompile Include="Test_Ordered_Task.cpp">
-      <Filter>Tests</Filter>
+      <Filter>Tests\Unit Tests</Filter>
     </ClCompile>
     <ClCompile Include="Helper.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+<<<<<<< HEAD
     <ClCompile Include="Test2_RealTimeScheduler.cpp">
       <Filter>Tests</Filter>
     </ClCompile>
@@ -104,6 +120,13 @@
     </ClCompile>
     <ClCompile Include="Test_Utility.cpp">
       <Filter>Tests</Filter>
+=======
+    <ClCompile Include="Test_Job_Scheduling.cpp">
+      <Filter>Tests\System Test</Filter>
+    </ClCompile>
+    <ClCompile Include="IScheduler.cpp">
+      <Filter>Header Files</Filter>
+>>>>>>> 3ffbcbb663e58f056ea21f6718a83f9be82cc013
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -158,10 +181,10 @@
     <ClInclude Include="..\Main\WeightRoundRobinScheduler.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="doctest.h">
-      <Filter>Tests</Filter>
-    </ClInclude>
     <ClInclude Include="Helper.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="doctest.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

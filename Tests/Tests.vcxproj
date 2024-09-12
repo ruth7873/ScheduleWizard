@@ -104,11 +104,13 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>D:\Bootcamp\part 2\Scheduler Project\ScheduleWizard\Main;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\ספריות\FakeIt\FakeIt\single_header\doctest;D:\Bootcamp\part 2\Scheduler Project\ScheduleWizard\Main</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\Bootcamp\part 2\Scheduler Project\ScheduleWizard\Main;C:\Users\user1\Desktop\bootcamp\Main\spdlog\include\spdlog;C:\Users\מיכל\Documents\BootCamp\OurProject\boost_1_85_0;C:\Users\user1\Downloads\boost_1_85_0\boost_1_85_0;C:\Users\user1\Desktop\bootcamp\project\FakeIt\single_header\doctest;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>C:\Users\user1\Downloads\boost_1_85_0\boost_1_85_0\libs;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -119,6 +121,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>D:\ספריות\FakeIt\FakeIt\single_header\doctest;D:\Bootcamp\part 2\Scheduler Project\ScheduleWizard\Main</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -145,6 +148,9 @@
     <ClCompile Include="..\Main\Utility.cpp" />
     <ClCompile Include="..\Main\WebSocketSession.cpp" />
     <ClCompile Include="..\Main\WeightRoundRobinScheduler.cpp" />
+    <ClCompile Include="IScheduler.cpp" />
+    <ClCompile Include="Test_Job_Scheduling.cpp" />
+    <ClCompile Include="Test_WRR.cpp" />
     <ClCompile Include="Helper.cpp" />
     <ClCompile Include="Test1_Execute.cpp" />
     <ClCompile Include="Test2_RealTimeScheduler.cpp" />
@@ -184,14 +190,14 @@
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
-    <Import Project="..\packages\spdlog.native.1.0.0\build\native\spdlog.native.targets" Condition="Exists('..\packages\spdlog.native.1.0.0\build\native\spdlog.native.targets')" />
     <Import Project="..\packages\nlohmann.json.3.11.2\build\native\nlohmann.json.targets" Condition="Exists('..\packages\nlohmann.json.3.11.2\build\native\nlohmann.json.targets')" />
+    <Import Project="..\packages\spdlog.native.1.0.0\build\native\spdlog.native.targets" Condition="Exists('..\packages\spdlog.native.1.0.0\build\native\spdlog.native.targets')" />
   </ImportGroup>
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
-    <Error Condition="!Exists('..\packages\spdlog.native.1.0.0\build\native\spdlog.native.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\spdlog.native.1.0.0\build\native\spdlog.native.targets'))" />
     <Error Condition="!Exists('..\packages\nlohmann.json.3.11.2\build\native\nlohmann.json.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\nlohmann.json.3.11.2\build\native\nlohmann.json.targets'))" />
+    <Error Condition="!Exists('..\packages\spdlog.native.1.0.0\build\native\spdlog.native.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\spdlog.native.1.0.0\build\native\spdlog.native.targets'))" />
   </Target>
 </Project>

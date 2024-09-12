@@ -1,6 +1,8 @@
 #pragma once
 #include <memory>
 #include "Task.h"
+#include "Scheduler.h"
+
 class OrderedTaskHandler
 {
 	queue<shared_ptr<Task>> orderedTaskQueue;

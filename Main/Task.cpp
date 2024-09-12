@@ -1,4 +1,5 @@
 #include "Task.h"
+#include "Consts.h"
 
 Task::Task(int id, string priority, int runningTime, string status, bool isOrdered)
 	: id(id), priority(priority), runningTime(runningTime), status(status), isOrdered(isOrdered)
@@ -38,8 +39,7 @@ const string& Task::getStatus() const {
 
 void Task::setStatus(const string& newStatus) {
 	status = newStatus;
-	if(newStatus != TaskStatus::CREATION)
-	Scheduler::displayMessage(this);
+	Utility::inviteDisplayMessage(this);
 }
 
 bool Task::getIsOrdered()const {

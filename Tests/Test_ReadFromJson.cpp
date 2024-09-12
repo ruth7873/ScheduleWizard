@@ -23,7 +23,7 @@ void removeTestJSONFile() {
 }
 
 TEST_CASE("Test ReadFromJSON::createTasksFromJSON") {
-	Scheduler scheduler;  // Assuming Scheduler is responsible for managing tasks
+	Scheduler scheduler(new ReadFromJSON(), new Utility());
 	Scheduler::totalRunningTask = 0;
 	SUBCASE("Handling of Empty Task JSON Data") {
 		PopAllTheQueue(scheduler);
@@ -169,7 +169,5 @@ TEST_CASE("Test ReadFromJSON::createTasksFromJSON") {
 		Scheduler::totalRunningTask = 0;
 	}
 }
-
-
 
 

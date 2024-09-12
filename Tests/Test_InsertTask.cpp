@@ -4,7 +4,7 @@
 #include "Helper.h"
 
 TEST_CASE("Test Scheduler::InsertTask") {
-    Scheduler scheduler;
+    Scheduler scheduler(new ReadFromJSON(), new Utility());
 
     SUBCASE("Insert a critical task") {
         shared_ptr<Task> criticalTask(new Task(Scheduler::taskIds++, PrioritiesLevel::CRITICAL, 5));
@@ -48,3 +48,4 @@ TEST_CASE("Test Scheduler::InsertTask") {
     PopAllTheQueue(scheduler);
 
 }
+

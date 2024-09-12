@@ -1,5 +1,5 @@
 #include "DeadLineTask.h"
-#include <memory> // for std::shared_ptr
+
 
 
 // Definition of the static member
@@ -15,7 +15,7 @@ DeadLineTask::DeadLineTask(Task basicTask, int deadLineTime)
 time_t DeadLineTask::getDeadline() const {
     return deadline;
 }
-
 bool DeadLineTask::operator>(const DeadLineTask& other) const {
-    return deadline > other.deadline;
+    return deadline < other.deadline;
 }
+

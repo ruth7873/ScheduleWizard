@@ -5,7 +5,7 @@
 #include "Helper.h"
 
 TEST_CASE("Unit Test Of Iterative Task Handler") {
-    Scheduler s;
+    Scheduler s(new ReadFromJSON(), new Utility());
     PopAllTheQueue(s);
 
     SUBCASE("Push Iterative Task") {
@@ -72,7 +72,7 @@ TEST_CASE("Unit Test Of Iterative Task Handler") {
 }
 
 TEST_CASE("System Test Of Iterative Task Handler") {
-    Scheduler s;
+    Scheduler s(new ReadFromJSON(), new Utility());
     PopAllTheQueue(s);
 
     SUBCASE("Iterative Task Handling") {

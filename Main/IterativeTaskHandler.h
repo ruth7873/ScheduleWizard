@@ -1,18 +1,27 @@
 #pragma once
-//#include "IterativeTask.h"
 #include <memory>
 #include <queue>
 #include <vector>
 #include <functional>
+#include <chrono>
+#include "Scheduler.h"
+#include "IterativeTask.h"
 
+
+class Task;
 class IterativeTask;
+
 using namespace std;
 
 class IterativeTaskHandler
 {
 private:
-		std::priority_queue<std::shared_ptr<IterativeTask>, std::vector<std::shared_ptr<IterativeTask>>,
-			std::greater<std::shared_ptr<IterativeTask>>> minHeap;
+	struct CompareIterative {
+		bool operator()(const std::shared_ptr<IterativeTask>& lhs, const std::shared_ptr<IterativeTask>& rhs) const {
+			return lhs->IterativeTask::getWaitTime() > rhs->IterativeTask::getWaitTime(); // Min-heap based on waitTime
+		}
+	};
+		std::priority_queue<std::shared_ptr<IterativeTask>, std::vector<std::shared_ptr<IterativeTask>>, CompareIterative> minHeap;
 
 public:
 	 void pushIterativeTask(shared_ptr<IterativeTask> iterativeTask);
@@ -25,7 +34,7 @@ public:
 		 return minHeap.empty();
 	 }
 
-	 std::priority_queue<std::shared_ptr<IterativeTask>, std::vector<std::shared_ptr<IterativeTask>>, std::greater<std::shared_ptr<IterativeTask>>> getMinHeap() const {
+	 std::priority_queue<std::shared_ptr<IterativeTask>, std::vector<std::shared_ptr<IterativeTask>>, CompareIterative> getMinHeap() const {
 		 return minHeap;
 	 }
 

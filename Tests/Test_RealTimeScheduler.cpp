@@ -4,6 +4,7 @@
 //#include <memory>
 //#include "../Main/Scheduler.h"
 //#include "../Main/RealTimeScheduler.h"
+<<<<<<< HEAD
 //#include "Helper.h"
 //
 //TEST_CASE("Test RealTimeScheduler::realTimeSchedulerFunction") {
@@ -23,6 +24,28 @@
 //
 //		CHECK_EQ(scheduler.getRealTimeScheduler().getRealTimeQueue().size(), 0);
 //		CHECK_EQ(task1->getStatus(), TaskStatus::COMPLETED);
+=======
+//
+//TEST_CASE("Test RealTimeScheduler::realTimeSchedulerFunction") {
+//	Scheduler scheduler;
+//
+//	SUBCASE("Successful Execution of Real-Time Tasks") {
+//		shared_ptr<Task> task1(new Task(Scheduler::taskIds++, PrioritiesLevel::CRITICAL, 2));
+//		shared_ptr<Task> task2(new Task(Scheduler::taskIds++, PrioritiesLevel::CRITICAL, 3));
+//
+//		scheduler.insertTask(task1);
+//		scheduler.insertTask(task2);
+//		//scheduler.getRealTimeScheduler().realTimeSchedulerFunction();
+//		std::thread schedulerThread(&RealTimeScheduler::realTimeSchedulerFunction, &scheduler.getRealTimeScheduler());
+//		// Give some time for tasks to be executed
+//		std::this_thread::sleep_for(std::chrono::seconds(15));
+//
+//		schedulerThread.detach();  // We detach instead of join to avoid infinite loop
+//
+//		CHECK_EQ(scheduler.getRealTimeScheduler().getRealTimeQueue().size(), 0);
+//		CHECK_EQ(task1->getStatus(), TaskStatus::COMPLETED);
+//		CHECK_EQ(task2->getStatus(), TaskStatus::COMPLETED);
+>>>>>>> 3ffbcbb663e58f056ea21f6718a83f9be82cc013
 //		// Here you might want to add more checks to verify task execution
 //	}
 //
