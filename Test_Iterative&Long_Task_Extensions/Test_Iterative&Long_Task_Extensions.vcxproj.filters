@@ -1,0 +1,54 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Test_Dead_Line.cpp" />
+    <ClCompile Include="Test_Iterative&amp;Long_Task_Extensions.cpp" />
+    <ClCompile Include="Test_Iterative_Task.cpp" />
+    <ClCompile Include="Test_Long_task.cpp" />
+    <ClCompile Include="Test_WRR.cpp" />
+    <ClCompile Include="..\Main\Consts.cpp" />
+    <ClCompile Include="..\Main\DeadLineTask.cpp" />
+    <ClCompile Include="..\Main\DeadlineTaskManager.cpp" />
+    <ClCompile Include="..\Main\IterativeTask.cpp" />
+    <ClCompile Include="..\Main\IterativeTaskHandler.cpp" />
+    <ClCompile Include="..\Main\Logger.cpp" />
+    <ClCompile Include="..\Main\LongTaskHandler.cpp" />
+    <ClCompile Include="..\Main\ReadFromJSON.cpp" />
+    <ClCompile Include="..\Main\RealTimeScheduler.cpp" />
+    <ClCompile Include="..\Main\Scheduler.cpp" />
+    <ClCompile Include="..\Main\Task.cpp" />
+    <ClCompile Include="..\Main\TaskFactory.cpp" />
+    <ClCompile Include="..\Main\TCPServer.cpp" />
+    <ClCompile Include="..\Main\Utility.cpp" />
+    <ClCompile Include="..\Main\WebSocketSession.cpp" />
+    <ClCompile Include="..\Main\WeightRoundRobinScheduler.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\Main\Consts.h" />
+    <ClInclude Include="..\Main\DeadLineTask.h" />
+    <ClInclude Include="..\Main\DeadlineTaskManager.h" />
+    <ClInclude Include="..\Main\IterativeTask.h" />
+    <ClInclude Include="..\Main\IterativeTaskHandler.h" />
+    <ClInclude Include="..\Main\Logger.h" />
+    <ClInclude Include="..\Main\LongTaskHandler.h" />
+    <ClInclude Include="..\Main\ReadFromJSON.h" />
+    <ClInclude Include="..\Main\RealTimeScheduler.h" />
+    <ClInclude Include="..\Main\Scheduler.h" />
+    <ClInclude Include="..\Main\Task.h" />
+    <ClInclude Include="..\Main\TaskFactory.h" />
+    <ClInclude Include="..\Main\TCPServer.h" />
+    <ClInclude Include="..\Main\Utility.h" />
+    <ClInclude Include="..\Main\WebSocketSession.h" />
+    <ClInclude Include="..\Main\WeightRoundRobinScheduler.h" />
+    <ClInclude Include="doctest.h" />
+  </ItemGroup>
+</Project>

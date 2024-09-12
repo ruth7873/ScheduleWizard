@@ -107,7 +107,7 @@ shared_ptr<Task> TaskFactory::createTask(const nlohmann::json& taskData)
 					taskData.at("priority").get<std::string>(),  // Priority is a string
 					taskData.at("runningTime").get<int>()        // Running time is an integer
 				);
-				int deadLineTime = taskData.at("deadLine").get<int>();  // Deadline is an integer
+				int deadLineTime = taskData.at("deadline").get<int>();  // Deadline is an integer
 
 				auto task = std::make_shared<DeadLineTask>(basicTask, deadLineTime);
 				return dynamic_pointer_cast<Task>(task);

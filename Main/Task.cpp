@@ -1,4 +1,5 @@
 #include "Task.h"
+#include "Consts.h"
 
 Task::Task(int id, string priority, int runningTime, string status, bool isOrdered)
 	: id(id), priority(priority), runningTime(runningTime), status(status), isOrdered(isOrdered)

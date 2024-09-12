@@ -6,13 +6,18 @@
 #include <iostream>
 #include <ctime>
 
-class Task;
-class DeadLineTask;
-
 class DeadlineTaskManager {
 private:
     // Min-heap to store shared pointers of DeadLineTask objects
-    static priority_queue<std::shared_ptr<DeadLineTask>, std::vector<std::shared_ptr<DeadLineTask>>, std::greater<std::shared_ptr<DeadLineTask>>> minHeap;
+    struct CompareDeadline {
+        bool operator()(const std::shared_ptr<DeadLineTask>& lhs, const std::shared_ptr<DeadLineTask>& rhs) const {
+
+            return lhs->DeadLineTask::getDeadline() > rhs->DeadLineTask::getDeadline(); // Min-heap based on deadline
+            
+        }
+    };
+
+    static std::priority_queue<std::shared_ptr<DeadLineTask>, std::vector<std::shared_ptr<DeadLineTask>>, CompareDeadline> minHeap;
 
 public:
     // Add a new DeadlineTask (as shared pointer) to the heap

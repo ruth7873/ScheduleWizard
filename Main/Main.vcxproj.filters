@@ -2,32 +2,50 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClCompile Include="Main.cpp" />
-    <ClCompile Include="Consts.cpp">
-      <Filter>Source files</Filter>
-    </ClCompile>
-    <ClCompile Include="DeadLineTask.cpp">
-      <Filter>Source files</Filter>
-    </ClCompile>
     <ClCompile Include="DeadlineTaskManager.cpp">
-      <Filter>Source files</Filter>
-    </ClCompile>
-    <ClCompile Include="IterativeTask.cpp">
-      <Filter>Source files</Filter>
+      <Filter>Task_Handlers\Sources</Filter>
     </ClCompile>
     <ClCompile Include="IterativeTaskHandler.cpp">
-      <Filter>Source files</Filter>
+      <Filter>Task_Handlers\Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Utility.cpp">
+      <Filter>Utilities\Sources</Filter>
+    <ClCompile Include="LongTaskHandler.cpp">
+      <Filter>Task_Handlers\Sources</Filter>
+    <ClCompile Include="WebSocketSession.cpp">
+      <Filter>Server\Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Consts.cpp">
+      <Filter>Utilities\Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="DeadLineTask.cpp">
+      <Filter>Task_Type\Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="IterativeTask.cpp">
+      <Filter>Task_Type\Sources</Filter>
     </ClCompile>
     <ClCompile Include="Logger.cpp">
-      <Filter>Source files</Filter>
+      <Filter>Logging\Sources</Filter>
     </ClCompile>
     <ClCompile Include="LongTaskHandler.cpp">
-      <Filter>Source files</Filter>
-    </ClCompile>
-    <ClCompile Include="OrderedTaskHandler.cpp">
-      <Filter>Source files</Filter>
+      <Filter>Task_Handlers\Sources</Filter>
     </ClCompile>
     <ClCompile Include="ReadFromJSON.cpp">
-      <Filter>Source files</Filter>
+      <Filter>Utilities\Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Task.cpp">
+      <Filter>Task_Type\Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="RealTimeScheduler.cpp">
+      <Filter>Schedulers\Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="TaskFactory.cpp">
+      <Filter>Utilities\Sources</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Main.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="RealTimeScheduler.cpp">
       <Filter>Source files</Filter>

@@ -1,5 +1,4 @@
 {
-<<<<<<< HEAD:Main/scenarios/scenario_10.json
     "title": "Wrr scheduler",
     "objective": "Verify task execution correctly by the wrr scheduler",
     "tasks": [
@@ -39,33 +38,3 @@
     
     ]
 }
-=======
-    "title": "Deadline Task Execution",
-    "objective": "To verify that tasks are executed in the correct order based on their priority and that long tasks are handled properly.",
-    "tasks": [
-      {
-        "type": "basic",
-        "priority": "High",
-        "runningTime": 5
-      },     
-      {  
-        "type": "basic",
-        "priority": "Low",
-        "runningTime": 15
-      },
-      {  
-        "type": "basic",
-        "priority": "Middle",
-        "runningTime": 5
-      },
-      {
-        "type": "deadline",
-        "priority": "Low",
-        "runningTime": 10,
-        "deadline": 15
-      }
-
-    ]
-  }
-  
->>>>>>> 5971535fac16bde244c29daf4e9c220d8ceb2e14:Main/tests/scenario_10.json
