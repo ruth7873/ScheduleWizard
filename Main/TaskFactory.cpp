@@ -19,7 +19,7 @@ Task TaskFactory::basicInput()
 	// Input validation for priority
 	while (priority != PrioritiesLevel::CRITICAL && priority != PrioritiesLevel::HIGHER &&
 		priority != PrioritiesLevel::MIDDLE && priority != PrioritiesLevel::LOWER) {
-		spdlog::error("Invalid priority. Please enter one of the specified options.");
+		spdlog::error(Logger::LoggerError::INVALID_PRIORITY);
 		std::cout << "Invalid priority. Please enter one of the specified options." << std::endl;
 		std::cout << "Enter the priority for the task. Options: Critical, Higher, Middle, Lower: \n";
 		std::cin >> priority;
@@ -140,7 +140,7 @@ shared_ptr<Task> TaskFactory::createTask(const nlohmann::json& taskData)
 	catch (const std::exception& e) {
 		// Handle exceptions thrown during JSON parsing or task creation
 		std::cerr << "An exception occurred: " << e.what() << std::endl;
-		spdlog::error("An exception occurred: {}", e.what());
+		spdlog::error(Logger::LoggerError::EXCEPTION_OCCURRED, e.what());
 	}
 
 	return nullptr; // Return nullptr if something goes wrong

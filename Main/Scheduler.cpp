@@ -103,10 +103,10 @@ void Scheduler::insertTask(shared_ptr<Task> newTask)
 {
 	if (newTask == nullptr) {
 		std::cerr << "Error: Invalid task input. Please try again." << std::endl;
-		spdlog::error("Error: Invalid task input. Skipping task insertion.");
+		spdlog::error(Logger::LoggerError::ERROR_INSERT_TASK);
 	}
 
-	else if (newTask->getIsOrdered() && orderedTaskHandler.frontOrderedTask()!=newTask) {
+	else if (newTask->getIsOrdered() && orderedTaskHandler.frontOrderedTask() != newTask) {
 		orderedTaskHandler.addOrderedtask(newTask);
 	}
 	else {
@@ -116,15 +116,11 @@ void Scheduler::insertTask(shared_ptr<Task> newTask)
 
 		if (shared_ptr< IterativeTask> iterativeTask = dynamic_pointer_cast<IterativeTask>(newTask)) {
 			// Check if dynamic_pointer_cast succeeded
-			if (iterativeTask) {
-				iterativeTaskHandler.pushIterativeTask(iterativeTask);
-			}
+			iterativeTaskHandler.pushIterativeTask(iterativeTask);
 		}
 		else if (shared_ptr< DeadLineTask> deadLineTask = dynamic_pointer_cast<DeadLineTask>(newTask)) {
 			// Check if dynamic_pointer_cast succeeded
-			if (deadLineTask) {
-				deadlineTaskManager.addTask(deadLineTask);
-			}
+			deadlineTaskManager.addTask(deadLineTask);
 		}
 	}
 }
@@ -146,10 +142,10 @@ void Scheduler::addTaskToItsQueue(shared_ptr<Task> taskToAdd) {
 
 /*
  * @brief Pop task From its Q.
- * 
+ *
  * Thread-safe pop operation for task queues
- * 
- */ 
+ *
+ */
 void Scheduler::popTaskFromItsQueue(shared_ptr<Task> taskToPop) {
 	if (taskToPop->getPriority() == PrioritiesLevel::CRITICAL) {
 		// Lock the mutex for the real-time queue
@@ -217,6 +213,7 @@ void Scheduler::execute(shared_ptr<Task> task) {
 			task->setStatus(TaskStatus::TERMINATED);
 			popTaskFromItsQueue(task);
 			totalRunningTask--;
+			LongTaskHandler::addSumOfAllSeconds(task->getRunningTime());
 			break; // Exit the loop if an exception is caught
 		}
 	}

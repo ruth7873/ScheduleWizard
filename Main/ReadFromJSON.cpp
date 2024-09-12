@@ -37,7 +37,7 @@ void ReadFromJSON::createTasksFromJSON(const string& filePath) {
 			}
 			else {
 				std::cerr << "Task creation failed for task type: " << taskType << std::endl;
-				spdlog::error("Task creation failed for task type: {}", taskType);
+				spdlog::error(Logger::LoggerError::ERROR_CREATE_TASK, taskType);
 			}
 
 			// If delayBetweenTasks is true and a "delay" field exists, wait for the specified delay
@@ -49,7 +49,7 @@ void ReadFromJSON::createTasksFromJSON(const string& filePath) {
 	catch (const std::exception& e) {
 		// Handle exceptions thrown during JSON parsing or task creation
 		std::cerr << "An exception occurred: " << e.what() << std::endl;
-		spdlog::error("An exception occurred: {}", e.what());
+		spdlog::error(Logger::LoggerError::EXCEPTION_OCCURRED, e.what());
 	}
 
 	file.close();

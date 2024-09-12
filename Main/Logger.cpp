@@ -87,4 +87,11 @@ const string Logger::LoggerInfo::POP_ITERATIVE_TASK_FROM_HEAP = "Task with ID: {
 
 //Logger Error
 const string Logger::LoggerError::ERROR_CREATE_THREAD = "Error creating threads: {}";
+const string Logger::LoggerError::ERROR_CREATE_TASK = "Task creation failed for task type: {}";
+const string Logger::LoggerError::ERROR_INSERT_TASK = "Error: Invalid task input.Skipping task insertion.";
 const string Logger::LoggerError::TASK_TERMINATED = "Exception occurred while executing task with ID: {}: {}";
+const string Logger::LoggerError::EXCEPTION_OCCURRED = "An exception occurred: {}";
+const string Logger::LoggerError::INVALID_PRIORITY = "Invalid Priority";
+
+const string Logger::LoggerWarn::CANT_POP = "Can't pop empty queue";
+const string Logger::LoggerWarn::CANT_FRONT = "Can't front empty queue";

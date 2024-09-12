@@ -48,4 +48,13 @@ TEST_CASE("OrderedTaskHandler operations") {
 
         CHECK_NOTHROW(s.getOrderedTaskHandler().popOrderedTask());  // Should not crash
     }
+
+    SUBCASE("Execute Order Task") {
+        auto task1 = std::make_shared<Task>(1, PrioritiesLevel::HIGHER, 1, true);
+        s.insertTask(task1);
+        s.execute(task1);
+        std::this_thread::sleep_for(std::chrono::seconds(2));
+        CHECK(s.getOrderedTaskHandler().frontOrderedTask() == nullptr);
+
+    }
 }

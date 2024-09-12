@@ -40,6 +40,17 @@ public:
 	class LoggerError {
 	public:
 		static const string ERROR_CREATE_THREAD;
+		static const string ERROR_CREATE_TASK;
+		static const string ERROR_INSERT_TASK;
 		static const string TASK_TERMINATED;
+		static const string EXCEPTION_OCCURRED;
+		static const string INVALID_PRIORITY;
+
+	};
+	class LoggerWarn {
+	public:
+		static const string CANT_POP;
+		static const string CANT_FRONT;
+
 	};
 };

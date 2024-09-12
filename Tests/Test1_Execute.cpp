@@ -41,6 +41,35 @@ TEST_CASE("Scheduler::execute") {
 		schedulerThread.join();
 	}
 
+	class FailingTask : public Task {
+	public:
+		FailingTask() : Task(1,PrioritiesLevel::HIGHER,2) {}
+
+		void setRunningTime(int time) override {
+			throw std::runtime_error("Simulated failure");
+		}
+	};
+
+	SUBCASE("SchedulerTest, TaskFailureHandledCorrectly") {
+		Scheduler scheduler;
+
+		// צור את המשימה הכושלת
+		auto failingTask = std::make_shared<FailingTask>();
+
+		// הרץ את המשימה
+		scheduler.execute(failingTask);
+
+		// בדוק שהמשימה הושלמה כראוי
+		CHECK_EQ(failingTask->getStatus(), TaskStatus::TERMINATED);
+		// ניתן גם לבדוק שהבקרה נרשמה נכון, אם יש צורך
+	}
+	SUBCASE("Scheduler::exeute - Terminated Task") {
+		shared_ptr<Task> higherPriorityTask(new Task(Scheduler::taskIds++, PrioritiesLevel::HIGHER, 5));
+		scheduler.execute(higherPriorityTask);
+		
+	}
+
+
 	SUBCASE("Scheduler::execute - Boundary Condition: Minimum Running Time") {
 		shared_ptr<Task> minTimeTask(new Task(Scheduler::taskIds++, PrioritiesLevel::CRITICAL, 0));
 
