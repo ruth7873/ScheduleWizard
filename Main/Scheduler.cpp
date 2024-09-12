@@ -104,6 +104,7 @@ void Scheduler::insertTask(shared_ptr<Task> newTask)
 			// Check if dynamic_pointer_cast succeeded
 			if (iterativeTask) {
 				iterativeTaskHandler.pushIterativeTask(iterativeTask);
+				auto u = iterativeTaskHandler.getMinHeap();
 			}
 		}
 		else if (shared_ptr< DeadLineTask> deadLineTask = dynamic_pointer_cast<DeadLineTask>(newTask)) {
