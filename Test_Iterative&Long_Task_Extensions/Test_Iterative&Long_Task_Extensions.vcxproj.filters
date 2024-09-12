@@ -10,6 +10,11 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Test_Dead_Line.cpp" />
+    <ClCompile Include="Test_Iterative&amp;Long_Task_Extensions.cpp" />
+    <ClCompile Include="Test_Iterative_Task.cpp" />
+    <ClCompile Include="Test_Long_task.cpp" />
+    <ClCompile Include="Test_WRR.cpp" />
     <ClCompile Include="..\Main\Consts.cpp" />
     <ClCompile Include="..\Main\DeadLineTask.cpp" />
     <ClCompile Include="..\Main\DeadlineTaskManager.cpp" />
@@ -22,12 +27,10 @@
     <ClCompile Include="..\Main\Scheduler.cpp" />
     <ClCompile Include="..\Main\Task.cpp" />
     <ClCompile Include="..\Main\TaskFactory.cpp" />
+    <ClCompile Include="..\Main\TCPServer.cpp" />
     <ClCompile Include="..\Main\Utility.cpp" />
+    <ClCompile Include="..\Main\WebSocketSession.cpp" />
     <ClCompile Include="..\Main\WeightRoundRobinScheduler.cpp" />
-    <ClCompile Include="Test_Dead_Line.cpp" />
-    <ClCompile Include="Test_Iterative&amp;Long_Task_Extensions.cpp" />
-    <ClCompile Include="Test_Iterative_Task.cpp" />
-    <ClCompile Include="Test_Long_task.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Main\Consts.h" />
@@ -42,8 +45,10 @@
     <ClInclude Include="..\Main\Scheduler.h" />
     <ClInclude Include="..\Main\Task.h" />
     <ClInclude Include="..\Main\TaskFactory.h" />
-    <ClInclude Include="..\Main\Timer.h" />
+    <ClInclude Include="..\Main\TCPServer.h" />
     <ClInclude Include="..\Main\Utility.h" />
+    <ClInclude Include="..\Main\WebSocketSession.h" />
     <ClInclude Include="..\Main\WeightRoundRobinScheduler.h" />
+    <ClInclude Include="doctest.h" />
   </ItemGroup>
 </Project>

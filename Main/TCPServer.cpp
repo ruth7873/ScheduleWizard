@@ -1,22 +1,4 @@
-//#include "TCPServer.h"
-//#include "WebSocketSession.h"
-//#include <iostream>
-//
-//TCPServer::TCPServer(boost::asio::io_context& ioc, short port, Scheduler& scheduler)
-//    : acceptor_(ioc, { boost::asio::ip::tcp::v4(), static_cast<boost::asio::ip::port_type>(port) }),
-//    scheduler_(scheduler), ioc_(ioc) {}
-//
-//void TCPServer::start_accepting() {
-//    std::cout << "The server is ready to accept a connection...\n";
-//        boost::asio::ip::tcp::socket socket{ ioc_ };
-//        acceptor_.accept(socket);
-//        std::cout << "Client connected...\n";
-//
-//        std::make_shared<WebSocketSession>(std::move(socket), scheduler_)->run();
-//    
-//}
-//
-//
+
 #include "TCPServer.h"
 #include <iostream>
 #include "WebSocketSession.h"

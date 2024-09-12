@@ -104,11 +104,12 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>D:\Bootcamp\part 2\Scheduler Project\ScheduleWizard\Main;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\Bootcamp\part 2\Scheduler Project\ScheduleWizard\Main;C:\Users\user1\Desktop\bootcamp\Main\spdlog\include\spdlog;C:\Users\מיכל\Documents\BootCamp\OurProject\boost_1_85_0;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>C:\Users\מיכל\Documents\BootCamp\OurProject\boost_1_85_0\libs</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -144,8 +145,11 @@
     <ClCompile Include="..\Main\Scheduler.cpp" />
     <ClCompile Include="..\Main\Task.cpp" />
     <ClCompile Include="..\Main\TaskFactory.cpp" />
+    <ClCompile Include="..\Main\TCPServer.cpp" />
     <ClCompile Include="..\Main\Utility.cpp" />
+    <ClCompile Include="..\Main\WebSocketSession.cpp" />
     <ClCompile Include="..\Main\WeightRoundRobinScheduler.cpp" />
+    <ClCompile Include="Test_WRR.cpp" />
     <ClCompile Include="Test_Dead_Line.cpp" />
     <ClCompile Include="Test_Iterative&amp;Long_Task_Extensions.cpp" />
     <ClCompile Include="Test_Iterative_Task.cpp" />
@@ -164,20 +168,22 @@
     <ClInclude Include="..\Main\Scheduler.h" />
     <ClInclude Include="..\Main\Task.h" />
     <ClInclude Include="..\Main\TaskFactory.h" />
-    <ClInclude Include="..\Main\Timer.h" />
+    <ClInclude Include="..\Main\TCPServer.h" />
     <ClInclude Include="..\Main\Utility.h" />
+    <ClInclude Include="..\Main\WebSocketSession.h" />
     <ClInclude Include="..\Main\WeightRoundRobinScheduler.h" />
+    <ClInclude Include="doctest.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
-    <Import Project="..\packages\spdlog.native.1.0.0\build\native\spdlog.native.targets" Condition="Exists('..\packages\spdlog.native.1.0.0\build\native\spdlog.native.targets')" />
     <Import Project="..\packages\nlohmann.json.3.11.2\build\native\nlohmann.json.targets" Condition="Exists('..\packages\nlohmann.json.3.11.2\build\native\nlohmann.json.targets')" />
+    <Import Project="..\packages\spdlog.native.1.0.0\build\native\spdlog.native.targets" Condition="Exists('..\packages\spdlog.native.1.0.0\build\native\spdlog.native.targets')" />
   </ImportGroup>
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
-    <Error Condition="!Exists('..\packages\spdlog.native.1.0.0\build\native\spdlog.native.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\spdlog.native.1.0.0\build\native\spdlog.native.targets'))" />
     <Error Condition="!Exists('..\packages\nlohmann.json.3.11.2\build\native\nlohmann.json.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\nlohmann.json.3.11.2\build\native\nlohmann.json.targets'))" />
+    <Error Condition="!Exists('..\packages\spdlog.native.1.0.0\build\native\spdlog.native.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\spdlog.native.1.0.0\build\native\spdlog.native.targets'))" />
   </Target>
 </Project>

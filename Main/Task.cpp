@@ -1,4 +1,5 @@
 #include "Task.h"
+#include "Consts.h"
 
 Task::Task(int id, string priority, int runningTime, string status)
 	: id(id), priority(priority), runningTime(runningTime), status(status)
@@ -42,8 +43,8 @@ const string& Task::getStatus() const {
 
 void Task::setStatus(const string& newStatus) {
 	status = newStatus;
-	if(newStatus != TaskStatus::CREATION)
-	Scheduler::displayMessage(this);
+	//if(newStatus != TaskStatus::CREATION)
+	//Scheduler::displayMessage(this);
 }
 
 time_t Task::getEntryTime() const {

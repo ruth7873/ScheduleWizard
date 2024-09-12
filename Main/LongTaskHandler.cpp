@@ -1,5 +1,6 @@
 #include "LongTaskHandler.h"
 
+
 mutex LongTaskHandler::longTaskMutex;
 int LongTaskHandler::numOfSeconds = 0;
 int LongTaskHandler::sumOfAllSeconds = 0;
