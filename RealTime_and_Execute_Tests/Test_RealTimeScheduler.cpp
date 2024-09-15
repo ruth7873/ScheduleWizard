@@ -8,7 +8,7 @@
 
 TEST_CASE("Test RealTimeScheduler::realTimeSchedulerFunction") {
 	Scheduler scheduler;
-	//PopAllTheQueue(scheduler);
+	//clearAll(scheduler);
 
 	SUBCASE("Successful Execution of Real-Time Tasks") {
 		shared_ptr<Task> task1(new Task(Scheduler::taskIds++, PrioritiesLevel::CRITICAL, 2));

@@ -1,0 +1,174 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+        <meta charset="utf-8"/>
+	    <title>TaskFactory.cpp</title>
+	    <link href="../../third-party/google-code-prettify/prettify-CppCoverage.css" type="text/css" rel="stylesheet" />
+	    <script type="text/javascript" src="../../third-party/google-code-prettify/prettify.js"></script>
+	</head>
+    <body onload="prettyPrint()">
+        <h4></h4>
+        <pre class="prettyprint lang-cpp linenums">
+#include "TaskFactory.h"
+
+
+using namespace std;
+
+/**
+ * @brief This function allows the user to input details for a new task, including priority and running time.
+ *
+ * @return A new created Task object based on the user input.
+ */
+Task TaskFactory::basicInput()
+<span style = "background-color:#fdd">{
+	std::string priority;</span>
+	int runningTime;
+
+<span style = "background-color:#fdd">	std::cout &lt;&lt; "Enter the priority for the task. Options: Critical, Higher, Middle, Lower: \n";
+	std::cin &gt;&gt; priority;</span>
+
+	// Input validation for priority
+	while (priority != PrioritiesLevel::CRITICAL &amp;&amp; priority != PrioritiesLevel::HIGHER &amp;&amp;
+<span style = "background-color:#fdd">		priority != PrioritiesLevel::MIDDLE &amp;&amp; priority != PrioritiesLevel::LOWER) {
+		spdlog::error("Invalid priority. Please enter one of the specified options.");
+		std::cout &lt;&lt; "Invalid priority. Please enter one of the specified options." &lt;&lt; std::endl;
+		std::cout &lt;&lt; "Enter the priority for the task. Options: Critical, Higher, Middle, Lower: \n";
+		std::cin &gt;&gt; priority;
+	}</span>
+
+	// Input validation for runningTime
+<span style = "background-color:#fdd">	runningTime = Utility::integerValidation("Enter the task Running time:", "running Time", 0);
+	spdlog::info(Logger::LoggerInfo::CREATE_NEW_TASK, priority, runningTime);</span>
+
+<span style = "background-color:#fdd">	return Task((Scheduler::taskIds++) % Scheduler::MAX_TASKS, priority, runningTime);
+}</span>
+
+shared_ptr&lt;Task&gt; TaskFactory::basicTaskInput(bool isOrdered = false)
+<span style = "background-color:#fdd">{
+	Task basicTask = basicInput();
+	return shared_ptr&lt;Task&gt;(new Task(basicTask.getId(), basicTask.getPriority(), basicTask.getRunningTime(), isOrdered));
+}</span>
+
+shared_ptr&lt;DeadLineTask&gt; TaskFactory::deadLineTaskInput()
+<span style = "background-color:#fdd">{
+	Task basicTask = basicInput();
+	int dealLineTime = Utility::integerValidation("Enter the Dead line:", "Dead line", 0);</span>
+
+	// Create some DeadlineTask objects
+<span style = "background-color:#fdd">	time_t now = time(nullptr);
+	return shared_ptr&lt;DeadLineTask&gt;(new DeadLineTask(basicTask, now + dealLineTime));
+}</span>
+
+shared_ptr&lt;IterativeTask&gt; TaskFactory::iterativeTaskInput()
+<span style = "background-color:#fdd">{
+	Task basicTask = basicInput();
+	int iterationsRemaining = Utility::integerValidation("Enter the number of repetitions:", "repetition", 0);
+	int executionInterval = Utility::integerValidation("Enter the Execution interval between tasks:", "Execution interval", 0);</span>
+
+<span style = "background-color:#fdd">	return shared_ptr&lt;IterativeTask&gt;(new IterativeTask(basicTask, iterationsRemaining, executionInterval));
+}</span>
+
+shared_ptr&lt;Task&gt; TaskFactory::createTask(string type)
+<span style = "background-color:#fdd">{
+	if (type == TaskType::BASIC) {
+		return basicTaskInput();
+	}
+	else if (type == TaskType::ORDERED)
+		return basicTaskInput(true);
+	else if (type == TaskType::DEAD_LINE) {
+		return dynamic_pointer_cast&lt;Task&gt;(deadLineTaskInput());
+	}
+	else if (type == TaskType::ITERATIVE) {
+		return dynamic_pointer_cast&lt;Task&gt;(iterativeTaskInput());
+	}</span>
+	else {
+<span style = "background-color:#fdd">		return nullptr;</span>
+	}
+<span style = "background-color:#fdd">}</span>
+
+shared_ptr&lt;Task&gt; TaskFactory::createTask(const nlohmann::json&amp; taskData)
+<span style = "background-color:#dfd">{</span>
+	try {
+<span style = "background-color:#dfd">		std::string taskType = taskData["type"];</span>
+
+		// Check if taskData contains the required keys for a basic task
+<span style = "background-color:#dfd">		if (taskType == TaskType::BASIC || taskType == TaskType::ORDERED) {
+			if (taskData.contains("priority") &amp;&amp; taskData.contains("runningTime")) {</span>
+				// Make sure priority is treated as a string
+<span style = "background-color:#dfd">				bool isOrdered = false;
+				if (taskType == TaskType::ORDERED)</span>
+<span style = "background-color:#fdd">					isOrdered = true;</span>
+
+<span style = "background-color:#dfd">				return std::make_shared&lt;Task&gt;(</span>
+					Scheduler::taskIds++,
+					taskData.at("priority").get&lt;std::string&gt;(),  // Priority is a string
+					taskData.at("runningTime").get&lt;int&gt;(),        // Running time is an integer
+					isOrdered
+				);
+<span style = "background-color:#fdd">			}</span>
+			else {
+<span style = "background-color:#fdd">				std::cerr &lt;&lt; "Missing required fields for BASIC task!" &lt;&lt; std::endl;</span>
+			}
+<span style = "background-color:#fdd">		}</span>
+		// Check if taskData contains the required keys for a deadline task
+<span style = "background-color:#dfd">		else if (taskType == TaskType::DEAD_LINE) {</span>
+<span style = "background-color:#fdd">			if (taskData.contains("priority") &amp;&amp; taskData.contains("runningTime") &amp;&amp; taskData.contains("deadLine")) {
+				Task basicTask(</span>
+					Scheduler::taskIds++,
+					taskData.at("priority").get&lt;std::string&gt;(),  // Priority is a string
+					taskData.at("runningTime").get&lt;int&gt;()        // Running time is an integer
+				);
+<span style = "background-color:#fdd">				int deadLineTime = taskData.at("deadline").get&lt;int&gt;();  // Deadline is an integer</span>
+
+<span style = "background-color:#fdd">				auto task = std::make_shared&lt;DeadLineTask&gt;(basicTask, deadLineTime);
+				return dynamic_pointer_cast&lt;Task&gt;(task);
+			}</span>
+			else {
+<span style = "background-color:#fdd">				std::cerr &lt;&lt; "Missing required fields for DEAD_LINE task!" &lt;&lt; std::endl;</span>
+			}
+<span style = "background-color:#fdd">		}</span>
+		// Check if taskData contains the required keys for an iterative task
+<span style = "background-color:#dfd">		else if (taskType == TaskType::ITERATIVE) {</span>
+<span style = "background-color:#fdd">			if (taskData.contains("priority") &amp;&amp; taskData.contains("runningTime") &amp;&amp; taskData.contains("iterationsRemaining") &amp;&amp; taskData.contains("executionInterval")) {
+				Task basicTask(</span>
+					Scheduler::taskIds++,
+					taskData.at("priority").get&lt;std::string&gt;(),  // Priority is a string
+					taskData.at("runningTime").get&lt;int&gt;()        // Running time is an integer
+				);
+<span style = "background-color:#fdd">				int iterationsRemaining = taskData.at("iterationsRemaining").get&lt;int&gt;();  // Integer
+				int executionInterval = taskData.at("executionInterval").get&lt;int&gt;();      // Integer
+				auto task = std::make_shared&lt;IterativeTask&gt;(basicTask, iterationsRemaining, executionInterval);
+				return dynamic_pointer_cast&lt;Task&gt;(task);
+			}</span>
+			else {
+<span style = "background-color:#fdd">				std::cerr &lt;&lt; "Missing required fields for ITERATIVE task!" &lt;&lt; std::endl;</span>
+			}
+<span style = "background-color:#fdd">		}</span>
+		else {
+<span style = "background-color:#dfd">			std::cout &lt;&lt; "Invalid task type!" &lt;&lt; std::endl;
+			return nullptr;</span>
+		}
+<span style = "background-color:#fdd">	}
+	catch (const std::exception&amp; e) {</span>
+		// Handle exceptions thrown during JSON parsing or task creation
+<span style = "background-color:#fdd">		std::cerr &lt;&lt; "An exception occurred: " &lt;&lt; e.what() &lt;&lt; std::endl;
+		spdlog::error("An exception occurred: {}", e.what());
+	}</span>
+
+<span style = "background-color:#fdd">	return nullptr; // Return nullptr if something goes wrong</span>
+<span style = "background-color:#dfd">}</span></pre>
+        <hr />
+        <table width="100%">
+            <thead>
+                <tr>
+                    <th align="center">
+                        <small>Generated by</small>
+                        <a href="https://github.com/OpenCppCoverage/OpenCppCoverage/releases">
+                            <strong>OpenCppCoverage (Version: 0.9.9.0)</strong>
+                        </a>
+                    </th>
+                </tr>
+            </thead>
+        </table>
+    </body>
+</html>

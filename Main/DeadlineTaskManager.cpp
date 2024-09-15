@@ -10,11 +10,12 @@ void DeadlineTaskManager::addTask(const std::shared_ptr<DeadLineTask>& task) {
 }
 
 std::shared_ptr<DeadLineTask> DeadlineTaskManager::getUpcomingTask() {
-    if (minHeap.empty())
-        throw "Heap is empty";
+    if (minHeap.empty()) {
+        throw std::runtime_error("Heap is empty");  // Throw an exception instead of using cerr
+    }
     return minHeap.top();
-    
 }
+
 
 void DeadlineTaskManager::deadlineMechanism() {
     if (!minHeap.empty()) {

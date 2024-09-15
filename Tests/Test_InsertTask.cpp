@@ -5,7 +5,7 @@
 
 TEST_CASE("Test Scheduler::InsertTask") {
     Scheduler scheduler(new ReadFromJSON(), new Utility());
-
+    clearAll(scheduler);
     SUBCASE("Insert a critical task") {
         shared_ptr<Task> criticalTask(new Task(Scheduler::taskIds++, PrioritiesLevel::CRITICAL, 5));
         scheduler.insertTask(criticalTask);
@@ -45,7 +45,7 @@ TEST_CASE("Test Scheduler::InsertTask") {
         // This assumes you have a method to get totalRunningTask
         CHECK_EQ(Scheduler::totalRunningTask, prevTotalRuningTask);
     }
-    PopAllTheQueue(scheduler);
+    clearAll(scheduler);
 
 }
 

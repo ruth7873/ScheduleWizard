@@ -142,7 +142,6 @@
     <ClCompile Include="..\Main\Scheduler.cpp" />
     <ClCompile Include="..\Main\Task.cpp" />
     <ClCompile Include="..\Main\TaskFactory.cpp" />
-    <ClCompile Include="..\Main\TCPServer.cpp" />
     <ClCompile Include="..\Main\Utility.cpp" />
     <ClCompile Include="..\Main\WebSocketSession.cpp" />
     <ClCompile Include="..\Main\WeightRoundRobinScheduler.cpp" />

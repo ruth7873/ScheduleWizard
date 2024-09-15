@@ -25,11 +25,6 @@ void RealTimeScheduler::realTimeSchedulerFunction() {
 			if (task->getStatus() != TaskStatus::RUNNING && task->getStatus() != TaskStatus::COMPLETED) {
 				Scheduler::execute(task);
 			}
-			else {
-				if (!realTimeQueue.empty()&& task->getStatus() == TaskStatus::COMPLETED) {
-					realTimeQueue.pop();
-				}
-			}
 		}
 	}
 }

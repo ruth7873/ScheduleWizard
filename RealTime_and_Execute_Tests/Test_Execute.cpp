@@ -38,7 +38,7 @@ TEST_CASE("Scheduler::execute") {
 		CHECK_EQ(criticalTask->getStatus(), TaskStatus::COMPLETED);
 
 		// Ensure the scheduler thread finishes
-		schedulerThread.join();
+		schedulerThread.detach();
 	}
 
 	SUBCASE("Scheduler::execute - Boundary Condition: Minimum Running Time") {

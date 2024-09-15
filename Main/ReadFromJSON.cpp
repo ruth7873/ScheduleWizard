@@ -38,8 +38,9 @@ void ReadFromJSON::createTasksFromJSON(const string& filePath) {
 				spdlog::error("Task creation failed for task type: {}", taskType);
 			}
 
-			// If delayBetweenTasks is true and a "delay" field exists, wait for the specified delay
+			// If "delay" field exists, wait for the specified delay
 			if (task.find("delay") != task.end()) {
+				int seconds = task["delay"];
 				std::this_thread::sleep_for(std::chrono::seconds(task["delay"]));
 			}
 		}
@@ -52,11 +53,6 @@ void ReadFromJSON::createTasksFromJSON(const string& filePath) {
 
 	if (file.is_open()) {
 		file.close();
-		if (file.is_open()) {
-			// File closure failed
-			std::cerr << "Error: File closure failed." << std::endl;
-			spdlog::error("Error: File closure failed.");
-		}
 	}
 }
 

@@ -1,0 +1,116 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+        <meta charset="utf-8"/>
+	    <title>Logger.cpp</title>
+	    <link href="../../third-party/google-code-prettify/prettify-CppCoverage.css" type="text/css" rel="stylesheet" />
+	    <script type="text/javascript" src="../../third-party/google-code-prettify/prettify.js"></script>
+	</head>
+    <body onload="prettyPrint()">
+        <h4></h4>
+        <pre class="prettyprint lang-cpp linenums">
+#define _CRT_SECURE_NO_WARNINGS
+#include "Logger.h"
+
+<span style = "background-color:#dfd">void HtmlFormatter::format(const spdlog::details::log_msg&amp; msg, spdlog::memory_buf_t&amp; dest) {</span>
+	// Determine color based on log level
+<span style = "background-color:#dfd">	std::string color;
+	switch (msg.level) {
+	case spdlog::level::info:
+		color = "green";
+		break;
+	case spdlog::level::warn:
+		color = "yellow";
+		break;
+	case spdlog::level::err:
+		color = "red";
+		break;
+	case spdlog::level::debug:
+		color = "blue";
+		break;
+	default:
+		color = "black";</span>
+		break;
+	}
+
+	// Create HTML formatted log message
+<span style = "background-color:#dfd">	std::ostringstream oss;</span>
+
+	// Get current time
+<span style = "background-color:#dfd">	auto now = std::chrono::system_clock::now();
+	std::time_t now_c = std::chrono::system_clock::to_time_t(now);
+	std::tm now_tm = *std::localtime(&amp;now_c);</span>
+
+	// Format time and date
+<span style = "background-color:#dfd">	oss &lt;&lt; "&lt;p style=\"color:" &lt;&lt; color &lt;&lt; "\"&gt;";
+	oss &lt;&lt; "[" &lt;&lt; std::put_time(&amp;now_tm, "%Y-%m-%d %H:%M:%S") &lt;&lt; "] ";
+	oss &lt;&lt; "[" &lt;&lt; spdlog::level::to_string_view(msg.level).data() &lt;&lt; "] ";
+	oss &lt;&lt; msg.payload.data();
+	oss &lt;&lt; "&lt;/p&gt;\n";</span>
+
+	// Append formatted message to destination buffer
+<span style = "background-color:#dfd">	std::string formatted_msg = oss.str();
+	dest.append(formatted_msg.data(), formatted_msg.data() + formatted_msg.size());
+}</span>
+
+<span style = "background-color:#dfd">std::unique_ptr&lt;spdlog::formatter&gt; HtmlFormatter::clone() const {
+	return std::make_unique&lt;HtmlFormatter&gt;();
+}</span>
+
+<span style = "background-color:#dfd">void Logger::initialize_logger() {</span>
+	// Create a daily logger to create a new file every day
+<span style = "background-color:#dfd">	auto daily_logger = spdlog::daily_logger_mt("daily_logger", "logs/daily_log.html", 0, 0); // Midnight rollover</span>
+
+	// Set the custom HTML formatter
+<span style = "background-color:#dfd">	daily_logger-&gt;set_formatter(std::make_unique&lt;HtmlFormatter&gt;());</span>
+
+<span style = "background-color:#dfd">	spdlog::set_default_logger(daily_logger);
+	spdlog::set_level(spdlog::level::debug);
+	spdlog::get("daily_logger")-&gt;debug("Logger initialized and logging to daily and hourly files");</span>
+
+<span style = "background-color:#dfd">	std::thread([]() {
+		while (true) {
+			std::this_thread::sleep_for(std::chrono::seconds(10));
+			spdlog::get("daily_logger")-&gt;flush();
+			spdlog::get("daily_logger")-&gt;debug("Starting new hourly log file");
+		}</span>
+<span style = "background-color:#fdd">		}).detach();</span>
+<span style = "background-color:#dfd">}</span>
+
+//Logger Info
+<span style = "background-color:#dfd">const string Logger::LoggerInfo::START_SCHEDULER = "Starting scheduling process.";
+const string Logger::LoggerInfo::START_THREAD = "{} thread started.";
+const string Logger::LoggerInfo::START_READ_FROM_JSON_THREAD = "read tasks From JSON thread started.";
+const string Logger::LoggerInfo::START_EXECUTE = "Executing task with ID: {}";</span>
+
+<span style = "background-color:#dfd">const string Logger::LoggerInfo::CREATE_NEW_TASK = "New task created with priority: {} and running time: {}";</span>
+
+<span style = "background-color:#dfd">const string Logger::LoggerInfo::TASK_COMPLITED = "Task with ID: {} completed.";
+const string Logger::LoggerInfo::TASK_PREEMPTITVE = "Preempting task with ID: {} for real-time task.";
+const string Logger::LoggerInfo::TASK_SUSPENDED = "Task with ID: {} suspended and added back to WRR queue.";
+const string Logger::LoggerInfo::LONG_TASK_SUSPENDED = "The long task with ID: {} is suspended and will continue later.";</span>
+
+<span style = "background-color:#dfd">const string Logger::LoggerInfo::ADD_CRITICAL_TASK = "Critical task with ID: {} added to RealTimeScheduler.";
+const string Logger::LoggerInfo::ADD_NON_CRITICAL_TASK = "Task with ID: {} added to {} queue.";</span>
+
+<span style = "background-color:#dfd">const string Logger::LoggerInfo::PUSH_ITERATIVE_TASK_TO_HEAP = "Task with ID: {} added to iterative min heap. return number: {}";
+const string Logger::LoggerInfo::POP_ITERATIVE_TASK_FROM_HEAP = "Task with ID: {} popped from iterative min heap.";</span>
+
+//Logger Error
+<span style = "background-color:#dfd">const string Logger::LoggerError::ERROR_CREATE_THREAD = "Error creating threads: {}";
+const string Logger::LoggerError::TASK_TERMINATED = "Exception occurred while executing task with ID: {}: {}";</span></pre>
+        <hr />
+        <table width="100%">
+            <thead>
+                <tr>
+                    <th align="center">
+                        <small>Generated by</small>
+                        <a href="https://github.com/OpenCppCoverage/OpenCppCoverage/releases">
+                            <strong>OpenCppCoverage (Version: 0.9.9.0)</strong>
+                        </a>
+                    </th>
+                </tr>
+            </thead>
+        </table>
+    </body>
+</html>

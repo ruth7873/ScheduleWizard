@@ -1,0 +1,864 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta charset="utf-8"/>
+        <title>Tests.exe</title>
+        <link rel="stylesheet" type="text/css" href="../third-party/css/style.css"/>
+        <script src="../third-party/RGraph/libraries/RGraph.common.core.js" type="text/javascript"></script>
+        <script src="../third-party/RGraph/libraries/RGraph.common.dynamic.js" type="text/javascript"></script>
+        <script src="../third-party/RGraph/libraries/RGraph.common.tooltips.js" type="text/javascript"></script>
+        <script src="../third-party/RGraph/libraries/RGraph.pie.js" type="text/javascript"></script>
+        <script src="../third-party/JQuery/jquery-3.4.1.min.js"></script>
+    </head>
+    <body>
+    <script type="text/javascript">
+        $(document).ready(function ()
+        {
+            
+            new RGraph.Pie('pi_e29e80f7-1446-447b-bbd4-a86641391528', [1666, 1580])
+                .set('labels', ['Cover 51%','Uncover 49%'])
+                .set('colors', ['rgb(0,255,0)','rgb(255,0,0)'])
+                .set('linewidth', 1)
+                .set('shadow', true)
+                .set('tooltips', ['cover 1666 lines (51%)', 'uncover 1580 lines (49%)'])
+                .set('tooltips.event', 'onmousemove')
+                .set('labels.sticks', true)
+                .set('labels.sticks.length', 10)
+                .draw();
+            
+            new RGraph.Pie('pi_9aef7c01-be07-4088-a843-f93a49263304', [0, 3])
+                .set('labels', ['Cover 0%','Uncover 100%'])
+                .set('colors', ['rgb(0,255,0)','rgb(255,0,0)'])
+                .set('linewidth', 1)
+                .set('shadow', true)
+                .set('tooltips', ['cover 0 lines (0%)', 'uncover 3 lines (100%)'])
+                .set('tooltips.event', 'onmousemove')
+                .set('labels.sticks', true)
+                .set('labels.sticks.length', 10)
+                .draw();
+            
+            new RGraph.Pie('pi_26f0b18d-b256-4fcc-9341-48e0ce9eca9f', [0, 15])
+                .set('labels', ['Cover 0%','Uncover 100%'])
+                .set('colors', ['rgb(0,255,0)','rgb(255,0,0)'])
+                .set('linewidth', 1)
+                .set('shadow', true)
+                .set('tooltips', ['cover 0 lines (0%)', 'uncover 15 lines (100%)'])
+                .set('tooltips.event', 'onmousemove')
+                .set('labels.sticks', true)
+                .set('labels.sticks.length', 10)
+                .draw();
+            
+            new RGraph.Pie('pi_56dd9d1e-9fbd-42a7-a4a6-312e528b54a6', [0, 1])
+                .set('labels', ['Cover 0%','Uncover 100%'])
+                .set('colors', ['rgb(0,255,0)','rgb(255,0,0)'])
+                .set('linewidth', 1)
+                .set('shadow', true)
+                .set('tooltips', ['cover 0 lines (0%)', 'uncover 1 lines (100%)'])
+                .set('tooltips.event', 'onmousemove')
+                .set('labels.sticks', true)
+                .set('labels.sticks.length', 10)
+                .draw();
+            
+            new RGraph.Pie('pi_df13b99b-2eae-4101-a795-59ae57a0ec34', [0, 51])
+                .set('labels', ['Cover 0%','Uncover 100%'])
+                .set('colors', ['rgb(0,255,0)','rgb(255,0,0)'])
+                .set('linewidth', 1)
+                .set('shadow', true)
+                .set('tooltips', ['cover 0 lines (0%)', 'uncover 51 lines (100%)'])
+                .set('tooltips.event', 'onmousemove')
+                .set('labels.sticks', true)
+                .set('labels.sticks.length', 10)
+                .draw();
+            
+            new RGraph.Pie('pi_3c01ff46-c6ba-49e2-9633-d9d80734e884', [12, 71])
+                .set('labels', ['Cover 14%','Uncover 86%'])
+                .set('colors', ['rgb(0,255,0)','rgb(255,0,0)'])
+                .set('linewidth', 1)
+                .set('shadow', true)
+                .set('tooltips', ['cover 12 lines (14%)', 'uncover 71 lines (86%)'])
+                .set('tooltips.event', 'onmousemove')
+                .set('labels.sticks', true)
+                .set('labels.sticks.length', 10)
+                .draw();
+            
+            new RGraph.Pie('pi_4d6a3fca-c676-4f48-af2b-c1ea5b72e0d1', [19, 33])
+                .set('labels', ['Cover 36%','Uncover 64%'])
+                .set('colors', ['rgb(0,255,0)','rgb(255,0,0)'])
+                .set('linewidth', 1)
+                .set('shadow', true)
+                .set('tooltips', ['cover 19 lines (36%)', 'uncover 33 lines (64%)'])
+                .set('tooltips.event', 'onmousemove')
+                .set('labels.sticks', true)
+                .set('labels.sticks.length', 10)
+                .draw();
+            
+            new RGraph.Pie('pi_f8b9b363-b4d5-4a69-b160-929bfce48f61', [763, 1311])
+                .set('labels', ['Cover 36%','Uncover 64%'])
+                .set('colors', ['rgb(0,255,0)','rgb(255,0,0)'])
+                .set('linewidth', 1)
+                .set('shadow', true)
+                .set('tooltips', ['cover 763 lines (36%)', 'uncover 1311 lines (64%)'])
+                .set('tooltips.event', 'onmousemove')
+                .set('labels.sticks', true)
+                .set('labels.sticks.length', 10)
+                .draw();
+            
+            new RGraph.Pie('pi_27ff9e63-792a-4729-a9f1-1a392c643bf6', [11, 12])
+                .set('labels', ['Cover 47%','Uncover 53%'])
+                .set('colors', ['rgb(0,255,0)','rgb(255,0,0)'])
+                .set('linewidth', 1)
+                .set('shadow', true)
+                .set('tooltips', ['cover 11 lines (47%)', 'uncover 12 lines (53%)'])
+                .set('tooltips.event', 'onmousemove')
+                .set('labels.sticks', true)
+                .set('labels.sticks.length', 10)
+                .draw();
+            
+            new RGraph.Pie('pi_dd5bc053-1d38-4278-a590-06a7670e0bba', [19, 13])
+                .set('labels', ['Cover 59%','Uncover 41%'])
+                .set('colors', ['rgb(0,255,0)','rgb(255,0,0)'])
+                .set('linewidth', 1)
+                .set('shadow', true)
+                .set('tooltips', ['cover 19 lines (59%)', 'uncover 13 lines (41%)'])
+                .set('tooltips.event', 'onmousemove')
+                .set('labels.sticks', true)
+                .set('labels.sticks.length', 10)
+                .draw();
+            
+            new RGraph.Pie('pi_869709fd-c643-43a8-b9cb-06dd8ccf6e51', [95, 58])
+                .set('labels', ['Cover 62%','Uncover 38%'])
+                .set('colors', ['rgb(0,255,0)','rgb(255,0,0)'])
+                .set('linewidth', 1)
+                .set('shadow', true)
+                .set('tooltips', ['cover 95 lines (62%)', 'uncover 58 lines (38%)'])
+                .set('tooltips.event', 'onmousemove')
+                .set('labels.sticks', true)
+                .set('labels.sticks.length', 10)
+                .draw();
+            
+            new RGraph.Pie('pi_371fe706-7be8-4e6c-91bc-da9313b618ab', [6, 3])
+                .set('labels', ['Cover 66%','Uncover 34%'])
+                .set('colors', ['rgb(0,255,0)','rgb(255,0,0)'])
+                .set('linewidth', 1)
+                .set('shadow', true)
+                .set('tooltips', ['cover 6 lines (66%)', 'uncover 3 lines (34%)'])
+                .set('tooltips.event', 'onmousemove')
+                .set('labels.sticks', true)
+                .set('labels.sticks.length', 10)
+                .draw();
+            
+            new RGraph.Pie('pi_4d638071-b0f7-4395-badd-dcd7d8f32f22', [18, 2])
+                .set('labels', ['Cover 90%','Uncover 10%'])
+                .set('colors', ['rgb(0,255,0)','rgb(255,0,0)'])
+                .set('linewidth', 1)
+                .set('shadow', true)
+                .set('tooltips', ['cover 18 lines (90%)', 'uncover 2 lines (10%)'])
+                .set('tooltips.event', 'onmousemove')
+                .set('labels.sticks', true)
+                .set('labels.sticks.length', 10)
+                .draw();
+            
+            new RGraph.Pie('pi_dd93067e-29d4-4c75-a8e0-1252f91d08a9', [23, 2])
+                .set('labels', ['Cover 92%','Uncover 8%'])
+                .set('colors', ['rgb(0,255,0)','rgb(255,0,0)'])
+                .set('linewidth', 1)
+                .set('shadow', true)
+                .set('tooltips', ['cover 23 lines (92%)', 'uncover 2 lines (8%)'])
+                .set('tooltips.event', 'onmousemove')
+                .set('labels.sticks', true)
+                .set('labels.sticks.length', 10)
+                .draw();
+            
+            new RGraph.Pie('pi_b5d1a579-3991-4af8-9d9f-46ad48bfc542', [25, 1])
+                .set('labels', ['Cover 96%','Uncover 4%'])
+                .set('colors', ['rgb(0,255,0)','rgb(255,0,0)'])
+                .set('linewidth', 1)
+                .set('shadow', true)
+                .set('tooltips', ['cover 25 lines (96%)', 'uncover 1 lines (4%)'])
+                .set('tooltips.event', 'onmousemove')
+                .set('labels.sticks', true)
+                .set('labels.sticks.length', 10)
+                .draw();
+            
+            new RGraph.Pie('pi_ccd24bc0-c502-4a85-899e-fb10cab3ace2', [35, 1])
+                .set('labels', ['Cover 97%','Uncover 3%'])
+                .set('colors', ['rgb(0,255,0)','rgb(255,0,0)'])
+                .set('linewidth', 1)
+                .set('shadow', true)
+                .set('tooltips', ['cover 35 lines (97%)', 'uncover 1 lines (3%)'])
+                .set('tooltips.event', 'onmousemove')
+                .set('labels.sticks', true)
+                .set('labels.sticks.length', 10)
+                .draw();
+            
+            new RGraph.Pie('pi_97578c6f-63d9-4ab4-8469-87163b76b9af', [60, 1])
+                .set('labels', ['Cover 98%','Uncover 2%'])
+                .set('colors', ['rgb(0,255,0)','rgb(255,0,0)'])
+                .set('linewidth', 1)
+                .set('shadow', true)
+                .set('tooltips', ['cover 60 lines (98%)', 'uncover 1 lines (2%)'])
+                .set('tooltips.event', 'onmousemove')
+                .set('labels.sticks', true)
+                .set('labels.sticks.length', 10)
+                .draw();
+            
+            new RGraph.Pie('pi_bd51a290-7fa5-4ee8-849e-afedd6f1c4c2', [60, 1])
+                .set('labels', ['Cover 98%','Uncover 2%'])
+                .set('colors', ['rgb(0,255,0)','rgb(255,0,0)'])
+                .set('linewidth', 1)
+                .set('shadow', true)
+                .set('tooltips', ['cover 60 lines (98%)', 'uncover 1 lines (2%)'])
+                .set('tooltips.event', 'onmousemove')
+                .set('labels.sticks', true)
+                .set('labels.sticks.length', 10)
+                .draw();
+            
+            new RGraph.Pie('pi_b2183fc7-5728-48aa-8a6e-094333c50bd9', [86, 1])
+                .set('labels', ['Cover 98%','Uncover 2%'])
+                .set('colors', ['rgb(0,255,0)','rgb(255,0,0)'])
+                .set('linewidth', 1)
+                .set('shadow', true)
+                .set('tooltips', ['cover 86 lines (98%)', 'uncover 1 lines (2%)'])
+                .set('tooltips.event', 'onmousemove')
+                .set('labels.sticks', true)
+                .set('labels.sticks.length', 10)
+                .draw();
+            
+            new RGraph.Pie('pi_2f16b493-da3b-4783-ac72-ff3fb8ca228e', [9, 0])
+                .set('labels', ['Cover 100%','Uncover 0%'])
+                .set('colors', ['rgb(0,255,0)','rgb(255,0,0)'])
+                .set('linewidth', 1)
+                .set('shadow', true)
+                .set('tooltips', ['cover 9 lines (100%)', 'uncover 0 lines (0%)'])
+                .set('tooltips.event', 'onmousemove')
+                .set('labels.sticks', true)
+                .set('labels.sticks.length', 10)
+                .draw();
+            
+            new RGraph.Pie('pi_5457a6a5-7c8b-4f77-b1eb-c6752d5b964b', [6, 0])
+                .set('labels', ['Cover 100%','Uncover 0%'])
+                .set('colors', ['rgb(0,255,0)','rgb(255,0,0)'])
+                .set('linewidth', 1)
+                .set('shadow', true)
+                .set('tooltips', ['cover 6 lines (100%)', 'uncover 0 lines (0%)'])
+                .set('tooltips.event', 'onmousemove')
+                .set('labels.sticks', true)
+                .set('labels.sticks.length', 10)
+                .draw();
+            
+            new RGraph.Pie('pi_d51b1366-8501-48f1-956a-95fc891ccb94', [6, 0])
+                .set('labels', ['Cover 100%','Uncover 0%'])
+                .set('colors', ['rgb(0,255,0)','rgb(255,0,0)'])
+                .set('linewidth', 1)
+                .set('shadow', true)
+                .set('tooltips', ['cover 6 lines (100%)', 'uncover 0 lines (0%)'])
+                .set('tooltips.event', 'onmousemove')
+                .set('labels.sticks', true)
+                .set('labels.sticks.length', 10)
+                .draw();
+            
+            new RGraph.Pie('pi_8deb9456-c16d-48b6-8adc-d38843ec4ae0', [18, 0])
+                .set('labels', ['Cover 100%','Uncover 0%'])
+                .set('colors', ['rgb(0,255,0)','rgb(255,0,0)'])
+                .set('linewidth', 1)
+                .set('shadow', true)
+                .set('tooltips', ['cover 18 lines (100%)', 'uncover 0 lines (0%)'])
+                .set('tooltips.event', 'onmousemove')
+                .set('labels.sticks', true)
+                .set('labels.sticks.length', 10)
+                .draw();
+            
+            new RGraph.Pie('pi_9f1d5486-4398-4366-8f54-b728fb330b02', [47, 0])
+                .set('labels', ['Cover 100%','Uncover 0%'])
+                .set('colors', ['rgb(0,255,0)','rgb(255,0,0)'])
+                .set('linewidth', 1)
+                .set('shadow', true)
+                .set('tooltips', ['cover 47 lines (100%)', 'uncover 0 lines (0%)'])
+                .set('tooltips.event', 'onmousemove')
+                .set('labels.sticks', true)
+                .set('labels.sticks.length', 10)
+                .draw();
+            
+            new RGraph.Pie('pi_39cc6470-f574-4c6a-9b93-1d2b76d15e43', [18, 0])
+                .set('labels', ['Cover 100%','Uncover 0%'])
+                .set('colors', ['rgb(0,255,0)','rgb(255,0,0)'])
+                .set('linewidth', 1)
+                .set('shadow', true)
+                .set('tooltips', ['cover 18 lines (100%)', 'uncover 0 lines (0%)'])
+                .set('tooltips.event', 'onmousemove')
+                .set('labels.sticks', true)
+                .set('labels.sticks.length', 10)
+                .draw();
+            
+            new RGraph.Pie('pi_e85330a5-fe75-4100-8a67-fdabe9417bcc', [50, 0])
+                .set('labels', ['Cover 100%','Uncover 0%'])
+                .set('colors', ['rgb(0,255,0)','rgb(255,0,0)'])
+                .set('linewidth', 1)
+                .set('shadow', true)
+                .set('tooltips', ['cover 50 lines (100%)', 'uncover 0 lines (0%)'])
+                .set('tooltips.event', 'onmousemove')
+                .set('labels.sticks', true)
+                .set('labels.sticks.length', 10)
+                .draw();
+            
+            new RGraph.Pie('pi_fd8ada71-f582-4e39-b88a-4803f03ea01b', [30, 0])
+                .set('labels', ['Cover 100%','Uncover 0%'])
+                .set('colors', ['rgb(0,255,0)','rgb(255,0,0)'])
+                .set('linewidth', 1)
+                .set('shadow', true)
+                .set('tooltips', ['cover 30 lines (100%)', 'uncover 0 lines (0%)'])
+                .set('tooltips.event', 'onmousemove')
+                .set('labels.sticks', true)
+                .set('labels.sticks.length', 10)
+                .draw();
+            
+            new RGraph.Pie('pi_3f0cb684-5f9a-490d-8a21-e94dc9729856', [1, 0])
+                .set('labels', ['Cover 100%','Uncover 0%'])
+                .set('colors', ['rgb(0,255,0)','rgb(255,0,0)'])
+                .set('linewidth', 1)
+                .set('shadow', true)
+                .set('tooltips', ['cover 1 lines (100%)', 'uncover 0 lines (0%)'])
+                .set('tooltips.event', 'onmousemove')
+                .set('labels.sticks', true)
+                .set('labels.sticks.length', 10)
+                .draw();
+            
+            new RGraph.Pie('pi_70b2d0d6-509e-4912-99c6-4858bd2b5d52', [1, 0])
+                .set('labels', ['Cover 100%','Uncover 0%'])
+                .set('colors', ['rgb(0,255,0)','rgb(255,0,0)'])
+                .set('linewidth', 1)
+                .set('shadow', true)
+                .set('tooltips', ['cover 1 lines (100%)', 'uncover 0 lines (0%)'])
+                .set('tooltips.event', 'onmousemove')
+                .set('labels.sticks', true)
+                .set('labels.sticks.length', 10)
+                .draw();
+            
+            new RGraph.Pie('pi_981e2cda-0ee5-4210-ab3b-c4ed7c641ad1', [51, 0])
+                .set('labels', ['Cover 100%','Uncover 0%'])
+                .set('colors', ['rgb(0,255,0)','rgb(255,0,0)'])
+                .set('linewidth', 1)
+                .set('shadow', true)
+                .set('tooltips', ['cover 51 lines (100%)', 'uncover 0 lines (0%)'])
+                .set('tooltips.event', 'onmousemove')
+                .set('labels.sticks', true)
+                .set('labels.sticks.length', 10)
+                .draw();
+            
+            new RGraph.Pie('pi_5c02bb5c-9f0b-41a7-b667-8d57e9cedeef', [51, 0])
+                .set('labels', ['Cover 100%','Uncover 0%'])
+                .set('colors', ['rgb(0,255,0)','rgb(255,0,0)'])
+                .set('linewidth', 1)
+                .set('shadow', true)
+                .set('tooltips', ['cover 51 lines (100%)', 'uncover 0 lines (0%)'])
+                .set('tooltips.event', 'onmousemove')
+                .set('labels.sticks', true)
+                .set('labels.sticks.length', 10)
+                .draw();
+            
+            new RGraph.Pie('pi_18f16a39-eefc-403f-8938-89463afaba74', [53, 0])
+                .set('labels', ['Cover 100%','Uncover 0%'])
+                .set('colors', ['rgb(0,255,0)','rgb(255,0,0)'])
+                .set('linewidth', 1)
+                .set('shadow', true)
+                .set('tooltips', ['cover 53 lines (100%)', 'uncover 0 lines (0%)'])
+                .set('tooltips.event', 'onmousemove')
+                .set('labels.sticks', true)
+                .set('labels.sticks.length', 10)
+                .draw();
+            
+            new RGraph.Pie('pi_5227c202-a05a-4edb-a503-c99bdbce39f9', [37, 0])
+                .set('labels', ['Cover 100%','Uncover 0%'])
+                .set('colors', ['rgb(0,255,0)','rgb(255,0,0)'])
+                .set('linewidth', 1)
+                .set('shadow', true)
+                .set('tooltips', ['cover 37 lines (100%)', 'uncover 0 lines (0%)'])
+                .set('tooltips.event', 'onmousemove')
+                .set('labels.sticks', true)
+                .set('labels.sticks.length', 10)
+                .draw();
+            
+            new RGraph.Pie('pi_582d5592-0cb4-4b3d-a61a-d100681f5ffe', [24, 0])
+                .set('labels', ['Cover 100%','Uncover 0%'])
+                .set('colors', ['rgb(0,255,0)','rgb(255,0,0)'])
+                .set('linewidth', 1)
+                .set('shadow', true)
+                .set('tooltips', ['cover 24 lines (100%)', 'uncover 0 lines (0%)'])
+                .set('tooltips.event', 'onmousemove')
+                .set('labels.sticks', true)
+                .set('labels.sticks.length', 10)
+                .draw();
+            
+            new RGraph.Pie('pi_f6315ef0-c224-4c3d-8522-99ebe6e7e806', [32, 0])
+                .set('labels', ['Cover 100%','Uncover 0%'])
+                .set('colors', ['rgb(0,255,0)','rgb(255,0,0)'])
+                .set('linewidth', 1)
+                .set('shadow', true)
+                .set('tooltips', ['cover 32 lines (100%)', 'uncover 0 lines (0%)'])
+                .set('tooltips.event', 'onmousemove')
+                .set('labels.sticks', true)
+                .set('labels.sticks.length', 10)
+                .draw();
+            
+
+      })
+    </script>    
+        <h1>
+        Tests.exe
+        </h1>
+        <h4>
+        
+        </h4>
+        <table id="rounded-corner">
+            <thead>
+                <tr>
+                    <th scope="col" class="rounded-left">Coverage</th>
+                    <th scope="col">Total lines</th>
+                    <th scope="col" class="rounded-right">Items</th>
+                </tr>
+            </thead> 
+            <tbody>
+                
+                <tr>
+                    <td>
+            <canvas id="pi_e29e80f7-1446-447b-bbd4-a86641391528" width="280" height="100">Cover 51%</canvas>
+                    </td>            
+                    <td>3246</td>
+                    <td>            
+                      
+                      C:\Users\user1\Desktop\bootcamp\project\ScheduleWizard\x64\Debug\Tests.exe
+                      
+                    </td>
+                </tr>        
+                
+                <tr>
+                    <td>
+            <canvas id="pi_9aef7c01-be07-4088-a843-f93a49263304" width="280" height="100">Cover 0%</canvas>
+                    </td>            
+                    <td>3</td>
+                    <td>            
+                      
+                      
+                      C:\Users\user1\Desktop\bootcamp\project\ScheduleWizard\Tests\predefined C++ types (compiler internal)(File Not Found)
+                    </td>
+                </tr>        
+                
+                <tr>
+                    <td>
+            <canvas id="pi_26f0b18d-b256-4fcc-9341-48e0ce9eca9f" width="280" height="100">Cover 0%</canvas>
+                    </td>            
+                    <td>15</td>
+                    <td>            
+                       <a href="Tests/TCPServer.cpp.html">C:\Users\user1\Desktop\bootcamp\project\ScheduleWizard\Main\TCPServer.cpp</a> 
+                      
+                      
+                    </td>
+                </tr>        
+                
+                <tr>
+                    <td>
+            <canvas id="pi_56dd9d1e-9fbd-42a7-a4a6-312e528b54a6" width="280" height="100">Cover 0%</canvas>
+                    </td>            
+                    <td>1</td>
+                    <td>            
+                       <a href="Tests/Utility.h.html">C:\Users\user1\Desktop\bootcamp\project\ScheduleWizard\Main\Utility.h</a> 
+                      
+                      
+                    </td>
+                </tr>        
+                
+                <tr>
+                    <td>
+            <canvas id="pi_df13b99b-2eae-4101-a795-59ae57a0ec34" width="280" height="100">Cover 0%</canvas>
+                    </td>            
+                    <td>51</td>
+                    <td>            
+                       <a href="Tests/WebSocketSession.cpp.html">C:\Users\user1\Desktop\bootcamp\project\ScheduleWizard\Main\WebSocketSession.cpp</a> 
+                      
+                      
+                    </td>
+                </tr>        
+                
+                <tr>
+                    <td>
+            <canvas id="pi_3c01ff46-c6ba-49e2-9633-d9d80734e884" width="280" height="100">Cover 14%</canvas>
+                    </td>            
+                    <td>83</td>
+                    <td>            
+                       <a href="Tests/TaskFactory.cpp.html">C:\Users\user1\Desktop\bootcamp\project\ScheduleWizard\Main\TaskFactory.cpp</a> 
+                      
+                      
+                    </td>
+                </tr>        
+                
+                <tr>
+                    <td>
+            <canvas id="pi_4d6a3fca-c676-4f48-af2b-c1ea5b72e0d1" width="280" height="100">Cover 36%</canvas>
+                    </td>            
+                    <td>52</td>
+                    <td>            
+                       <a href="Tests/WeightRoundRobinScheduler.cpp.html">C:\Users\user1\Desktop\bootcamp\project\ScheduleWizard\Main\WeightRoundRobinScheduler.cpp</a> 
+                      
+                      
+                    </td>
+                </tr>        
+                
+                <tr>
+                    <td>
+            <canvas id="pi_f8b9b363-b4d5-4a69-b160-929bfce48f61" width="280" height="100">Cover 36%</canvas>
+                    </td>            
+                    <td>2074</td>
+                    <td>            
+                       <a href="Tests/doctest.h.html">C:\Users\user1\Desktop\bootcamp\project\ScheduleWizard\Tests\doctest.h</a> 
+                      
+                      
+                    </td>
+                </tr>        
+                
+                <tr>
+                    <td>
+            <canvas id="pi_27ff9e63-792a-4729-a9f1-1a392c643bf6" width="280" height="100">Cover 47%</canvas>
+                    </td>            
+                    <td>23</td>
+                    <td>            
+                       <a href="Tests/RealTimeScheduler.cpp.html">C:\Users\user1\Desktop\bootcamp\project\ScheduleWizard\Main\RealTimeScheduler.cpp</a> 
+                      
+                      
+                    </td>
+                </tr>        
+                
+                <tr>
+                    <td>
+            <canvas id="pi_dd5bc053-1d38-4278-a590-06a7670e0bba" width="280" height="100">Cover 59%</canvas>
+                    </td>            
+                    <td>32</td>
+                    <td>            
+                       <a href="Tests/Utility.cpp.html">C:\Users\user1\Desktop\bootcamp\project\ScheduleWizard\Main\Utility.cpp</a> 
+                      
+                      
+                    </td>
+                </tr>        
+                
+                <tr>
+                    <td>
+            <canvas id="pi_869709fd-c643-43a8-b9cb-06dd8ccf6e51" width="280" height="100">Cover 62%</canvas>
+                    </td>            
+                    <td>153</td>
+                    <td>            
+                       <a href="Tests/Scheduler.cpp.html">C:\Users\user1\Desktop\bootcamp\project\ScheduleWizard\Main\Scheduler.cpp</a> 
+                      
+                      
+                    </td>
+                </tr>        
+                
+                <tr>
+                    <td>
+            <canvas id="pi_371fe706-7be8-4e6c-91bc-da9313b618ab" width="280" height="100">Cover 66%</canvas>
+                    </td>            
+                    <td>9</td>
+                    <td>            
+                       <a href="Tests/IterativeTaskHandler.h.html">C:\Users\user1\Desktop\bootcamp\project\ScheduleWizard\Main\IterativeTaskHandler.h</a> 
+                      
+                      
+                    </td>
+                </tr>        
+                
+                <tr>
+                    <td>
+            <canvas id="pi_4d638071-b0f7-4395-badd-dcd7d8f32f22" width="280" height="100">Cover 90%</canvas>
+                    </td>            
+                    <td>20</td>
+                    <td>            
+                       <a href="Tests/Helper.cpp.html">C:\Users\user1\Desktop\bootcamp\project\ScheduleWizard\Tests\Helper.cpp</a> 
+                      
+                      
+                    </td>
+                </tr>        
+                
+                <tr>
+                    <td>
+            <canvas id="pi_dd93067e-29d4-4c75-a8e0-1252f91d08a9" width="280" height="100">Cover 92%</canvas>
+                    </td>            
+                    <td>25</td>
+                    <td>            
+                       <a href="Tests/ReadFromJSON.cpp.html">C:\Users\user1\Desktop\bootcamp\project\ScheduleWizard\Main\ReadFromJSON.cpp</a> 
+                      
+                      
+                    </td>
+                </tr>        
+                
+                <tr>
+                    <td>
+            <canvas id="pi_b5d1a579-3991-4af8-9d9f-46ad48bfc542" width="280" height="100">Cover 96%</canvas>
+                    </td>            
+                    <td>26</td>
+                    <td>            
+                       <a href="Tests/DeadlineTaskManager.cpp.html">C:\Users\user1\Desktop\bootcamp\project\ScheduleWizard\Main\DeadlineTaskManager.cpp</a> 
+                      
+                      
+                    </td>
+                </tr>        
+                
+                <tr>
+                    <td>
+            <canvas id="pi_ccd24bc0-c502-4a85-899e-fb10cab3ace2" width="280" height="100">Cover 97%</canvas>
+                    </td>            
+                    <td>36</td>
+                    <td>            
+                       <a href="Tests/IterativeTaskHandler.cpp.html">C:\Users\user1\Desktop\bootcamp\project\ScheduleWizard\Main\IterativeTaskHandler.cpp</a> 
+                      
+                      
+                    </td>
+                </tr>        
+                
+                <tr>
+                    <td>
+            <canvas id="pi_97578c6f-63d9-4ab4-8469-87163b76b9af" width="280" height="100">Cover 98%</canvas>
+                    </td>            
+                    <td>61</td>
+                    <td>            
+                       <a href="Tests/Logger.cpp.html">C:\Users\user1\Desktop\bootcamp\project\ScheduleWizard\Main\Logger.cpp</a> 
+                      
+                      
+                    </td>
+                </tr>        
+                
+                <tr>
+                    <td>
+            <canvas id="pi_bd51a290-7fa5-4ee8-849e-afedd6f1c4c2" width="280" height="100">Cover 98%</canvas>
+                    </td>            
+                    <td>61</td>
+                    <td>            
+                       <a href="Tests/Test_Iterative_Task.cpp.html">C:\Users\user1\Desktop\bootcamp\project\ScheduleWizard\Tests\Test_Iterative_Task.cpp</a> 
+                      
+                      
+                    </td>
+                </tr>        
+                
+                <tr>
+                    <td>
+            <canvas id="pi_b2183fc7-5728-48aa-8a6e-094333c50bd9" width="280" height="100">Cover 98%</canvas>
+                    </td>            
+                    <td>87</td>
+                    <td>            
+                       <a href="Tests/Test_Logger.cpp.html">C:\Users\user1\Desktop\bootcamp\project\ScheduleWizard\Tests\Test_Logger.cpp</a> 
+                      
+                      
+                    </td>
+                </tr>        
+                
+                <tr>
+                    <td>
+            <canvas id="pi_2f16b493-da3b-4783-ac72-ff3fb8ca228e" width="280" height="100">Cover 100%</canvas>
+                    </td>            
+                    <td>9</td>
+                    <td>            
+                       <a href="Tests/DeadLineTask.cpp.html">C:\Users\user1\Desktop\bootcamp\project\ScheduleWizard\Main\DeadLineTask.cpp</a> 
+                      
+                      
+                    </td>
+                </tr>        
+                
+                <tr>
+                    <td>
+            <canvas id="pi_5457a6a5-7c8b-4f77-b1eb-c6752d5b964b" width="280" height="100">Cover 100%</canvas>
+                    </td>            
+                    <td>6</td>
+                    <td>            
+                       <a href="Tests/DeadlineTaskManager.h.html">C:\Users\user1\Desktop\bootcamp\project\ScheduleWizard\Main\DeadlineTaskManager.h</a> 
+                      
+                      
+                    </td>
+                </tr>        
+                
+                <tr>
+                    <td>
+            <canvas id="pi_d51b1366-8501-48f1-956a-95fc891ccb94" width="280" height="100">Cover 100%</canvas>
+                    </td>            
+                    <td>6</td>
+                    <td>            
+                       <a href="Tests/IterativeTask.cpp.html">C:\Users\user1\Desktop\bootcamp\project\ScheduleWizard\Main\IterativeTask.cpp</a> 
+                      
+                      
+                    </td>
+                </tr>        
+                
+                <tr>
+                    <td>
+            <canvas id="pi_8deb9456-c16d-48b6-8adc-d38843ec4ae0" width="280" height="100">Cover 100%</canvas>
+                    </td>            
+                    <td>18</td>
+                    <td>            
+                       <a href="Tests/IterativeTask.h.html">C:\Users\user1\Desktop\bootcamp\project\ScheduleWizard\Main\IterativeTask.h</a> 
+                      
+                      
+                    </td>
+                </tr>        
+                
+                <tr>
+                    <td>
+            <canvas id="pi_9f1d5486-4398-4366-8f54-b728fb330b02" width="280" height="100">Cover 100%</canvas>
+                    </td>            
+                    <td>47</td>
+                    <td>            
+                       <a href="Tests/LongTaskHandler.cpp.html">C:\Users\user1\Desktop\bootcamp\project\ScheduleWizard\Main\LongTaskHandler.cpp</a> 
+                      
+                      
+                    </td>
+                </tr>        
+                
+                <tr>
+                    <td>
+            <canvas id="pi_39cc6470-f574-4c6a-9b93-1d2b76d15e43" width="280" height="100">Cover 100%</canvas>
+                    </td>            
+                    <td>18</td>
+                    <td>            
+                       <a href="Tests/OrderedTaskHandler.cpp.html">C:\Users\user1\Desktop\bootcamp\project\ScheduleWizard\Main\OrderedTaskHandler.cpp</a> 
+                      
+                      
+                    </td>
+                </tr>        
+                
+                <tr>
+                    <td>
+            <canvas id="pi_e85330a5-fe75-4100-8a67-fdabe9417bcc" width="280" height="100">Cover 100%</canvas>
+                    </td>            
+                    <td>50</td>
+                    <td>            
+                       <a href="Tests/Test_Dead_Line.cpp.html">C:\Users\user1\Desktop\bootcamp\project\ScheduleWizard\Tests\Test_Dead_Line.cpp</a> 
+                      
+                      
+                    </td>
+                </tr>        
+                
+                <tr>
+                    <td>
+            <canvas id="pi_fd8ada71-f582-4e39-b88a-4803f03ea01b" width="280" height="100">Cover 100%</canvas>
+                    </td>            
+                    <td>30</td>
+                    <td>            
+                       <a href="Tests/Test_InsertTask.cpp.html">C:\Users\user1\Desktop\bootcamp\project\ScheduleWizard\Tests\Test_InsertTask.cpp</a> 
+                      
+                      
+                    </td>
+                </tr>        
+                
+                <tr>
+                    <td>
+            <canvas id="pi_3f0cb684-5f9a-490d-8a21-e94dc9729856" width="280" height="100">Cover 100%</canvas>
+                    </td>            
+                    <td>1</td>
+                    <td>            
+                       <a href="Tests/ReadFromJSON.h.html">C:\Users\user1\Desktop\bootcamp\project\ScheduleWizard\Main\ReadFromJSON.h</a> 
+                      
+                      
+                    </td>
+                </tr>        
+                
+                <tr>
+                    <td>
+            <canvas id="pi_70b2d0d6-509e-4912-99c6-4858bd2b5d52" width="280" height="100">Cover 100%</canvas>
+                    </td>            
+                    <td>1</td>
+                    <td>            
+                       <a href="Tests/RealTimeScheduler.h.html">C:\Users\user1\Desktop\bootcamp\project\ScheduleWizard\Main\RealTimeScheduler.h</a> 
+                      
+                      
+                    </td>
+                </tr>        
+                
+                <tr>
+                    <td>
+            <canvas id="pi_981e2cda-0ee5-4210-ab3b-c4ed7c641ad1" width="280" height="100">Cover 100%</canvas>
+                    </td>            
+                    <td>51</td>
+                    <td>            
+                       <a href="Tests/Test_Long_task.cpp.html">C:\Users\user1\Desktop\bootcamp\project\ScheduleWizard\Tests\Test_Long_task.cpp</a> 
+                      
+                      
+                    </td>
+                </tr>        
+                
+                <tr>
+                    <td>
+            <canvas id="pi_5c02bb5c-9f0b-41a7-b667-8d57e9cedeef" width="280" height="100">Cover 100%</canvas>
+                    </td>            
+                    <td>51</td>
+                    <td>            
+                       <a href="Tests/Test_Ordered_Task.cpp.html">C:\Users\user1\Desktop\bootcamp\project\ScheduleWizard\Tests\Test_Ordered_Task.cpp</a> 
+                      
+                      
+                    </td>
+                </tr>        
+                
+                <tr>
+                    <td>
+            <canvas id="pi_18f16a39-eefc-403f-8938-89463afaba74" width="280" height="100">Cover 100%</canvas>
+                    </td>            
+                    <td>53</td>
+                    <td>            
+                       <a href="Tests/Test_ReadFromJson.cpp.html">C:\Users\user1\Desktop\bootcamp\project\ScheduleWizard\Tests\Test_ReadFromJson.cpp</a> 
+                      
+                      
+                    </td>
+                </tr>        
+                
+                <tr>
+                    <td>
+            <canvas id="pi_5227c202-a05a-4edb-a503-c99bdbce39f9" width="280" height="100">Cover 100%</canvas>
+                    </td>            
+                    <td>37</td>
+                    <td>            
+                       <a href="Tests/Test_Utility.cpp.html">C:\Users\user1\Desktop\bootcamp\project\ScheduleWizard\Tests\Test_Utility.cpp</a> 
+                      
+                      
+                    </td>
+                </tr>        
+                
+                <tr>
+                    <td>
+            <canvas id="pi_582d5592-0cb4-4b3d-a61a-d100681f5ffe" width="280" height="100">Cover 100%</canvas>
+                    </td>            
+                    <td>24</td>
+                    <td>            
+                       <a href="Tests/Consts.cpp.html">C:\Users\user1\Desktop\bootcamp\project\ScheduleWizard\Main\Consts.cpp</a> 
+                      
+                      
+                    </td>
+                </tr>        
+                
+                <tr>
+                    <td>
+            <canvas id="pi_f6315ef0-c224-4c3d-8522-99ebe6e7e806" width="280" height="100">Cover 100%</canvas>
+                    </td>            
+                    <td>32</td>
+                    <td>            
+                       <a href="Tests/Task.cpp.html">C:\Users\user1\Desktop\bootcamp\project\ScheduleWizard\Main\Task.cpp</a> 
+                      
+                      
+                    </td>
+                </tr>        
+                
+            </tbody>
+            <tfoot>
+                <tr>
+                <td colspan="2" class="rounded-foot-left"></td>
+                <td class="rounded-foot-right"></td>
+                </tr>
+            </tfoot>            
+        </table>
+        <hr/>
+        <table width="100%" >
+         <thead>
+            <tr>
+               <th align="center">
+                  <small>Generated by</small>
+                  <a href="https://github.com/OpenCppCoverage/OpenCppCoverage/releases">
+                     <strong>OpenCppCoverage (Version: 0.9.9.0)</strong>
+                  </a>
+               </th>
+            </tr>
+         </thead>
+        </table>
+    </body>
+</html>

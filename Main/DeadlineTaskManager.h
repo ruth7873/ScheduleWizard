@@ -26,6 +26,10 @@ public:
 
     std::shared_ptr<DeadLineTask> getUpcomingTask();
 
+    bool isEmpty() {
+        return minHeap.empty();
+    }
+
     // Mechanism to handle deadline tasks
     static void deadlineMechanism();
 };

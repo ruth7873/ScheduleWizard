@@ -1,0 +1,199 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+        <meta charset="utf-8"/>
+	    <title>Test_ReadFromJson.cpp</title>
+	    <link href="../../third-party/google-code-prettify/prettify-CppCoverage.css" type="text/css" rel="stylesheet" />
+	    <script type="text/javascript" src="../../third-party/google-code-prettify/prettify.js"></script>
+	</head>
+    <body onload="prettyPrint()">
+        <h4></h4>
+        <pre class="prettyprint lang-cpp linenums">
+#include "doctest.h"
+#include &lt;fstream&gt;
+#include &lt;memory&gt;
+#include &lt;thread&gt;
+#include &lt;chrono&gt;
+#include "../Main/ReadFromJSON.h"
+#include "../Main/Scheduler.h"
+#include "Helper.h"
+
+// Mock JSON Data
+<span style = "background-color:#dfd">const std::string testJsonFilePath = "test_tasks.json";</span>
+
+// Helper function to create temporary JSON files
+<span style = "background-color:#dfd">void createTestJSONFile(const std::string&amp; content) {
+	std::ofstream file(testJsonFilePath);
+	file &lt;&lt; content;
+	file.close();
+}</span>
+
+// Helper function to remove the temporary file after tests
+<span style = "background-color:#dfd">void removeTestJSONFile() {
+	std::remove(testJsonFilePath.c_str());
+}</span>
+
+<span style = "background-color:#dfd">TEST_CASE("Test ReadFromJSON::createTasksFromJSON") {
+	Scheduler scheduler(new ReadFromJSON(), new Utility());
+	Scheduler::totalRunningTask = 0;
+	SUBCASE("Handling of Empty Task JSON Data") {
+		clearAll(scheduler);</span>
+		// Empty JSON data with no tasks
+<span style = "background-color:#dfd">		std::string jsonData = R"(</span>
+	    {
+	        "tasks": []
+	    })";
+
+		// Create temporary JSON file
+<span style = "background-color:#dfd">		createTestJSONFile(jsonData);</span>
+
+		// Read tasks from JSON
+<span style = "background-color:#dfd">		ReadFromJSON reader;
+		reader.createTasksFromJSON(testJsonFilePath);</span>
+
+		// No tasks should have been added
+<span style = "background-color:#dfd">		CHECK_EQ(Scheduler::totalRunningTask, 0);</span>
+
+		// Cleanup: remove the temporary JSON file
+<span style = "background-color:#dfd">		removeTestJSONFile();
+	}</span>
+
+<span style = "background-color:#dfd">	SUBCASE("Handling of Invalid or Non-Existing JSON File") {</span>
+		// Try reading from a non-existing file
+<span style = "background-color:#dfd">		ReadFromJSON reader;
+		CHECK_NOTHROW(reader.createTasksFromJSON("non_existing_file.json"));  // Ensure no crash</span>
+
+		// No tasks should have been added
+<span style = "background-color:#dfd">		CHECK_EQ(Scheduler::totalRunningTask, 0);
+	}</span>
+
+<span style = "background-color:#dfd">	SUBCASE("Successful Reading of Tasks from JSON File") {</span>
+		// Mock JSON data with tasks
+<span style = "background-color:#dfd">		std::string jsonData = R"(</span>
+	{
+	 "tasks": [
+        {
+		    "type": "basic",
+            "priority": "Critical",
+            "runningTime": 2
+        },
+        {
+			"type": "basic",
+            "priority": "Lower",
+            "runningTime": 3
+        }
+	]
+	})";
+
+		// Create temporary JSON file
+<span style = "background-color:#dfd">		createTestJSONFile(jsonData);</span>
+
+		// Read tasks from JSON
+<span style = "background-color:#dfd">		ReadFromJSON reader;
+		reader.createTasksFromJSON(testJsonFilePath);</span>
+
+		// Check if tasks were added to the scheduler correctly
+<span style = "background-color:#dfd">		CHECK_EQ(Scheduler::totalRunningTask, 2);  // Assuming Scheduler has getTaskCount()</span>
+
+		////Validate the first task
+<span style = "background-color:#dfd">		auto task1 = scheduler.getRealTimeScheduler().getRealTimeQueue().front();  // Assuming Scheduler has getTask()
+		CHECK_EQ(task1-&gt;getPriority(), PrioritiesLevel::CRITICAL);
+		CHECK_EQ(task1-&gt;getRunningTime(), 2);
+		CHECK_EQ(task1-&gt;getStatus(), TaskStatus::CREATION);</span>
+
+		// Validate the second task
+<span style = "background-color:#dfd">		auto task2 = scheduler.getWrrQueuesScheduler().getWrrQueues()[PrioritiesLevel::LOWER].queue.front();
+		CHECK_EQ(task2-&gt;getPriority(), PrioritiesLevel::LOWER);
+		CHECK_EQ(task2-&gt;getRunningTime(), 3);
+		CHECK_EQ(task2-&gt;getStatus(), TaskStatus::CREATION);</span>
+
+		// Cleanup: remove the temporary JSON file
+<span style = "background-color:#dfd">		removeTestJSONFile();
+		Scheduler::totalRunningTask = 0;</span>
+
+<span style = "background-color:#dfd">	}</span>
+
+<span style = "background-color:#dfd">	SUBCASE("Handling of Creating null task ") {
+		Scheduler::totalRunningTask = 0;</span>
+		// Mock JSON data with tasks
+<span style = "background-color:#dfd">		std::string jsonData = R"(</span>
+	{
+	 "tasks": [
+        {
+		    "type": "other",
+            "priority": "Critical",
+            "runningTime": 2
+        } 
+	]
+	})";
+
+		// Create temporary JSON file
+<span style = "background-color:#dfd">		createTestJSONFile(jsonData);</span>
+
+		// Read tasks from JSON
+<span style = "background-color:#dfd">		ReadFromJSON reader;</span>
+		
+
+		// Check if tasks were added to the scheduler correctly
+<span style = "background-color:#dfd">		CHECK_NOTHROW(reader.createTasksFromJSON(testJsonFilePath););  // Assuming Scheduler has getTaskCount()</span>
+
+		// Cleanup: remove the temporary JSON file
+<span style = "background-color:#dfd">		removeTestJSONFile();
+		Scheduler::totalRunningTask = 0;</span>
+
+<span style = "background-color:#dfd">	}</span>
+
+	//SUBCASE("Successful Reading of Tasks with Delay") {
+	//	Scheduler::totalRunningTask = 0;
+	//	// Mock JSON data with tasks and delays
+	//	std::string jsonData = R"(
+ //       {
+ //           "tasks": [
+ //               { "type": "basic", "priority": "Critical", "runningTime": 2, "delay": 1 },
+ //               { "type": "basic", "priority": "Lower", "runningTime": 3, "delay": 3 }
+ //           ]
+ //       })";
+
+	//	// Create temporary JSON file
+	//	createTestJSONFile(jsonData);
+
+	//	// Read tasks from JSON with a delay
+	//	ReadFromJSON reader;
+	//	std::thread readerThread([&amp;reader]() {
+	//		reader.createTasksFromJSON(testJsonFilePath);
+	//		});
+
+	//	// Allow time for the first task to be read
+	//	std::this_thread::sleep_for(std::chrono::seconds(1));
+
+	//	// After 2 seconds, we expect the first task to be inserted
+	//	CHECK_EQ(Scheduler::totalRunningTask, 1);
+
+	//	// Allow additional time for the second task to be read
+	//	std::this_thread::sleep_for(std::chrono::seconds(4));
+	//	CHECK_EQ(Scheduler::totalRunningTask, 2);
+
+	//	readerThread.detach();  // Wait for the reader thread to complete
+
+	//	// Cleanup: remove the temporary JSON file
+	//	removeTestJSONFile();
+	//	Scheduler::totalRunningTask = 0;
+	//}
+<span style = "background-color:#dfd">}</span>
+
+</pre>
+        <hr />
+        <table width="100%">
+            <thead>
+                <tr>
+                    <th align="center">
+                        <small>Generated by</small>
+                        <a href="https://github.com/OpenCppCoverage/OpenCppCoverage/releases">
+                            <strong>OpenCppCoverage (Version: 0.9.9.0)</strong>
+                        </a>
+                    </th>
+                </tr>
+            </thead>
+        </table>
+    </body>
+</html>

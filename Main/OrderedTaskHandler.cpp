@@ -14,6 +14,7 @@ void OrderedTaskHandler::popOrderedTask() {
 		Scheduler::insertTask(orderedTaskQueue.front());
 	}
 }
+
 shared_ptr<Task> OrderedTaskHandler::frontOrderedTask() {
 	if (!orderedTaskQueue.empty())
 		return orderedTaskQueue.front();
