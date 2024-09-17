@@ -58,11 +58,11 @@ void Logger::initialize_logger() {
 	spdlog::get("daily_logger")->debug("Logger initialized and logging to daily and hourly files");
 
 	std::thread([]() {
-		while (true) {
+		//while (true) {
 			std::this_thread::sleep_for(std::chrono::seconds(10));
 			spdlog::get("daily_logger")->flush();
 			spdlog::get("daily_logger")->debug("Starting new hourly log file");
-		}
+		//}
 		}).detach();
 }
 

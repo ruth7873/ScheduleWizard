@@ -75,13 +75,11 @@ void WeightRoundRobinScheduler::weightRoundRobinFunction()
 			while (!taskQueue->queue.empty() && countTasks < taskCountToRun) {
 				shared_ptr<Task> task = taskQueue->queue.front();
 
-				if (shared_ptr<IterativeTask> iterativeTask = dynamic_pointer_cast<IterativeTask>(task)) {
-					// Check if dynamic_pointer_cast succeeded
-					if (iterativeTask){
-						task->setStatus(TaskStatus::CREATION);
-					}
-				}
-				else {
+				//if (shared_ptr<IterativeTask> iterativeTask = dynamic_pointer_cast<IterativeTask>(task)) {
+				//	// Check if dynamic_pointer_cast succeeded
+				//		task->setStatus(TaskStatus::CREATION);
+				//}
+				//else {
 					// check if the task is not a deadline task that removed to Critical Q 
 					while (task != nullptr && (task->getPriority() == PrioritiesLevel::CRITICAL || task->getStatus() == TaskStatus::COMPLETED)) {
 						if (!taskQueue->queue.empty()) {
@@ -95,7 +93,7 @@ void WeightRoundRobinScheduler::weightRoundRobinFunction()
 							task = nullptr;
 						}
 					}
-				}
+				//}
 
 				// Wait until the mutex is released
 				{

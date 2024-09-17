@@ -1,6 +1,6 @@
 #ifndef TCPSERVER_H
 #define TCPSERVER_H
-#include <boost/beast.hpp>
+
 #include <boost/asio.hpp>
 #include <memory>
 
@@ -16,6 +16,27 @@ private:
 };
 
 #endif // TCPSERVER_H
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 //#ifndef TCPSERVER_H
 //#define TCPSERVER_H

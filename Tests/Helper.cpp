@@ -1,5 +1,12 @@
 #include "Helper.h"
-void PopAllTheQueue(Scheduler scheduler) {
+void clearAll(Scheduler scheduler) {
+	//clear heaps
+	while (!scheduler.getDeadlineTaskManager().isEmpty()) {
+		scheduler.getDeadlineTaskManager().deadlineMechanism();
+	}
+	while (!scheduler.getIterativeTaskHandler().isEmpty()) {
+		scheduler.getIterativeTaskHandler().popIterativeTask();
+	}
 
 	while (!scheduler.getRealTimeScheduler().getRealTimeQueue().empty())
 		scheduler.getRealTimeScheduler().getRealTimeQueue().pop();
@@ -12,4 +19,11 @@ void PopAllTheQueue(Scheduler scheduler) {
 
 	while (!scheduler.getWrrQueuesScheduler().getWrrQueues()[PrioritiesLevel::LOWER].queue.empty())
 		scheduler.getWrrQueuesScheduler().getWrrQueues()[PrioritiesLevel::LOWER].queue.pop();
+
+	//Clear the static variables before each test
+	LongTaskHandler::setSumOfAllSeconds(0);
+	LongTaskHandler::setNumOfSeconds(0);
+	LongTaskHandler::setAverageLength(0.0);
+
+	Scheduler::totalRunningTask = 0;
 }

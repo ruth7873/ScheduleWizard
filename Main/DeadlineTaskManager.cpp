@@ -9,12 +9,15 @@ void DeadlineTaskManager::addTask(const std::shared_ptr<DeadlineTask>& task) {
         minHeap.push(task);
 }
 
+
 std::shared_ptr<DeadlineTask> DeadlineTaskManager::getUpcomingTask() {
-    if (minHeap.empty())
-        throw "Heap is empty";
+    if (minHeap.empty()) {
+        cerr<<"Heap is empty\n";  // Throw an exception instead of using cerr
+        return nullptr;
+    }
     return minHeap.top();
-    
 }
+
 
 void DeadlineTaskManager::deadlineMechanism() {
     if (!minHeap.empty()) {
@@ -34,12 +37,12 @@ void DeadlineTaskManager::deadlineMechanism() {
             // Remove the task from the heap
             {
                 std::unique_lock<std::mutex> lock(Scheduler::rtLock);  // Lock the rtLock
-                if (!minHeap.empty())
+               // if (!minHeap.empty())
                     minHeap.pop();
             }
         }
         else {
-            if (earliestTask->getPriority() == PrioritiesLevel::CRITICAL ||
+            if (/*earliestTask->getPriority() == PrioritiesLevel::CRITICAL ||*/ 
                 earliestTask->getStatus() == TaskStatus::COMPLETED)
 
                 minHeap.pop();

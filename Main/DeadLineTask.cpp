@@ -15,7 +15,3 @@ DeadlineTask::DeadlineTask(Task basicTask, int deadlineTime)
 time_t DeadlineTask::getDeadline() const {
     return deadline;
 }
-bool DeadlineTask::operator>(const DeadlineTask& other) const {
-    return deadline < other.deadline;
-}
-

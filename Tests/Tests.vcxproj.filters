@@ -2,7 +2,7 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClCompile Include="..\Main\Consts.cpp" />
-    <ClCompile Include="..\Main\DeadLineTask.cpp" />
+    <ClCompile Include="..\Main\DeadlineTask.cpp" />
     <ClCompile Include="..\Main\DeadlineTaskManager.cpp" />
     <ClCompile Include="..\Main\IterativeTask.cpp" />
     <ClCompile Include="..\Main\IterativeTaskHandler.cpp" />
@@ -20,24 +20,24 @@
     <ClCompile Include="..\Main\WeightRoundRobinScheduler.cpp" />
     <ClCompile Include="IScheduler.cpp" />
     <ClCompile Include="Test_Job_Scheduling.cpp" />
-    <ClCompile Include="Test_WRR.cpp" />
+    <ClCompile Include="Test_TaskFactory.cpp" />
+    <ClCompile Include="Test3_WRR.cpp" />
     <ClCompile Include="Helper.cpp" />
     <ClCompile Include="Test1_Execute.cpp" />
     <ClCompile Include="Test2_RealTimeScheduler.cpp" />
     <ClCompile Include="Tests_Main.cpp" />
-    <ClCompile Include="Test_Dead_Line.cpp" />
+    <ClCompile Include="Test00_Dead_Line.cpp" />
     <ClCompile Include="Test_InsertTask.cpp" />
-    <ClCompile Include="Test_Iterative_Task.cpp" />
+    <ClCompile Include="Test11_Iterative_Task.cpp" />
     <ClCompile Include="Test_Logger.cpp" />
     <ClCompile Include="Test_Long_task.cpp" />
     <ClCompile Include="Test_Ordered_Task.cpp" />
-    <ClCompile Include="Test_ReadFromJson.cpp" />
+    <ClCompile Include="Test0_ReadFromJson.cpp" />
     <ClCompile Include="Test_Utility.cpp" />
-    <ClCompile Include="Test_Server.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Main\Consts.h" />
-    <ClInclude Include="..\Main\DeadLineTask.h" />
+    <ClInclude Include="..\Main\DeadlineTask.h" />
     <ClInclude Include="..\Main\DeadlineTaskManager.h" />
     <ClInclude Include="..\Main\IterativeTask.h" />
     <ClInclude Include="..\Main\IterativeTaskHandler.h" />

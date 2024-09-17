@@ -28,7 +28,7 @@ int Utility::integerValidation(string inputMassege, string variableName, bool ne
 }
 
 void Utility::inviteDisplayMessage(Task* task){
-	if (task->getStatus() != TaskStatus::CREATION)
+	//if (task->getStatus() != TaskStatus::CREATION)
 		Scheduler::displayMessage(task);
 }
 

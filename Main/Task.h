@@ -22,6 +22,8 @@ public:
 	Task(int id, string priority, int runningTime, string status, bool isOrdered = false);
 	Task(int id, string priority, int runningTime, bool isOrdered = false);
 
+	Task(const shared_ptr<Task>& other);
+
 	//getters & setters
 	virtual int getId() const;
 

@@ -35,17 +35,15 @@ void IterativeTaskHandler::pushIterativeTask(shared_ptr<IterativeTask> iterative
  */
 shared_ptr<IterativeTask> IterativeTaskHandler::popIterativeTask()
 {
-	if (isEmpty())
-		throw "can't pop from empty heap";
-
-	shared_ptr<IterativeTask> topTask = minHeap.top();
-	minHeap.pop();
-	spdlog::info(Logger::LoggerInfo::POP_ITERATIVE_TASK_FROM_HEAP, topTask->getId());
-
-	// Set the running time of the task
-	topTask->setRunningTime(topTask->getRunTime());
-
-	return topTask;
+	if (isEmpty()) {
+		throw std::runtime_error("Heap is empty");  // Throw an exception instead of using cerr
+	}
+		shared_ptr<IterativeTask> topTask = minHeap.top();
+		minHeap.pop();
+		spdlog::info(Logger::LoggerInfo::POP_ITERATIVE_TASK_FROM_HEAP, topTask->getId());
+		topTask->setRunningTime(topTask->getRunTime());
+		// Set the running time of the task
+		return topTask;
 }
 
 /**
@@ -63,7 +61,10 @@ void IterativeTaskHandler::checkTime()
 
 			// If the current time is greater than or equal to the task's wait time, insert the task again
 			if (currentTime_t >= waitTime) {
-				Scheduler::insertTask(dynamic_pointer_cast<Task>(popIterativeTask()));
+				auto popedtTask = popIterativeTask();
+				Task task(dynamic_pointer_cast<Task>(popedtTask));
+				Scheduler::insertTask(make_shared<Task>(task));
+				pushIterativeTask(popedtTask);
 			}
 		}
 

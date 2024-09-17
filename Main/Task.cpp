@@ -12,6 +12,9 @@ Task::Task(int id, string priority, int runningTime, string status, bool isOrder
 Task::Task(int id, string priority, int runningTime, bool isOrdered)
 	: Task(id, priority, runningTime, TaskStatus::CREATION, isOrdered)
 {}
+Task::Task(const shared_ptr<Task>& other)
+	: id(other->id), priority(other->priority), runningTime(other->runningTime), status(other->status), isOrdered(other->isOrdered) {}
+
 
 int Task::getId() const {
 	return id;

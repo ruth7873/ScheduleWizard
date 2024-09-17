@@ -1,4 +1,4 @@
 #pragma once
 #include "../Main/Scheduler.h"
 
-void PopAllTheQueue(Scheduler scheduler);
+void clearAll(Scheduler scheduler);

@@ -67,7 +67,7 @@ void Scheduler::init() {
 			this->iterativeTaskHandler.checkTime();
 			});
 
-		readtasksFromJSON_Thread.join();
+		//readtasksFromJSON_Thread.join();
 		insertTask_Thread.join();
 		RTScheduler_Thread.join();
 		WRRScheduler_Thread.join();
@@ -103,10 +103,8 @@ void Scheduler::insertTask(shared_ptr<Task> newTask)
 
 		if (shared_ptr< IterativeTask> iterativeTask = dynamic_pointer_cast<IterativeTask>(newTask)) {
 			// Check if dynamic_pointer_cast succeeded
-			if (iterativeTask) {
 				iterativeTaskHandler.pushIterativeTask(iterativeTask);
 				auto u = iterativeTaskHandler.getMinHeap();
-			}
 		}
 		else if (shared_ptr< DeadlineTask> deadlineTask = dynamic_pointer_cast<DeadlineTask>(newTask)) {
 			// Check if dynamic_pointer_cast succeeded
@@ -205,6 +203,7 @@ void Scheduler::execute(shared_ptr<Task> task) {
 			task->setStatus(TaskStatus::TERMINATED);
 			popTaskFromItsQueue(task);
 			totalRunningTask--;
+			LongTaskHandler::addSumOfAllSeconds(task->getRunningTime() * -1);
 			break; // Exit the loop if an exception is caught
 		}
 	}
