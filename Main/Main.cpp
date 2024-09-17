@@ -7,13 +7,13 @@
 int main() {
     Scheduler s(new ReadFromJSON(), new Utility());
 
-    s.init();
+    //s.init();
 
     std::thread schedulerThread([&s]() {
         std::cerr << "Initializing Scheduler...\n";
         s.init();
         });
-
+    
     try {
         // Initialize the TCP server
         boost::asio::io_context io_context;

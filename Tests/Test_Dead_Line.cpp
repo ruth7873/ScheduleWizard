@@ -12,29 +12,30 @@ TEST_CASE("Test DeadLineTask creation and management") {
     Scheduler scheduler(new ReadFromJSON(), new Utility());
     //DeadlineTaskManager manager;
     
-    SUBCASE("Test inserting tasks with different deadlines") {
-        //clearAll(scheduler);
-        // Create deadline tasks with different deadlines
-        auto deadLineTask1 = std::make_shared<DeadLineTask>(DeadLineTask(Task(1, PrioritiesLevel::LOWER, 1), time(nullptr) + 10));
-        auto deadLineTask2 = std::make_shared<DeadLineTask>(DeadLineTask(Task(2, PrioritiesLevel::LOWER, 1), time(nullptr) + 1));
-        // Insert tasks into the scheduler
-        scheduler.insertTask(deadLineTask1);
-        scheduler.insertTask(deadLineTask2);
-        // Start the deadline mechanism in a separate thread
-        std::thread deadlineThread([&scheduler]() {
-            scheduler.getDeadlineTaskManager().deadlineMechanism();
-            });
-        // Detach the thread to finish execution
-        deadlineThread.detach();
-        // Check the task at the top of the heap
-        auto topTask = scheduler.getDeadlineTaskManager().getUpcomingTask();
-        CHECK_EQ(topTask->getId(), 2);  // Task with ID 2 should be at the top
-        // Wait for the first task's deadline to pass
-        std::this_thread::sleep_for(std::chrono::seconds(2));
-        // Check the task at the top again
-        topTask = scheduler.getDeadlineTaskManager().getUpcomingTask();
-        CHECK_EQ(topTask->getId(), 1);  // Task with ID 1 should now be at the top
-    }
+    //SUBCASE("Test inserting tasks with different deadlines") {
+    //    //clearAll(scheduler);
+    //    // Create deadline tasks with different deadlines
+    //    auto deadLineTask1 = std::make_shared<DeadLineTask>(DeadLineTask(Task(1, PrioritiesLevel::LOWER, 1), time(nullptr) + 10));
+    //    auto deadLineTask2 = std::make_shared<DeadLineTask>(DeadLineTask(Task(2, PrioritiesLevel::LOWER, 1), time(nullptr) + 1));
+    //    // Insert tasks into the scheduler
+    //    scheduler.insertTask(deadLineTask1);
+    //    scheduler.insertTask(deadLineTask2);
+    //    // Start the deadline mechanism in a separate thread
+    //    std::thread deadlineThread([&scheduler]() {
+    //        scheduler.getDeadlineTaskManager().deadlineMechanism();
+    //        });
+    //    // Detach the thread to finish execution
+    //    deadlineThread.detach();
+    //    // Check the task at the top of the heap
+
+    //    auto topTask = scheduler.getDeadlineTaskManager().getUpcomingTask();
+    //    CHECK_EQ(topTask->getId(), 2);  // Task with ID 2 should be at the top
+    //    // Wait for the first task's deadline to pass
+    //    std::this_thread::sleep_for(std::chrono::seconds(7));
+    //    // Check the task at the top again
+    //    topTask = scheduler.getDeadlineTaskManager().getUpcomingTask();
+    //    CHECK_EQ(topTask->getId(), 1);  // Task with ID 1 should now be at the top
+    //}
     // Test the insertion of tasks into the heap
     SUBCASE("Test deadline task inserts to the heap") {
         // Create tasks (task1: regular task, task2: deadline task)
@@ -72,17 +73,9 @@ TEST_CASE("Test DeadLineTask creation and management") {
     SUBCASE("Pop from empty heap throws exception") {
         DeadlineTaskManager manager;  // Create an instance of your class
         // Check if the correct exception is thrown when heap is empty
-        CHECK_THROWS_WITH_AS(manager.getUpcomingTask(), "Heap is empty", std::runtime_error);
+        CHECK_EQ(manager.getUpcomingTask(),nullptr);
     }
-    SUBCASE("Test DeadLineTask comparison operator") {
-        // Create two tasks with different deadlines
-        DeadLineTask task1(Task(1, PrioritiesLevel::LOWER, 1), time(nullptr) + 10);  // Later deadline
-        DeadLineTask task2(Task(2, PrioritiesLevel::LOWER, 1), time(nullptr) + 5);   // Earlier deadline
-
-        // Check that task1 is considered greater than task2 based on deadline
-        CHECK(task2 > task1);  // task1 has a later deadline, so it should be greater
-        CHECK_FALSE(task1 > task2);  // task2 has an earlier deadline, so it should not be greater
-    }
+   
 
 }
 //

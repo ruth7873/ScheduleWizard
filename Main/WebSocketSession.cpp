@@ -21,6 +21,7 @@ void WebSocketSession::start() {
 	// Accept the WebSocket handshake
 	ws_.async_accept([self = shared_from_this()](beast::error_code ec) {
 		if (!ec) {
+			cout << "The client connected...\n";
 			self->do_read();
 		}
 		else {
@@ -30,49 +31,100 @@ void WebSocketSession::start() {
 }
 
 void WebSocketSession::do_read() {
-	// Read data from the WebSocket
-	ws_.async_read(buffer_, [self = shared_from_this()](beast::error_code ec, std::size_t bytes_transferred) {
-		if (!ec) {
-			// Handle the received message (convert buffer to string)
-			std::string message = beast::buffers_to_string(self->buffer_.data());
+		// Read data from the WebSocket
+		ws_.async_read(buffer_, [self = shared_from_this()](beast::error_code ec, std::size_t bytes_transferred) {
+			if (!ec) {
+				// Handle the received message (convert buffer to string)
+				std::string message = beast::buffers_to_string(self->buffer_.data());
+	
+				// Log or handle the message as needed
+				std::cout << "Received: " << message << std::endl;
+	
+				// Parse the message as JSON
+				json task_json = json::parse(message);
+				if (task_json.contains("priority") && task_json.contains("runningTime")) {
+	
+					// Use TaskFactory to create the correct type of task based on the taskType
+					shared_ptr<Task> newTask = TaskFactory::createTask(task_json);
+	
+					// Insert the new Task into the Scheduler's queues
+					if (newTask) {
+						Scheduler::insertTask(newTask);
+					}
+					else {
+						std::cerr << "Task creation failed for task type: " << task_json["type"] << std::endl;
+						//spdlog::error("Task creation failed for task type: {}", task_json["type"]);
+					}
+					// Check boundaries before accessing JSON fields
+	
+					std::string priority = task_json["priority"].get<std::string>();
+					int runningTime = task_json["runningTime"].get<int>();  // Expecting an integer
+	
+					// Prepare and send a response to the client
+					std::string response = "{ \"taskId\": " + std::to_string(newTask->getId()) +
+						", \"priority\": \"" + priority +
+						"\", \"runningTime\": " + std::to_string(runningTime) +
+						", \"status\": \"received and scheduled\" }";
 
-			// Log or handle the message as needed
-			std::cout << "Received: " << message << std::endl;
-
-			// Parse the message as JSON
-			json task_json = json::parse(message);
-			if (task_json.contains("priority") && task_json.contains("runningTime")) {
-				TaskFactory::createTask(task_json);
-				// Check boundaries before accessing JSON fields
-
-				std::string priority = task_json["priority"].get<std::string>();
-				int runningTime = task_json["runningTime"].get<int>();  // Expecting an integer
-
-				// Create a new Task and insert it into the scheduler
-
-				//std::shared_ptr<Task> newTask(new Task(Scheduler::taskIds++, priority, runningTime));
-				//Scheduler::insertTask(newTask);
-				std::cout << "Sending a response\n";
-
-				// Prepare and send a response to the client
-				std::string response = "Task with priority " + priority + " and running time " +
-					std::to_string(runningTime) + " received and scheduled.";
-
-				// Use 'self' instead of 'this' to call the member function
-				self->send_response(response);
+					// Use 'self' instead of 'this' to call the member function
+					self->send_response(response);
+				}
+	
+				// Clear the buffer
+				self->buffer_.consume(bytes_transferred);
+	
+				// Continue reading
+				self->do_read();
 			}
-
-			// Clear the buffer
-			self->buffer_.consume(bytes_transferred);
-
-			// Continue reading
-			self->do_read();
-		}
-		else {
-			std::cerr << "WebSocket read error: " << ec.message() << std::endl;
-		}
-		});
-}
+			else {
+				std::cerr << "WebSocket read error: " << ec.message() << std::endl;
+			}
+			});
+	}
+//void WebSocketSession::do_read() {
+//	// Read data from the WebSocket
+//	ws_.async_read(buffer_, [self = shared_from_this()](beast::error_code ec, std::size_t bytes_transferred) {
+//		if (!ec) {
+//			// Handle the received message (convert buffer to string)
+//			std::string message = beast::buffers_to_string(self->buffer_.data());
+//
+//			// Log or handle the message as needed
+//			std::cout << "Received: " << message << std::endl;
+//
+//			// Parse the message as JSON
+//			json task_json = json::parse(message);
+//			if (task_json.contains("priority") && task_json.contains("runningTime")) {
+//				Task t = TaskFactory::createTask(task_json);
+//				// Check boundaries before accessing JSON fields
+//
+//				std::string priority = task_json["priority"].get<std::string>();
+//				int runningTime = task_json["runningTime"].get<int>();  // Expecting an integer
+//
+//				// Create a new Task and insert it into the scheduler
+//
+//				//std::shared_ptr<Task> newTask(new Task(Scheduler::taskIds++, priority, runningTime));
+//				//Scheduler::insertTask(newTask);
+//				std::cout << "Sending a response\n";
+//
+//				// Prepare and send a response to the client
+//				std::string response = "Task "+ to_string(t.getId()) + " with priority " + priority + " and running time " +
+//					std::to_string(runningTime) + " received and scheduled.";
+//
+//				// Use 'self' instead of 'this' to call the member function
+//				self->send_response(response);
+//			}
+//
+//			// Clear the buffer
+//			self->buffer_.consume(bytes_transferred);
+//
+//			// Continue reading
+//			self->do_read();
+//		}
+//		else {
+//			std::cerr << "WebSocket read error: " << ec.message() << std::endl;
+//		}
+//		});
+//}
 
 void WebSocketSession::send_response(const std::string& response) {
 	// Ensure response is valid

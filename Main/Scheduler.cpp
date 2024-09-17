@@ -32,11 +32,11 @@ void Scheduler::init() {
 	spdlog::info(Logger::LoggerInfo::START_SCHEDULER);
 	try {
 		// Create a thread for the read from json file
-		std::thread readtasksFromJSON_Thread([this]() {
+	/*	std::thread readtasksFromJSON_Thread([this]() {
 			SetThreadDescription(GetCurrentThread(), L"createTasksFromJSON");
 			spdlog::info(Logger::LoggerInfo::START_READ_FROM_JSON_THREAD);
 			reader->createTasksFromJSON(Scenario::SCENARIO_11_FILE_PATH);
-			});
+			});*/
 
 		// Create a thread for the InsertTask function
 		std::thread insertTask_Thread([this]() {
@@ -66,7 +66,7 @@ void Scheduler::init() {
 			this->iterativeTaskHandler.checkTime();
 			});
 
-		readtasksFromJSON_Thread.join();
+		//readtasksFromJSON_Thread.join();
 		insertTask_Thread.join();
 		RTScheduler_Thread.join();
 		WRRScheduler_Thread.join();

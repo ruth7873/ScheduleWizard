@@ -1,0 +1,7 @@
+
+        {
+            "tasks": [
+                { "type": "basic", "priority": "Critical", "runningTime": 2, "delay": 3 },
+                { "type": "basic", "priority": "Lower", "runningTime": 3 }
+            ]
+        }
