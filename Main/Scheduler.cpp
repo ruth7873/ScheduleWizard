@@ -27,6 +27,7 @@ Scheduler::Scheduler(IReadFromJSON* reader, IUtility* utilies)
  * Exceptions that may occur during thread creation are caught and handled within the function.
  */
 void Scheduler::init() {
+
 	Logger::initialize_logger();
 
 	spdlog::info(Logger::LoggerInfo::START_SCHEDULER);
@@ -35,7 +36,7 @@ void Scheduler::init() {
 		std::thread readtasksFromJSON_Thread([this]() {
 			SetThreadDescription(GetCurrentThread(), L"createTasksFromJSON");
 			spdlog::info(Logger::LoggerInfo::START_READ_FROM_JSON_THREAD);
-			reader->createTasksFromJSON(Scenario::SCENARIO_11_FILE_PATH);
+			reader->createTasksFromJSON(Scenario::SCENARIO_1_FILE_PATH);
 			});
 
 		// Create a thread for the InsertTask function
@@ -107,10 +108,10 @@ void Scheduler::insertTask(shared_ptr<Task> newTask)
 				auto u = iterativeTaskHandler.getMinHeap();
 			}
 		}
-		else if (shared_ptr< DeadLineTask> deadLineTask = dynamic_pointer_cast<DeadLineTask>(newTask)) {
+		else if (shared_ptr< DeadlineTask> deadlineTask = dynamic_pointer_cast<DeadlineTask>(newTask)) {
 			// Check if dynamic_pointer_cast succeeded
-			if (deadLineTask) {
-				deadlineTaskManager.addTask(deadLineTask);
+			if (deadlineTask) {
+				deadlineTaskManager.addTask(deadlineTask);
 			}
 		}
 	}
@@ -218,6 +219,8 @@ void Scheduler::execute(shared_ptr<Task> task) {
  */
 void Scheduler::preemptive(shared_ptr<Task> task) {
 	task->setStatus(TaskStatus::SUSPENDED);
+	//string res = "Task id: " + to_string(task->getId()) + " status: " + task->getStatus();
+	//server.send_response(res);
 	spdlog::info(Logger::LoggerInfo::TASK_SUSPENDED, task->getId());
 
 }

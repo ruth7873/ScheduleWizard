@@ -14,11 +14,16 @@
     },
     {
       "type": "basic",
+      "priority": "Critical",
+      "runningTime": 3
+    },
+    {
+      "type": "basic",
       "priority": "Middle",
       "runningTime": 5
     },
     {
-      "type": "deadLine",
+      "type": "deadline",
       "priority": "Lower",
       "runningTime": 5,
       "deadLine": 1

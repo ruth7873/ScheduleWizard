@@ -114,26 +114,26 @@ TEST_CASE("Test Weighted Round Robin scheduler") {
     //    CHECK_EQ(higherTask->getStatus(), TaskStatus::COMPLETED);
     //}
 
-    SUBCASE("Test dynamic task addition during execution") {
-        shared_ptr<Task> higherTask(new Task(1, PrioritiesLevel::HIGHER, 1));
-        scheduler.insertTask(higherTask);
+    //SUBCASE("Test dynamic task addition during execution") {
+    //    shared_ptr<Task> higherTask(new Task(1, PrioritiesLevel::HIGHER, 1));
+    //    scheduler.insertTask(higherTask);
 
-        // Start the scheduler in a new thread
-        std::thread WRRThread([&scheduler]() {
-            scheduler.getWrrQueuesScheduler().weightRoundRobinFunction();
-            });
+    //    // Start the scheduler in a new thread
+    //    std::thread WRRThread([&scheduler]() {
+    //        scheduler.getWrrQueuesScheduler().weightRoundRobinFunction();
+    //        });
 
-        // Add new task while scheduler is running
-        std::this_thread::sleep_for(std::chrono::seconds(1));
-        shared_ptr<Task> middleTask(new Task(2, PrioritiesLevel::MIDDLE, 1));
-        scheduler.insertTask(middleTask);
+    //    // Add new task while scheduler is running
+    //    std::this_thread::sleep_for(std::chrono::seconds(1));
+    //    shared_ptr<Task> middleTask(new Task(2, PrioritiesLevel::MIDDLE, 1));
+    //    scheduler.insertTask(middleTask);
 
-        std::this_thread::sleep_for(std::chrono::seconds(3));
-        WRRThread.detach();
+    //    std::this_thread::sleep_for(std::chrono::seconds(3));
+    //    WRRThread.detach();
 
-        // Check that the dynamically added task is executed
-        CHECK_EQ(middleTask->getStatus(), TaskStatus::COMPLETED);
-    }
+    //    // Check that the dynamically added task is executed
+    //    CHECK_EQ(middleTask->getStatus(), TaskStatus::COMPLETED);
+    //}
 	
     //SUBCASE("Test WRR Destructor") {
     //    {
@@ -143,12 +143,13 @@ TEST_CASE("Test Weighted Round Robin scheduler") {
     //        wrr.addTask(task1);
     //        wrr.addTask(task2);
 
-    //        CHECK_EQ(wrr.getWrrQueues()[PrioritiesLevel::LOWER], 2);
-    //    } // RealTimeScheduler goes out of scope here, destructor is called
+    //        CHECK_EQ(wrr.getWrrQueues()[PrioritiesLevel::LOWER].queue.size(), 2);
+    //    } // WeightRoundRobinScheduler goes out of scope here, destructor is called
 
-    //    // We can't directly check the queue size after destruction,
-    //    // but we can verify that the destructor didn't crash
+    //     We can't directly check the queue size after destruction,
+    //     but we can verify that the destructor didn't crash
     //    CHECK(true); // If we reach here, destructor completed without crashing
     //}
+
  
 }

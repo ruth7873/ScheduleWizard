@@ -7,10 +7,11 @@
 #include <nlohmann/json.hpp>  // For JSON parsing
 
 using json = nlohmann::json;
+websocket::stream<boost::asio::ip::tcp::socket> WebSocketSession::ws_{ nullptr };
+
 
 // Modify the constructor to take a socket and move it into the WebSocket stream
-WebSocketSession::WebSocketSession(boost::asio::ip::tcp::socket socket)
-	: ws_(std::move(socket)) {
+WebSocketSession::WebSocketSession(boost::asio::ip::tcp::socket socket){
 }
 
 boost::asio::ip::tcp::socket& WebSocketSession::get_socket() {
@@ -42,17 +43,22 @@ void WebSocketSession::do_read() {
 			// Parse the message as JSON
 			json task_json = json::parse(message);
 			if (task_json.contains("priority") && task_json.contains("runningTime")) {
-				TaskFactory::createTask(task_json);
+
+				// Use TaskFactory to create the correct type of task based on the taskType
+				shared_ptr<Task> newTask = TaskFactory::createTask(task_json);
+
+				// Insert the new Task into the Scheduler's queues
+				if (newTask) {
+					Scheduler::insertTask(newTask);
+				}
+				else {
+					std::cerr << "Task creation failed for task type: " << task_json["type"] << std::endl;
+					//spdlog::error("Task creation failed for task type: {}", task_json["type"]);
+				}
 				// Check boundaries before accessing JSON fields
 
 				std::string priority = task_json["priority"].get<std::string>();
 				int runningTime = task_json["runningTime"].get<int>();  // Expecting an integer
-
-				// Create a new Task and insert it into the scheduler
-
-				//std::shared_ptr<Task> newTask(new Task(Scheduler::taskIds++, priority, runningTime));
-				//Scheduler::insertTask(newTask);
-				std::cout << "Sending a response\n";
 
 				// Prepare and send a response to the client
 				std::string response = "Task with priority " + priority + " and running time " +
@@ -75,7 +81,6 @@ void WebSocketSession::do_read() {
 }
 
 void WebSocketSession::send_response(const std::string& response) {
-	// Ensure response is valid
 	if (response.empty()) {
 		std::cerr << "Error: Empty response string" << std::endl;
 		return;
@@ -85,17 +90,12 @@ void WebSocketSession::send_response(const std::string& response) {
 	std::cout << "---- send response in action ----" << std::endl;
 
 	try {
-		// Synchronous write
-		ws_.write(net::buffer(response));
-
+		ws_.write(boost::asio::buffer(response));
 		std::cout << "Successfully wrote " << response.size() << " bytes" << std::endl;
 	}
 	catch (const std::exception& e) {
 		std::cerr << "Write Error: " << e.what() << std::endl;
 	}
-
-	// Continue reading after writing
-	//do_read();
 }
 
 void WebSocketSession::do_write(const std::string& message) {

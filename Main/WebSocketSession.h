@@ -12,27 +12,29 @@ namespace net = boost::asio;
 
 class WebSocketSession : public std::enable_shared_from_this<WebSocketSession> {
 public:
-    // Modify the constructor to accept a socket directly
-    explicit WebSocketSession(boost::asio::ip::tcp::socket socket);
+	// Modify the constructor to accept a socket directly
+	explicit WebSocketSession(boost::asio::ip::tcp::socket socket);
 
-    // Start the session
-    void start();
+	// Start the session
+	void start();
 
-    // Retrieve the underlying socket
-    boost::asio::ip::tcp::socket& get_socket();
+	// Retrieve the underlying socket
+	boost::asio::ip::tcp::socket& get_socket();
+
+	static void send_response(const std::string& response);
+
 
 private:
-    // Function to handle WebSocket read
-    void do_read();
+	// Function to handle WebSocket read
+	void do_read();
 
-    void send_response(const std::string& response);
 
-    // Function to handle WebSocket write
-    void do_write(const std::string& message);
+	// Function to handle WebSocket write
+	void do_write(const std::string& message);
 
-    // Socket and WebSocket stream
-    websocket::stream<boost::asio::ip::tcp::socket> ws_;
-    beast::flat_buffer buffer_;
+	// Socket and WebSocket stream
+	static websocket::stream<boost::asio::ip::tcp::socket> ws_;
+	beast::flat_buffer buffer_;
 };
 
 #endif

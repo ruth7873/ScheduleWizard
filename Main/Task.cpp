@@ -45,3 +45,4 @@ void Task::setStatus(const string& newStatus) {
 bool Task::getIsOrdered()const {
 	return isOrdered;
 }
+

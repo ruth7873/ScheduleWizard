@@ -1,5 +1,5 @@
 #include "doctest.h"
-#include "../Main/DeadLineTask.h"
+#include "../Main/DeadlineTask.h"
 #include "../Main/DeadlineTaskManager.h"
 #include "../Main/Scheduler.h"
 #include <chrono>
@@ -18,11 +18,11 @@ TEST_CASE("Test DeadLineTask creation and management") {
     //SUBCASE("Test deadline task inserts to the heap") {
     //    // Create tasks (task1: regular task, task2: deadline task)
     //    auto task1 = std::make_shared<Task>(1, PrioritiesLevel::HIGHER, 15);
-    //    auto task2 = std::make_shared<DeadLineTask>(DeadLineTask(Task(2, PrioritiesLevel::LOWER, 10), time(nullptr) + 2));
+    //    auto task2 = std::make_shared<DeadlineTask>(DeadlineTask(Task(2, PrioritiesLevel::LOWER, 10), time(nullptr) + 2));
 
     //    // Insert tasks into the scheduler
     //    scheduler.insertTask(task1);
-    //    scheduler.insertTask(task2);  // Assuming insertTask accepts both Task and DeadLineTask
+    //    scheduler.insertTask(task2);  // Assuming insertTask accepts both Task and DeadlineTask
 
     //    // Verify if the correct task is at the top of the heap
     //    auto incomingTask = manager.getUpcomingTask();
@@ -32,14 +32,14 @@ TEST_CASE("Test DeadLineTask creation and management") {
     //// Test that a deadline task becomes critical after a certain time
     //SUBCASE("Test deadline time becomes critical") {
     //    auto Task1 = std::make_shared<Task>(1, PrioritiesLevel::HIGHER, 15);
-    //    auto baseTaskPtr = std::make_shared<DeadLineTask>(DeadLineTask(Task(2, PrioritiesLevel::LOWER, 10), time(nullptr) + 2));
+    //    auto baseTaskPtr = std::make_shared<DeadlineTask>(DeadlineTask(Task(2, PrioritiesLevel::LOWER, 10), time(nullptr) + 2));
 
     //    // Insert tasks into the scheduler
     //    scheduler.insertTask(Task1);
     //    scheduler.insertTask(baseTaskPtr);
 
     //    // Run the deadline mechanism in a separate thread
-    //    std::thread deadLineThread([&scheduler]() {
+    //    std::thread deadlineThread([&scheduler]() {
     //        cout << scheduler.getRealTimeScheduler().getRealTimeQueue().size() << "----------------" << endl;
     //        scheduler.getDeadlineTaskManager().deadlineMechanism();
     //        });
@@ -48,7 +48,7 @@ TEST_CASE("Test DeadLineTask creation and management") {
     //    std::this_thread::sleep_for(std::chrono::seconds(3));
 
     //    // Detach the thread to finish execution
-    //    deadLineThread.detach();
+    //    deadlineThread.detach();
     //    cout << scheduler.getRealTimeScheduler().getRealTimeQueue().size() << "----------------" << endl;
 
     //    // Verify that the task count in the real-time queue is 1
@@ -58,20 +58,20 @@ TEST_CASE("Test DeadLineTask creation and management") {
     //// Test the build of the heap by the pop
     //SUBCASE("Test inserting tasks with different deadlines") {
     //    // Create deadline tasks with different deadlines
-    //    auto deadlineTask1 = std::make_shared<DeadLineTask>(DeadLineTask(Task(1, PrioritiesLevel::LOWER, 1), time(nullptr) + 10));
-    //    auto deadlineTask2 = std::make_shared<DeadLineTask>(DeadLineTask(Task(2, PrioritiesLevel::LOWER, 1), time(nullptr) + 1));
+    //    auto deadlineTask1 = std::make_shared<DeadlineTask>(DeadlineTask(Task(1, PrioritiesLevel::LOWER, 1), time(nullptr) + 10));
+    //    auto deadlineTask2 = std::make_shared<DeadlineTask>(DeadlineTask(Task(2, PrioritiesLevel::LOWER, 1), time(nullptr) + 1));
 
     //    // Insert tasks into the scheduler
     //    scheduler.insertTask(deadlineTask1);
     //    scheduler.insertTask(deadlineTask2);
 
     //    // Start the deadline mechanism in a separate thread
-    //    std::thread deadLineThread([&scheduler]() {
+    //    std::thread deadlineThread([&scheduler]() {
     //        scheduler.getDeadlineTaskManager().deadlineMechanism();
     //        });
 
     //    // Detach the thread to finish execution
-    //    deadLineThread.detach();
+    //    deadlineThread.detach();
 
     //    // Check the task at the top of the heap
     //    auto topTask = manager.getUpcomingTask();
@@ -85,31 +85,15 @@ TEST_CASE("Test DeadLineTask creation and management") {
     //    CHECK_EQ(topTask->getId(), 1);  // Task with ID 1 should now be at the top
     //}
 
-    SUBCASE("Test task removal after completion or critical status") {
-        try {
-            //auto deadlineTask = std::make_shared<DeadLineTask>(Task(1, PrioritiesLevel::LOWER, 10), time(nullptr) + 2);
-            //// Insert tasks into the scheduler
-            //scheduler.insertTask(deadlineTask);
+    SUBCASE("Pop from empty heap throws exception") {
+        DeadlineTaskManager manager;  // Create an instance of your class
 
-            //// Start the deadline mechanism in a separate thread
-            //std::thread deadLineThread([&scheduler]() {
-            //    scheduler.getDeadlineTaskManager().deadlineMechanism();
-            //    });
-
-            //// Detach the thread to finish execution
-            //deadLineThread.detach();
-
-            //// Wait for the first task's deadline to pass
-            //std::this_thread::sleep_for(std::chrono::seconds(2));
-            scheduler.getDeadlineTaskManager().getUpcomingTask();
-        }
-        catch (exception e) {
-            CHECK_EQ(e.what(), "Heap is empty");  // No task should be left in the heap
-
-        }
-
-
+        // Check if the correct exception is thrown when heap is empty
+        CHECK_THROWS_WITH(manager.getUpcomingTask(), "Heap is empty");
     }
+
+
+    
 }
 
 

@@ -1,5 +1,5 @@
 #pragma once
-#include "DeadLineTask.h"
+#include "DeadlineTask.h"
 #include "Utility.h"
 #include "IterativeTask.h"
 #include <memory>
@@ -11,7 +11,7 @@ class TaskFactory {
 private:
 	static Task basicInput();
 	static shared_ptr<Task> basicTaskInput(bool);
-	static shared_ptr<DeadLineTask> deadLineTaskInput();
+	static shared_ptr<DeadlineTask> deadlineTaskInput();
 	static shared_ptr<IterativeTask> iterativeTaskInput();
 
 public:

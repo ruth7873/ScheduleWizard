@@ -150,6 +150,7 @@
     <ClCompile Include="..\Main\WeightRoundRobinScheduler.cpp" />
     <ClCompile Include="IScheduler.cpp" />
     <ClCompile Include="Test_Job_Scheduling.cpp" />
+    <ClCompile Include="Test_Server.cpp" />
     <ClCompile Include="Test_WRR.cpp" />
     <ClCompile Include="Helper.cpp" />
     <ClCompile Include="Test1_Execute.cpp" />
