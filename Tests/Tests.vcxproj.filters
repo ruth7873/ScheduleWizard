@@ -25,9 +25,9 @@
     <ClCompile Include="Test1_Execute.cpp" />
     <ClCompile Include="Test2_RealTimeScheduler.cpp" />
     <ClCompile Include="Tests_Main.cpp" />
-    <ClCompile Include="Test_Dead_Line.cpp" />
+    <ClCompile Include="Test00_Dead_Line.cpp" />
     <ClCompile Include="Test_InsertTask.cpp" />
-    <ClCompile Include="Test_Iterative_Task.cpp" />
+    <ClCompile Include="Test11_Iterative_Task.cpp" />
     <ClCompile Include="Test_Logger.cpp" />
     <ClCompile Include="Test_Long_task.cpp" />
     <ClCompile Include="Test_Ordered_Task.cpp" />

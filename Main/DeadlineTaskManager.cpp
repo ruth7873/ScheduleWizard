@@ -36,12 +36,12 @@ void DeadlineTaskManager::deadlineMechanism() {
             // Remove the task from the heap
             {
                 std::unique_lock<std::mutex> lock(Scheduler::rtLock);  // Lock the rtLock
-                if (!minHeap.empty())
+               // if (!minHeap.empty())
                     minHeap.pop();
             }
         }
         else {
-            if (earliestTask->getPriority() == PrioritiesLevel::CRITICAL ||
+            if (/*earliestTask->getPriority() == PrioritiesLevel::CRITICAL ||*/ 
                 earliestTask->getStatus() == TaskStatus::COMPLETED)
 
                 minHeap.pop();

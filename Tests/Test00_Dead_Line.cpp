@@ -12,30 +12,30 @@ TEST_CASE("Test DeadLineTask creation and management") {
     Scheduler scheduler(new ReadFromJSON(), new Utility());
     //DeadlineTaskManager manager;
     
-    //SUBCASE("Test inserting tasks with different deadlines") {
-    //    //clearAll(scheduler);
-    //    // Create deadline tasks with different deadlines
-    //    auto deadLineTask1 = std::make_shared<DeadLineTask>(DeadLineTask(Task(1, PrioritiesLevel::LOWER, 1), time(nullptr) + 10));
-    //    auto deadLineTask2 = std::make_shared<DeadLineTask>(DeadLineTask(Task(2, PrioritiesLevel::LOWER, 1), time(nullptr) + 1));
-    //    // Insert tasks into the scheduler
-    //    scheduler.insertTask(deadLineTask1);
-    //    scheduler.insertTask(deadLineTask2);
-    //    // Start the deadline mechanism in a separate thread
-    //    std::thread deadlineThread([&scheduler]() {
-    //        scheduler.getDeadlineTaskManager().deadlineMechanism();
-    //        });
-    //    // Detach the thread to finish execution
-    //    deadlineThread.detach();
-    //    // Check the task at the top of the heap
+    SUBCASE("Test inserting tasks with different deadlines") {
+        //clearAll(scheduler);
+        // Create deadline tasks with different deadlines
+        auto deadLineTask1 = std::make_shared<DeadLineTask>(DeadLineTask(Task(1, PrioritiesLevel::LOWER, 1), time(nullptr) + 10));
+        auto deadLineTask2 = std::make_shared<DeadLineTask>(DeadLineTask(Task(2, PrioritiesLevel::LOWER, 1), time(nullptr) + 1));
+        // Insert tasks into the scheduler
+        scheduler.insertTask(deadLineTask1);
+        scheduler.insertTask(deadLineTask2);
+        // Start the deadline mechanism in a separate thread
+        std::thread deadlineThread([&scheduler]() {
+            scheduler.getDeadlineTaskManager().deadlineMechanism();
+            });
+        // Detach the thread to finish execution
+        deadlineThread.detach();
+        // Check the task at the top of the heap
 
-    //    auto topTask = scheduler.getDeadlineTaskManager().getUpcomingTask();
-    //    CHECK_EQ(topTask->getId(), 2);  // Task with ID 2 should be at the top
-    //    // Wait for the first task's deadline to pass
-    //    std::this_thread::sleep_for(std::chrono::seconds(7));
-    //    // Check the task at the top again
-    //    topTask = scheduler.getDeadlineTaskManager().getUpcomingTask();
-    //    CHECK_EQ(topTask->getId(), 1);  // Task with ID 1 should now be at the top
-    //}
+        auto topTask = scheduler.getDeadlineTaskManager().getUpcomingTask();
+        CHECK_EQ(topTask->getId(), 2);  // Task with ID 2 should be at the top
+        // Wait for the first task's deadline to pass
+        std::this_thread::sleep_for(std::chrono::seconds(7));
+        // Check the task at the top again
+        topTask = scheduler.getDeadlineTaskManager().getUpcomingTask();
+        CHECK_EQ(topTask->getId(), 1);  // Task with ID 1 should now be at the top
+    }
     // Test the insertion of tasks into the heap
     SUBCASE("Test deadline task inserts to the heap") {
         // Create tasks (task1: regular task, task2: deadline task)

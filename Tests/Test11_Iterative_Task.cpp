@@ -115,4 +115,74 @@ TEST_CASE("System Test Of Iterative Task Handler") {
         s.getWrrQueuesScheduler().getWrrQueues()[PrioritiesLevel::HIGHER].queue.pop();
     }
 
+    SUBCASE("Test CompareIterative with Close Wait Times") {
+        IterativeTaskHandler handler;
+
+        // Create two tasks with very close execution times
+        std::shared_ptr<IterativeTask> task1 = std::make_shared<IterativeTask>(Task(0, PrioritiesLevel::HIGHER, 2), 5, 1); // 1 second interval
+        std::shared_ptr<IterativeTask> task2 = std::make_shared<IterativeTask>(Task(1, PrioritiesLevel::HIGHER, 2), 3, 1); // 1 second interval
+
+        // Set wait times very close to each other
+        time_t now = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
+        task1->setWaitTime(now + 1); // 1 second from now
+
+        // Sleep for a very short time to ensure a slight difference in wait times
+        std::this_thread::sleep_for(std::chrono::milliseconds(10));
+
+        task2->setWaitTime(now + 1); // Slightly more than 1 second from the original now
+
+        // Push tasks into the minHeap
+        handler.pushIterativeTask(task1);
+        handler.pushIterativeTask(task2);
+
+        // Check that both tasks can be popped from the heap in the correct order
+        auto firstTask = handler.popIterativeTask();
+        auto secondTask = handler.popIterativeTask();
+        CHECK(firstTask->getWaitTime() <= secondTask->getWaitTime());
+        CHECK(handler.isEmpty());
+    }
+
+    SUBCASE("Iterative Task with different running times") {
+        // Create and add iterative tasks with different running times
+        std::shared_ptr<IterativeTask> shortRunningTask = std::make_shared<IterativeTask>(Task(0, PrioritiesLevel::HIGHER, 1), 2, 1); // Running time: 1
+        std::shared_ptr<IterativeTask> longRunningTask = std::make_shared<IterativeTask>(Task(1, PrioritiesLevel::HIGHER, 5), 2, 1); // Running time: 5
+
+        // Push tasks into the handler
+        s.getIterativeTaskHandler().pushIterativeTask(shortRunningTask);
+        s.getIterativeTaskHandler().pushIterativeTask(longRunningTask);
+
+        // Verify that tasks are added
+        CHECK_EQ(s.getIterativeTaskHandler().getMinHeap().size(), 2);
+
+        // Pop tasks and check their running times
+        auto poppedTask1 = s.getIterativeTaskHandler().popIterativeTask();
+        auto poppedTask2 = s.getIterativeTaskHandler().popIterativeTask();
+
+        // Check that the running times are as expected
+        CHECK_EQ(poppedTask1->getRunTime(), 1);
+        CHECK_EQ(poppedTask2->getRunTime(), 5);
+    }
+
+    SUBCASE("Iterative Task with different iteration intervals") {
+        // Create and add iterative tasks with different iteration intervals
+        std::shared_ptr<IterativeTask> fastIterativeTask = std::make_shared<IterativeTask>(Task(0, PrioritiesLevel::HIGHER, 2), 3, 1); // Interval: 1 second
+        std::shared_ptr<IterativeTask> slowIterativeTask = std::make_shared<IterativeTask>(Task(1, PrioritiesLevel::HIGHER, 2), 3, 5); // Interval: 5 seconds
+
+        // Push tasks into the handler
+        s.getIterativeTaskHandler().pushIterativeTask(fastIterativeTask);
+        s.getIterativeTaskHandler().pushIterativeTask(slowIterativeTask);
+
+        // Verify that tasks are added
+        CHECK_EQ(s.getIterativeTaskHandler().getMinHeap().size(), 2);
+
+        // Simulate time passing and pop tasks
+        std::this_thread::sleep_for(std::chrono::seconds(1)); // Wait 2 seconds for the fast task to be eligible for execution
+        auto poppedTask1 = s.getIterativeTaskHandler().popIterativeTask();
+        CHECK_EQ(poppedTask1->getExecutionInterval(), 1);
+
+        // Wait another few seconds for the slow task
+        std::this_thread::sleep_for(std::chrono::seconds(4)); // Wait an additional 4 seconds
+        auto poppedTask2 = s.getIterativeTaskHandler().popIterativeTask();
+        CHECK_EQ(poppedTask2->getExecutionInterval(), 5);
+    }
 }

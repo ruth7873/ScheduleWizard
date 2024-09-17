@@ -41,6 +41,34 @@ TEST_CASE("Test RealTimeScheduler::realTimeSchedulerFunction") {
 		// Detach the thread to prevent blocking the test case
 		schedulerThread.detach();
 	}
+
+	SUBCASE("Execute Tasks by their arrival order") {
+		shared_ptr<Task> task1(new Task(Scheduler::taskIds++, PrioritiesLevel::CRITICAL, 2));
+		shared_ptr<Task> task2(new Task(Scheduler::taskIds++, PrioritiesLevel::CRITICAL, 3));
+		shared_ptr<Task> task3(new Task(Scheduler::taskIds++, PrioritiesLevel::CRITICAL, 5));
+
+		scheduler.insertTask(task1);
+		scheduler.insertTask(task2);
+		scheduler.insertTask(task3);
+
+		Scheduler::totalRunningTask = 1;
+		std::thread schedulerThread(&RealTimeScheduler::realTimeSchedulerFunction, &scheduler.getRealTimeScheduler());
+		// Give some time for tasks to be executed
+		schedulerThread.detach();  // We detach instead of join to avoid infinite loop
+		std::this_thread::sleep_for(std::chrono::seconds(3));
+		CHECK(task1->getStatus() == TaskStatus::COMPLETED);
+		CHECK(task2->getStatus() != TaskStatus::COMPLETED);
+		CHECK(task3->getStatus() != TaskStatus::COMPLETED);
+
+		std::this_thread::sleep_for(std::chrono::seconds(3));
+		CHECK(task2->getStatus() == TaskStatus::COMPLETED);
+		CHECK(task3->getStatus() != TaskStatus::COMPLETED);
+
+		std::this_thread::sleep_for(std::chrono::seconds(5));
+		CHECK(task3->getStatus() == TaskStatus::COMPLETED);
+
+	}
+
 	SUBCASE("Test RealTimeScheduler Destructor") {
 		{
 			RealTimeScheduler rts;
@@ -56,5 +84,6 @@ TEST_CASE("Test RealTimeScheduler::realTimeSchedulerFunction") {
 		// but we can verify that the destructor didn't crash
 		CHECK(true); // If we reach here, destructor completed without crashing
 	}
+
 
 }

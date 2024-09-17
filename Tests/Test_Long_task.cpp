@@ -75,6 +75,16 @@ TEST_CASE("Testing LongTaskHandler functionality") {
         CHECK(LongTaskHandler::getNumOfSeconds() == 2);
     }
 
+    SUBCASE("Test Execute Of Long Task"){
+        shared_ptr<Task> task(new Task(0, PrioritiesLevel::HIGHER, 5));
+        LongTaskHandler::setSumOfAllSeconds(4);
+        Scheduler::totalRunningTask = 2;
+        Scheduler::execute(task);
+        std::this_thread::sleep_for(std::chrono::seconds(3));
+        CHECK(task->getStatus() == TaskStatus::SUSPENDED);
+
+    }
+
     SUBCASE("Test setters and getters") {
         LongTaskHandler::setSumOfAllSeconds(100);
         CHECK(LongTaskHandler::getSumOfAllSeconds() == 100);
