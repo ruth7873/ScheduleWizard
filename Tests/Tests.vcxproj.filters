@@ -35,6 +35,7 @@
     <ClCompile Include="Test_Utility.cpp" />
     <ClCompile Include="Test_TaskFactory.cpp" />
     <ClCompile Include="Test_CheckStarvation.cpp" />
+    <ClCompile Include="Test_StressTest.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Main\Consts.h" />

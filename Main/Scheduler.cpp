@@ -154,6 +154,8 @@ void Scheduler::addTaskToItsQueue(shared_ptr<Task> taskToAdd) {
 		std::lock_guard<std::mutex> lock(realTimeQueueMutex);
 		realTimeScheduler.addTask(taskToAdd); // Add task to real-time scheduler
 		spdlog::info(Logger::LoggerInfo::ADD_CRITICAL_TASK, taskToAdd->getId());
+		spdlog::warn("A real - time task has been detected!This may lead to potential starvation or preemption.");
+		cout << "A real-time task has been detected! This may lead to potential starvation or preemption.\n";
 	}
 	else {
 		// Lock the mutex for the WRR queue when adding a task
