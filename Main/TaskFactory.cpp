@@ -107,7 +107,7 @@ shared_ptr<Task> TaskFactory::createTask(const nlohmann::json& taskData)
 		}
 		// Check if taskData contains the required keys for a deadline task
 		else if (taskType == TaskType::DEAD_LINE) {
-			if (taskData.contains("priority") && taskData.contains("runningTime") && taskData.contains("deadLine")) {
+			if (taskData.contains("priority") && taskData.contains("runningTime") && taskData.contains("deadline")) {
 				auto priority = taskData.at("priority").get<std::string>();
 				if (priority != PrioritiesLevel::CRITICAL && priority != PrioritiesLevel::HIGHER &&
 					priority != PrioritiesLevel::MIDDLE && priority != PrioritiesLevel::LOWER) {
@@ -118,7 +118,7 @@ shared_ptr<Task> TaskFactory::createTask(const nlohmann::json& taskData)
 					taskData.at("priority").get<std::string>(),  // Priority is a string
 					taskData.at("runningTime").get<int>()        // Running time is an integer
 				);
-				int deadLineTime = taskData.at("deadLine").get<int>();  // Deadline is an integer
+				int deadLineTime = taskData.at("deadline").get<int>();  // Deadline is an integer
 
 				auto task = std::make_shared<DeadLineTask>(basicTask, deadLineTime);
 				return dynamic_pointer_cast<Task>(task);

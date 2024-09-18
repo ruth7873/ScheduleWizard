@@ -149,6 +149,7 @@
     <ClCompile Include="..\Main\WebSocketSession.cpp" />
     <ClCompile Include="..\Main\WeightRoundRobinScheduler.cpp" />
     <ClCompile Include="IScheduler.cpp" />
+    <ClCompile Include="Test_CheckStarvation.cpp" />
     <ClCompile Include="Test_Job_Scheduling.cpp" />
     <ClCompile Include="Test_TaskFactory.cpp" />
     <ClCompile Include="Test3_WRR.cpp" />

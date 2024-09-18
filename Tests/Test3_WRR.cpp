@@ -109,6 +109,33 @@ TEST_CASE("Test Weighted Round Robin scheduler") {
         // Check that the dynamically added task is executed
         CHECK_EQ(middleTask->getStatus(), TaskStatus::COMPLETED);
     }
+    SUBCASE("Execute Higher Tasks by their arrival order") {
+        clearAll(scheduler);
+        shared_ptr<Task> task1(new Task(Scheduler::taskIds++, PrioritiesLevel::HIGHER, 2));
+        shared_ptr<Task> task2(new Task(Scheduler::taskIds++, PrioritiesLevel::HIGHER, 3));
+        shared_ptr<Task> task3(new Task(Scheduler::taskIds++, PrioritiesLevel::HIGHER, 5));
+
+        scheduler.insertTask(task1);
+        scheduler.insertTask(task2);
+        scheduler.insertTask(task3);
+
+        Scheduler::totalRunningTask = 1;//ensure that the task won't suspended because the long.
+        std::thread schedulerThread(&RealTimeScheduler::realTimeSchedulerFunction, &scheduler.getRealTimeScheduler());
+        // Give some time for tasks to be executed
+        schedulerThread.detach();  // We detach instead of join to avoid infinite loop
+        std::this_thread::sleep_for(std::chrono::seconds(3));
+        CHECK(task1->getStatus() == TaskStatus::COMPLETED);
+        CHECK(task2->getStatus() != TaskStatus::COMPLETED);
+        CHECK(task3->getStatus() != TaskStatus::COMPLETED);
+
+        std::this_thread::sleep_for(std::chrono::seconds(3));
+        CHECK(task2->getStatus() == TaskStatus::COMPLETED);
+        CHECK(task3->getStatus() != TaskStatus::COMPLETED);
+
+        std::this_thread::sleep_for(std::chrono::seconds(5));
+        CHECK(task3->getStatus() == TaskStatus::COMPLETED);
+
+    }
 
     SUBCASE("Test WRR Destructor") {
         {

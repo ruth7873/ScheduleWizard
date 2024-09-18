@@ -145,7 +145,7 @@ TEST_CASE("System Test Of Iterative Task Handler") {
     SUBCASE("Iterative Task with different running times") {
         // Create and add iterative tasks with different running times
         std::shared_ptr<IterativeTask> shortRunningTask = std::make_shared<IterativeTask>(Task(0, PrioritiesLevel::HIGHER, 1), 2, 1); // Running time: 1
-        std::shared_ptr<IterativeTask> longRunningTask = std::make_shared<IterativeTask>(Task(1, PrioritiesLevel::HIGHER, 5), 2, 1); // Running time: 5
+        std::shared_ptr<IterativeTask> longRunningTask = std::make_shared<IterativeTask>(Task(1, PrioritiesLevel::HIGHER, 10), 2, 1); // Running time: 10
 
         // Push tasks into the handler
         s.getIterativeTaskHandler().pushIterativeTask(shortRunningTask);
@@ -166,7 +166,7 @@ TEST_CASE("System Test Of Iterative Task Handler") {
     SUBCASE("Iterative Task with different iteration intervals") {
         // Create and add iterative tasks with different iteration intervals
         std::shared_ptr<IterativeTask> fastIterativeTask = std::make_shared<IterativeTask>(Task(0, PrioritiesLevel::HIGHER, 2), 3, 1); // Interval: 1 second
-        std::shared_ptr<IterativeTask> slowIterativeTask = std::make_shared<IterativeTask>(Task(1, PrioritiesLevel::HIGHER, 2), 3, 5); // Interval: 5 seconds
+        std::shared_ptr<IterativeTask> slowIterativeTask = std::make_shared<IterativeTask>(Task(1, PrioritiesLevel::HIGHER, 2), 3, 10); // Interval: 10 seconds
 
         // Push tasks into the handler
         s.getIterativeTaskHandler().pushIterativeTask(fastIterativeTask);
