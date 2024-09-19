@@ -6,7 +6,7 @@ using json = nlohmann::json;
 namespace fs = std::filesystem; // Use standard filesystem instead of experimental
 
 // Path to the logs directory
-const std::string logDirectoryPath = "C:\\Users\\îéëì\\Documents\\BootCamp\\Final\\ScheduleWizard\\Main\\logs";
+const std::string logDirectoryPath = "C:\\Users\\Ã®Ã©Ã«Ã¬\\Documents\\BootCamp\\Final\\ScheduleWizard\\Main\\logs";
 
 // Modify the constructor to take a socket and move it into the WebSocket stream
 WebSocketSession::WebSocketSession(boost::asio::ip::tcp::socket socket)
@@ -25,7 +25,6 @@ void WebSocketSession::start() {
 	// Accept the WebSocket handshake
 	ws_.async_accept([self = shared_from_this()](beast::error_code ec) {
 		if (!ec) {
-			cout << "The client connected...\n";
 			self->do_read();
 		}
 		else {
@@ -47,7 +46,6 @@ void WebSocketSession::do_read() {
 			// Parse the message as JSON
 			json task_json = json::parse(message);
 			if (task_json.contains("priority") && task_json.contains("runningTime")) {
-
 				// Use TaskFactory to create the correct type of task based on the taskType
 				shared_ptr<Task> newTask = TaskFactory::createTask(task_json);
 
@@ -68,11 +66,15 @@ void WebSocketSession::do_read() {
 				std::string priority = task_json["priority"].get<std::string>();
 				int runningTime = task_json["runningTime"].get<int>();  // Expecting an integer
 
+				// Create a new Task and insert it into the scheduler
+
+				//std::shared_ptr<Task> newTask(new Task(Scheduler::taskIds++, priority, runningTime));
+				//Scheduler::insertTask(newTask);
+				std::cout << "Sending a response\n";
+
 				// Prepare and send a response to the client
-				std::string response = "{ \"taskId\": " + std::to_string(newTask->getId()) +
-					", \"priority\": \"" + priority +
-					"\", \"runningTime\": " + std::to_string(runningTime) +
-					", \"status\": \"received and scheduled\" }";
+				std::string response = "Task with priority " + priority + " and running time " +
+					std::to_string(runningTime) + " received and scheduled.";
 
 				// Use 'self' instead of 'this' to call the member function
 				self->send_response(response);
@@ -89,7 +91,6 @@ void WebSocketSession::do_read() {
 		}
 		});
 }
-
 
 void WebSocketSession::send_response(const std::string& response) {
 	// Ensure response is valid
@@ -123,6 +124,7 @@ void WebSocketSession::do_write(const std::string& message) {
 		}
 		});
 }
+
 
 // Helper function to get the latest log file
 std::string get_latest_log_file(const std::string& directory) {
@@ -223,19 +225,3 @@ void WebSocketSession::monitorLogs() {
 		std::this_thread::sleep_for(std::chrono::seconds(1));
 	}
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

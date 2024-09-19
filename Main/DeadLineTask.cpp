@@ -1,17 +1,21 @@
-#include "DeadlineTask.h"
+#include "DeadLineTask.h"
 
 
 
 // Definition of the static member
-//DeadlineTaskManager DeadlineTask::manager;
+//DeadlineTaskManager DeadLineTask::manager;
 
-DeadlineTask::DeadlineTask(Task basicTask, int deadlineTime)
+DeadLineTask::DeadLineTask(Task basicTask, int deadLineTime)
     : Task(basicTask.getId(), basicTask.getPriority(), basicTask.getRunningTime(), basicTask.getStatus()),
-    deadline(deadlineTime) {
+    deadline(deadLineTime * 100) {
     // Automatically add the task to the manager's min-heap when it's created
-    //manager.addTask(std::make_shared<DeadlineTask>(*this));
+    //manager.addTask(std::make_shared<DeadLineTask>(*this));
 }
 
-time_t DeadlineTask::getDeadline() const {
+time_t DeadLineTask::getDeadline() const {
     return deadline;
 }
+bool DeadLineTask::operator>(const DeadLineTask& other) const {
+    return deadline < other.deadline;
+}
+

@@ -4,29 +4,24 @@
   "tasks": [
     {
       "type": "basic",
-      "priority": "Middle",
-      "runningTime": 5
-    },
+      "priority": "Higher",
+      "runningTime": 7
+    },    
     {
       "type": "basic",
       "priority": "Middle",
-      "runningTime": 3
+      "runningTime": 1
     },
     {
       "type": "basic",
-      "priority": "Critical",
-      "runningTime": 3
+      "priority": "Lower",
+      "runningTime": 1
     },
     {
-      "type": "basic",
-      "priority": "Middle",
-      "runningTime": 5
-    },
-    {
-      "type": "deadline",
+      "type": "deadLine",
       "priority": "Lower",
       "runningTime": 5,
-      "deadLine": 1
+      "deadLine": 10
     }
   ]
 }

@@ -105,7 +105,7 @@
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>D:\ספריות\FakeIt\FakeIt\single_header\doctest;D:\Bootcamp\part 2\Scheduler Project\ScheduleWizard\Main</AdditionalIncludeDirectories>
-      <AdditionalIncludeDirectories>D:\Bootcamp\part 2\Scheduler Project\ScheduleWizard\Main;C:\Users\user1\Desktop\bootcamp\Main\spdlog\include\spdlog;C:\Users\מיכל\Documents\BootCamp\OurProject\boost_1_85_0;C:\Users\user1\Downloads\boost_1_85_0\boost_1_85_0;C:\Users\user1\Desktop\bootcamp\project\FakeIt\single_header\doctest;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\Bootcamp\part 2\Scheduler Project\ScheduleWizard\Main;C:\Users\user1\Desktop\bootcamp\Main\spdlog\include\spdlog;D:\ספריות\boost_1_85_0\boost_1_85_0;C:\Users\user1\Downloads\boost_1_85_0\boost_1_85_0;C:\Users\user1\Desktop\bootcamp\project\FakeIt\single_header\doctest;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>

@@ -102,15 +102,17 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;_WIN32_WINNT=0x0601;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\Users\מיכל\Documents\BootCamp\ExternalLib\boost_1_85_0;C:\Users\מיכל\Documents\BootCamp\ExternalLib\spdlog.native.1.0.0</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\ספריות\boost_1_85_0\boost_1_85_0;C:\Users\user1\Downloads\boost_1_85_0\boost_1_85_0</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
+      <BuildStlModules>true</BuildStlModules>
+
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>D:\ספריות\boost_1_85_0\boost_1_85_0\libs;C:\Users\מיכל\Documents\BootCamp\ExternalLib\boost_1_85_0\libs</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>D:\ספריות\boost_1_85_0\boost_1_85_0\libs;C:\Users\user1\Downloads\boost_1_85_0\boost_1_85_0\libs</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -133,7 +135,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Consts.cpp" />
-    <ClCompile Include="DeadlineTask.cpp" />
+    <ClCompile Include="DeadLineTask.cpp" />
     <ClCompile Include="DeadlineTaskManager.cpp" />
     <ClCompile Include="IterativeTask.cpp" />
     <ClCompile Include="IterativeTaskHandler.cpp" />
@@ -154,7 +156,7 @@
   <ItemGroup>
     <ClInclude Include="Consts.h" />
     <ClInclude Include="DeadlineTaskManager.h" />
-    <ClInclude Include="DeadlineTask.h" />
+    <ClInclude Include="DeadLineTask.h" />
     <ClInclude Include="IterativeTaskHandler.h" />
     <ClInclude Include="IterativeTask.h" />
     <ClInclude Include="Logger.h" />

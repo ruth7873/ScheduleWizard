@@ -44,12 +44,12 @@ private:
     void do_write(const std::string& message);
 
     void monitorLogs();
+    std::string get_latest_log_file(const std::string& directory);
 
     // Socket and WebSocket stream
     websocket::stream<boost::asio::ip::tcp::socket> ws_;
     beast::flat_buffer buffer_;
 };
-
 #endif
 
-std::string get_latest_log_file(const std::string& directory);
+
