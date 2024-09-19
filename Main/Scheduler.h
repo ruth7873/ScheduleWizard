@@ -1,6 +1,7 @@
 #pragma once
+
 #include <thread>
-#include <chrono>    
+#include <chrono>
 #include <string>
 #include <memory>
 #include <mutex>
@@ -17,17 +18,14 @@
 #include "OrderedTaskHandler.h"
 #include "LongTaskHandler.h"
 
-
-
 class RealTimeScheduler;
 class WeightRoundRobinScheduler;
 class DeadlineTaskManager;
 class IterativeTaskHandler;
 class OrderedTaskHandler;
 class IReadFromJSON;
-class ReadFromJSON;
 class IUtility;
-class Utility;
+class Task;
 
 class Scheduler
 {
@@ -42,17 +40,15 @@ private:
     static std::mutex wrrQueueMutex;
 
     IReadFromJSON* reader;
-    IUtility* utilies;
-
+    IUtility* utilities;
 
 public:
-
     static const unsigned int MAX_TASKS = std::numeric_limits<unsigned int>::max();
     static std::mutex rtLock;
     static int totalRunningTask;
     static unsigned int taskIds;
 
-    Scheduler(IReadFromJSON* reader, IUtility* utilies);
+    Scheduler(IReadFromJSON* reader, IUtility* utilities);
     void init();
 
     static void printAtomically(const std::string& message);
@@ -70,4 +66,3 @@ public:
     static DeadlineTaskManager& getDeadlineTaskManager();
     static OrderedTaskHandler& getOrderedTaskHandler();
 };
-

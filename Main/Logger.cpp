@@ -57,12 +57,13 @@ void Logger::initialize_logger() {
 	spdlog::set_level(spdlog::level::debug);
 	spdlog::get("daily_logger")->debug("Logger initialized and logging to daily and hourly files");
 
+	// Start a new hourly log file periodically
 	std::thread([]() {
-		//while (true) {
-			std::this_thread::sleep_for(std::chrono::seconds(10));
+		while (true) {
+			std::this_thread::sleep_for(std::chrono::hours(1)); // Start a new hourly log file every hour
 			spdlog::get("daily_logger")->flush();
 			spdlog::get("daily_logger")->debug("Starting new hourly log file");
-		//}
+		}
 		}).detach();
 }
 

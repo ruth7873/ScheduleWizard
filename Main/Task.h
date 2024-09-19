@@ -17,7 +17,6 @@ private:
 	string status;
 	bool isOrdered;
 public:
-
 	//c'tors
 	Task(int id, string priority, int runningTime, string status, bool isOrdered = false);
 	Task(int id, string priority, int runningTime, bool isOrdered = false);

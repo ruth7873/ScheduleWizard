@@ -4,20 +4,19 @@
 #include <memory> // for std::shared_ptr
 
 class Task;
-//class DeadlineTask;
+//class DeadLineTask;
 
-class DeadlineTask : public Task {
+class DeadLineTask : public Task {
 private:
     time_t deadline;
 
 public:
-    DeadlineTask(Task basicTask, int deadlineTime);
+    DeadLineTask(Task basicTask, int deadLineTime);
     time_t getDeadline() const;
 
     // Comparator for the min-heap based on deadline
-    bool operator>(const DeadlineTask& other) const;
+    bool operator>(const DeadLineTask& other) const;
 
-    DeadlineTask() = default;
+    DeadLineTask() = default;
 };
-
 

@@ -21,7 +21,6 @@ void WebSocketSession::start() {
 	// Accept the WebSocket handshake
 	ws_.async_accept([self = shared_from_this()](beast::error_code ec) {
 		if (!ec) {
-			cout << "The client connected...\n";
 			self->do_read();
 		}
 		else {
@@ -43,28 +42,21 @@ void WebSocketSession::do_read() {
 			// Parse the message as JSON
 			json task_json = json::parse(message);
 			if (task_json.contains("priority") && task_json.contains("runningTime")) {
-
-				// Use TaskFactory to create the correct type of task based on the taskType
-				shared_ptr<Task> newTask = TaskFactory::createTask(task_json);
-
-				// Insert the new Task into the Scheduler's queues
-				if (newTask) {
-					Scheduler::insertTask(newTask);
-				}
-				else {
-					std::cerr << "Task creation failed for task type: " << task_json["type"] << std::endl;
-					//spdlog::error("Task creation failed for task type: {}", task_json["type"]);
-				}
+				TaskFactory::createTask(task_json);
 				// Check boundaries before accessing JSON fields
 
 				std::string priority = task_json["priority"].get<std::string>();
 				int runningTime = task_json["runningTime"].get<int>();  // Expecting an integer
 
+				// Create a new Task and insert it into the scheduler
+
+				//std::shared_ptr<Task> newTask(new Task(Scheduler::taskIds++, priority, runningTime));
+				//Scheduler::insertTask(newTask);
+				std::cout << "Sending a response\n";
+
 				// Prepare and send a response to the client
-				std::string response = "{ \"taskId\": " + std::to_string(newTask->getId()) +
-					", \"priority\": \"" + priority +
-					"\", \"runningTime\": " + std::to_string(runningTime) +
-					", \"status\": \"received and scheduled\" }";
+				std::string response = "Task with priority " + priority + " and running time " +
+					std::to_string(runningTime) + " received and scheduled.";
 
 				// Use 'self' instead of 'this' to call the member function
 				self->send_response(response);
@@ -81,7 +73,6 @@ void WebSocketSession::do_read() {
 		}
 		});
 }
-
 
 void WebSocketSession::send_response(const std::string& response) {
 	// Ensure response is valid
@@ -115,23 +106,3 @@ void WebSocketSession::do_write(const std::string& message) {
 		}
 		});
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
