@@ -17,6 +17,7 @@
 #include "OrderedTaskHandler.h"
 #include "LongTaskHandler.h"
 
+
 class RealTimeScheduler;
 class WeightRoundRobinScheduler;
 class DeadlineTaskManager;
@@ -61,6 +62,7 @@ public:
 	static void displayMessage(const Task* task);
 	static void preemptive(std::shared_ptr<Task> task);
 
+
 	static void popTaskFromItsQueue(std::shared_ptr<Task> taskToPop);
 	static void addTaskToItsQueue(std::shared_ptr<Task> taskToAdd);
 	void checkStarvation();
@@ -73,7 +75,6 @@ public:
 
 	static queue<shared_ptr<Task>>& getStarvationCheckQueue();
 	static void setStarvationCheckQueue(queue<shared_ptr<Task>>);
-
 	static int getSTARVATION();
 };
 

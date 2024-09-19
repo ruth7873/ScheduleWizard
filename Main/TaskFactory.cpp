@@ -38,14 +38,14 @@ shared_ptr<Task> TaskFactory::basicTaskInput(bool isOrdered = false)
 	return shared_ptr<Task>(new Task(basicTask.getId(), basicTask.getPriority(), basicTask.getRunningTime(), isOrdered));
 }
 
-shared_ptr<DeadLineTask> TaskFactory::deadLineTaskInput()
+shared_ptr<DeadlineTask> TaskFactory::deadlineTaskInput()
 {
 	Task basicTask = basicInput();
 	int dealLineTime = Utility::integerValidation("Enter the Dead line:", "Dead line", 0);
 
 	// Create some DeadlineTask objects
 	time_t now = time(nullptr);
-	return shared_ptr<DeadLineTask>(new DeadLineTask(basicTask, now + dealLineTime));
+	return shared_ptr<DeadlineTask>(new DeadlineTask(basicTask, now + dealLineTime));
 }
 
 shared_ptr<IterativeTask> TaskFactory::iterativeTaskInput()
@@ -65,7 +65,7 @@ shared_ptr<Task> TaskFactory::createTask(string type)
 	else if (type == TaskType::ORDERED)
 		return basicTaskInput(true);
 	else if (type == TaskType::DEAD_LINE) {
-		return dynamic_pointer_cast<Task>(deadLineTaskInput());
+		return dynamic_pointer_cast<Task>(deadlineTaskInput());
 	}
 	else if (type == TaskType::ITERATIVE) {
 		return dynamic_pointer_cast<Task>(iterativeTaskInput());
@@ -118,9 +118,9 @@ shared_ptr<Task> TaskFactory::createTask(const nlohmann::json& taskData)
 					taskData.at("priority").get<std::string>(),  // Priority is a string
 					taskData.at("runningTime").get<int>()        // Running time is an integer
 				);
-				int deadLineTime = taskData.at("deadline").get<int>();  // Deadline is an integer
 
-				auto task = std::make_shared<DeadLineTask>(basicTask, deadLineTime);
+				int deadlineTime = taskData.at("deadline").get<int>();  // Deadline is an integer
+				auto task = std::make_shared<DeadlineTask>(basicTask, deadlineTime);
 				return dynamic_pointer_cast<Task>(task);
 			}
 			else {

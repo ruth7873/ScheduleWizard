@@ -132,7 +132,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\Main\Consts.cpp" />
-    <ClCompile Include="..\Main\DeadLineTask.cpp" />
+    <ClCompile Include="..\Main\DeadlineTask.cpp" />
     <ClCompile Include="..\Main\DeadlineTaskManager.cpp" />
     <ClCompile Include="..\Main\IterativeTask.cpp" />
     <ClCompile Include="..\Main\IterativeTaskHandler.cpp" />
@@ -169,7 +169,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Main\Consts.h" />
-    <ClInclude Include="..\Main\DeadLineTask.h" />
+    <ClInclude Include="..\Main\DeadlineTask.h" />
     <ClInclude Include="..\Main\DeadlineTaskManager.h" />
     <ClInclude Include="..\Main\IterativeTask.h" />
     <ClInclude Include="..\Main\IterativeTaskHandler.h" />

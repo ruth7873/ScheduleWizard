@@ -2,14 +2,15 @@
 
 
 // Definition of the static member
-std::priority_queue<std::shared_ptr<DeadLineTask>, std::vector<std::shared_ptr<DeadLineTask>>, DeadlineTaskManager::CompareDeadline> DeadlineTaskManager::minHeap;
+std::priority_queue<std::shared_ptr<DeadlineTask>, std::vector<std::shared_ptr<DeadlineTask>>, DeadlineTaskManager::CompareDeadline> DeadlineTaskManager::minHeap;
 
-void DeadlineTaskManager::addTask(const std::shared_ptr<DeadLineTask>& task) {
+void DeadlineTaskManager::addTask(const std::shared_ptr<DeadlineTask>& task) {
     if (task->getPriority() != PrioritiesLevel::CRITICAL)
         minHeap.push(task);
 }
 
-std::shared_ptr<DeadLineTask> DeadlineTaskManager::getUpcomingTask() {
+
+std::shared_ptr<DeadlineTask> DeadlineTaskManager::getUpcomingTask() {
     if (minHeap.empty()) {
         cerr<<"Heap is empty\n";  // Throw an exception instead of using cerr
         return nullptr;
@@ -20,7 +21,7 @@ std::shared_ptr<DeadLineTask> DeadlineTaskManager::getUpcomingTask() {
 
 void DeadlineTaskManager::deadlineMechanism() {
     if (!minHeap.empty()) {
-        std::shared_ptr<DeadLineTask> earliestTask = minHeap.top();
+        std::shared_ptr<DeadlineTask> earliestTask = minHeap.top();
         time_t currentTime = time(nullptr);
         // Check if the current time is close to the task's deadline
         if (currentTime >= earliestTask->getDeadline() - earliestTask->getRunningTime() &&

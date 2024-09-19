@@ -17,7 +17,7 @@ const int WeightPrecents::HIGHER_WEIGHT = 50;
 
 const string TaskType::BASIC = "basic";
 const string TaskType::ORDERED = "ordered";
-const string TaskType::DEAD_LINE = "deadLine";
+const string TaskType::DEAD_LINE = "deadline";
 const string TaskType::ITERATIVE = "iterative";
 
 const string Scenario::SCENARIO_1_FILE_PATH = "scenarios/scenario_1.json";

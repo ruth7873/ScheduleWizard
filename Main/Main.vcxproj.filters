@@ -2,7 +2,7 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClCompile Include="Consts.cpp" />
-    <ClCompile Include="DeadLineTask.cpp" />
+    <ClCompile Include="DeadlineTask.cpp" />
     <ClCompile Include="DeadlineTaskManager.cpp" />
     <ClCompile Include="IterativeTask.cpp" />
     <ClCompile Include="IterativeTaskHandler.cpp" />
@@ -23,7 +23,7 @@
   <ItemGroup>
     <ClInclude Include="Consts.h" />
     <ClInclude Include="DeadlineTaskManager.h" />
-    <ClInclude Include="DeadLineTask.h" />
+    <ClInclude Include="DeadlineTask.h" />
     <ClInclude Include="IterativeTaskHandler.h" />
     <ClInclude Include="IterativeTask.h" />
     <ClInclude Include="Logger.h" />

@@ -15,10 +15,10 @@ IterativeTaskHandler Scheduler::iterativeTaskHandler;
 DeadlineTaskManager Scheduler::deadlineTaskManager;
 OrderedTaskHandler Scheduler::orderedTaskHandler;
 
+
 queue <shared_ptr<Task>> Scheduler::starvationCheckQueue;
 
 const int Scheduler::STARVATION = 10;
-
 
 Scheduler::Scheduler(IReadFromJSON* reader, IUtility* utilies)
 	: reader(reader),
@@ -33,16 +33,17 @@ Scheduler::Scheduler(IReadFromJSON* reader, IUtility* utilies)
  * Exceptions that may occur during thread creation are caught and handled within the function.
  */
 void Scheduler::init() {
+
 	Logger::initialize_logger();
 
 	spdlog::info(Logger::LoggerInfo::START_SCHEDULER);
 	try {
-		// Create a thread for the read from json file
-	/*	std::thread readtasksFromJSON_Thread([this]() {
-			SetThreadDescription(GetCurrentThread(), L"createTasksFromJSON");
-			spdlog::info(Logger::LoggerInfo::START_READ_FROM_JSON_THREAD);
-			reader->createTasksFromJSON(Scenario::SCENARIO_11_FILE_PATH);
-			});*/
+		//// Create a thread for the read from json file
+		//std::thread readtasksFromJSON_Thread([this]() {
+		//	SetThreadDescription(GetCurrentThread(), L"createTasksFromJSON");
+		//	spdlog::info(Logger::LoggerInfo::START_READ_FROM_JSON_THREAD);
+		//	reader->createTasksFromJSON(Scenario::SCENARIO_1_FILE_PATH);
+		//	});
 
 			// Create a thread for the InsertTask function
 		std::thread insertTask_Thread([this]() {
@@ -141,7 +142,7 @@ void Scheduler::insertTask(shared_ptr<Task> newTask)
 			iterativeTaskHandler.pushIterativeTask(iterativeTask);
 			auto u = iterativeTaskHandler.getMinHeap();
 		}
-		else if (shared_ptr< DeadLineTask> deadLineTask = dynamic_pointer_cast<DeadLineTask>(newTask)) {
+		else if (shared_ptr< DeadlineTask> deadlineTask = dynamic_pointer_cast<DeadlineTask>(newTask)) {
 			// Check if dynamic_pointer_cast succeeded
 			deadlineTaskManager.addTask(deadLineTask);
 		}
@@ -201,8 +202,8 @@ void Scheduler::execute(shared_ptr<Task> task) {
 	deadlineTaskManager.deadlineMechanism();
 	LongTaskHandler::calculateAverageLength();
 	LongTaskHandler::setNumOfSeconds(0);
+
 	spdlog::info(Logger::LoggerInfo::START_EXECUTE, task->getId());
-	task->setStatus(TaskStatus::RUNNING);
 
 	// Continue executing the task while it has remaining running time
 	while (true) {
@@ -254,6 +255,8 @@ void Scheduler::execute(shared_ptr<Task> task) {
  */
 void Scheduler::preemptive(shared_ptr<Task> task) {
 	task->setStatus(TaskStatus::SUSPENDED);
+	//string res = "Task id: " + to_string(task->getId()) + " status: " + task->getStatus();
+	//server.send_response(res);
 	spdlog::info(Logger::LoggerInfo::TASK_SUSPENDED, task->getId());
 
 }
@@ -265,6 +268,7 @@ void Scheduler::preemptive(shared_ptr<Task> task) {
  *
  * @param task Pointer to the task whose status is to be displayed.
  */
+
 void Scheduler::displayMessage(const Task* task) {
 	printAtomically("task " + to_string(task->getId()) + " with priority: " + task->getPriority() + " and running time " + std::to_string(task->getRunningTime()) + " is " + task->getStatus() + "\n");
 }

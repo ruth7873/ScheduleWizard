@@ -36,8 +36,9 @@ void Utility::insertTaskFromInput()
 {
 	TaskFactory taskFactor;
 	while (true) {
-		cout << "Enter task type. basic/deadLine/iterative/ordered:" << endl;
+		cout << "Enter task type. basic/deadline/iterative/ordered:" << endl;
 		string type;
+		cin.clear(); // Clears any error flags
 		cin >> type;
 
 		// Validate the input task type

@@ -46,6 +46,7 @@ void Task::setStatus(const string& newStatus) {
 bool Task::getIsOrdered()const {
 	return isOrdered;
 }
+
 int Task::getCounter() const {
 	return counter;
 }

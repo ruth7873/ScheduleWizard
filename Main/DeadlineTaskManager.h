@@ -5,26 +5,26 @@
 #include "Scheduler.h"
 #include <iostream>
 #include <ctime>
-#include "DeadLineTask.h"
+#include "DeadlineTask.h"
 
 class DeadlineTaskManager {
 private:
-    // Min-heap to store shared pointers of DeadLineTask objects
+    // Min-heap to store shared pointers of DeadlineTask objects
     struct CompareDeadline {
-        bool operator()(const std::shared_ptr<DeadLineTask>& lhs, const std::shared_ptr<DeadLineTask>& rhs) const {
+        bool operator()(const std::shared_ptr<DeadlineTask>& lhs, const std::shared_ptr<DeadlineTask>& rhs) const {
 
-            return lhs->DeadLineTask::getDeadline() > rhs->DeadLineTask::getDeadline(); // Min-heap based on deadline
+            return lhs->DeadlineTask::getDeadline() > rhs->DeadlineTask::getDeadline(); // Min-heap based on deadline
             
         }
     };
 
-    static std::priority_queue<std::shared_ptr<DeadLineTask>, std::vector<std::shared_ptr<DeadLineTask>>, CompareDeadline> minHeap;
+    static std::priority_queue<std::shared_ptr<DeadlineTask>, std::vector<std::shared_ptr<DeadlineTask>>, CompareDeadline> minHeap;
 
 public:
     // Add a new DeadlineTask (as shared pointer) to the heap
-    void addTask(const std::shared_ptr<DeadLineTask>& task);
+    void addTask(const std::shared_ptr<DeadlineTask>& task);
 
-    std::shared_ptr<DeadLineTask> getUpcomingTask();
+    std::shared_ptr<DeadlineTask> getUpcomingTask();
 
     bool isEmpty() {
         return minHeap.empty();
