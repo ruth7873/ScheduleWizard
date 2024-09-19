@@ -18,7 +18,6 @@
 #include "LongTaskHandler.h"
 
 
-
 class RealTimeScheduler;
 class WeightRoundRobinScheduler;
 class DeadlineTaskManager;
