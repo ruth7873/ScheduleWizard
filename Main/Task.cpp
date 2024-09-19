@@ -1,19 +1,20 @@
 #include "Task.h"
 #include "Consts.h"
+#include "Scheduler.h"
 
 Task::Task(int id, string priority, int runningTime, string status, bool isOrdered)
-	: id(id), priority(priority), runningTime(runningTime), status(status), isOrdered(isOrdered)
+	: id(id), priority(priority), runningTime(runningTime), status(status), isOrdered(isOrdered), counter(Scheduler::tasksCounter)
 {
-	auto currentTime = std::chrono::system_clock::now();
-	// Convert the time point to std::time_t
-	//entryTime = std::chrono::system_clock::to_time_t(currentTime);
+	Utility::checkTaskIds();
 }
 
 Task::Task(int id, string priority, int runningTime, bool isOrdered)
 	: Task(id, priority, runningTime, TaskStatus::CREATION, isOrdered)
 {}
+
 Task::Task(const shared_ptr<Task>& other)
-	: id(other->id), priority(other->priority), runningTime(other->runningTime), status(other->status), isOrdered(other->isOrdered) {}
+	:Task(other->id, other->priority, other->runningTime, other->status, other->isOrdered) 
+{}
 
 
 int Task::getId() const {
@@ -42,10 +43,14 @@ const string& Task::getStatus() const {
 
 void Task::setStatus(const string& newStatus) {
 	status = newStatus;
-	Utility::inviteDisplayMessage(this);
+	Utility::displayInviteMessage(this);
 }
 
 bool Task::getIsOrdered()const {
 	return isOrdered;
+}
+
+int Task::getCounter() const {
+	return counter;
 }
 

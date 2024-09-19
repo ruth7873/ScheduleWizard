@@ -13,7 +13,7 @@ TEST_CASE("Utility::integerValidation") {
         std::istringstream cinStream("123\n");
         std::streambuf* oldCinStream = std::cin.rdbuf(cinStream.rdbuf());
 
-        int result = Utility::integerValidation("Enter number:", "TestVariable", false);
+        int result = Utility::validateIntegerInput("Enter number:", "TestVariable", false);
         CHECK_EQ(result, 123);
         CHECK(cerrStream.str().empty());
 
@@ -25,7 +25,7 @@ TEST_CASE("Utility::integerValidation") {
         std::istringstream cinStream("abc\n123\n");
         std::streambuf* oldCinStream = std::cin.rdbuf(cinStream.rdbuf());
 
-        int result = Utility::integerValidation("Enter number:", "TestVariable", false);
+        int result = Utility::validateIntegerInput("Enter number:", "TestVariable", false);
         CHECK_EQ(result, 123);
         CHECK(cerrStream.str() == "Invalid input. TestVariable should contain only numeric digits.\n");
 
@@ -37,7 +37,7 @@ TEST_CASE("Utility::integerValidation") {
         std::istringstream cinStream("-5\n5\n");
         std::streambuf* oldCinStream = std::cin.rdbuf(cinStream.rdbuf());
 
-        int result = Utility::integerValidation("Enter number:", "TestVariable", false);
+        int result = Utility::validateIntegerInput("Enter number:", "TestVariable", false);
         CHECK_EQ(result, 5);
         CHECK(cerrStream.str() == "Invalid input: TestVariable cannot be negative.\n");
 
@@ -49,7 +49,7 @@ TEST_CASE("Utility::integerValidation") {
         std::istringstream cinStream("-5\n");
         std::streambuf* oldCinStream = std::cin.rdbuf(cinStream.rdbuf());
 
-        int result = Utility::integerValidation("Enter number:", "TestVariable", true);
+        int result = Utility::validateIntegerInput("Enter number:", "TestVariable", true);
         CHECK_EQ(result, -5);
         CHECK(cerrStream.str().empty());
 

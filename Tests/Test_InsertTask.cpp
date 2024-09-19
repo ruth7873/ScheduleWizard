@@ -48,4 +48,3 @@ TEST_CASE("Test Scheduler::InsertTask") {
     clearAll(scheduler);
 
 }
-

@@ -16,8 +16,8 @@ private:
 	int runningTime;
 	string status;
 	bool isOrdered;
+	int counter;
 public:
-
 	//c'tors
 	Task(int id, string priority, int runningTime, string status, bool isOrdered = false);
 	Task(int id, string priority, int runningTime, bool isOrdered = false);
@@ -37,4 +37,6 @@ public:
 	virtual void setStatus(const string& newStatus);
 	
 	virtual bool getIsOrdered()const;
+
+	virtual int getCounter() const;
 };

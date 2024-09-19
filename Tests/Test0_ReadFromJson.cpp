@@ -170,4 +170,6 @@ TEST_CASE("Test ReadFromJSON::createTasksFromJSON") {
 		removeTestJSONFile();
 		Scheduler::totalRunningTask = 0;
 	}
+
 }
+

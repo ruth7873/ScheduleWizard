@@ -9,11 +9,9 @@ void DeadlineTaskManager::addTask(const std::shared_ptr<DeadlineTask>& task) {
         minHeap.push(task);
 }
 
-
 std::shared_ptr<DeadlineTask> DeadlineTaskManager::getUpcomingTask() {
     if (minHeap.empty()) {
-        cerr<<"Heap is empty\n";  // Throw an exception instead of using cerr
-        return nullptr;
+        throw std::runtime_error("Heap is empty");  // Throw an exception instead of using cerr
     }
     return minHeap.top();
 }
@@ -22,7 +20,7 @@ std::shared_ptr<DeadlineTask> DeadlineTaskManager::getUpcomingTask() {
 void DeadlineTaskManager::deadlineMechanism() {
     if (!minHeap.empty()) {
         std::shared_ptr<DeadlineTask> earliestTask = minHeap.top();
-        time_t currentTime = time(nullptr);
+        time_t currentTime = time(nullptr) * 100;
         // Check if the current time is close to the task's deadline
         if (currentTime >= earliestTask->getDeadline() - earliestTask->getRunningTime() &&
             earliestTask->getPriority() != PrioritiesLevel::CRITICAL &&
@@ -37,12 +35,12 @@ void DeadlineTaskManager::deadlineMechanism() {
             // Remove the task from the heap
             {
                 std::unique_lock<std::mutex> lock(Scheduler::rtLock);  // Lock the rtLock
-               // if (!minHeap.empty())
+                if (!minHeap.empty())
                     minHeap.pop();
             }
         }
         else {
-            if (/*earliestTask->getPriority() == PrioritiesLevel::CRITICAL ||*/ 
+            if (earliestTask->getPriority() == PrioritiesLevel::CRITICAL ||
                 earliestTask->getStatus() == TaskStatus::COMPLETED)
 
                 minHeap.pop();

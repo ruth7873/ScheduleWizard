@@ -75,6 +75,4 @@ TEST_CASE("Test DeadLineTask creation and management") {
         // Check if the correct exception is thrown when heap is empty
         CHECK_EQ(manager.getUpcomingTask(),nullptr);
     }
-   
-
 }

@@ -105,12 +105,13 @@
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>D:\ספריות\FakeIt\FakeIt\single_header\doctest;D:\Bootcamp\part 2\Scheduler Project\ScheduleWizard\Main</AdditionalIncludeDirectories>
-      <AdditionalIncludeDirectories>D:\Bootcamp\part 2\Scheduler Project\ScheduleWizard\Main;C:\Users\user1\Desktop\bootcamp\Main\spdlog\include\spdlog;C:\Users\מיכל\Documents\BootCamp\OurProject\boost_1_85_0;C:\Users\user1\Downloads\boost_1_85_0\boost_1_85_0;C:\Users\user1\Desktop\bootcamp\project\FakeIt\single_header\doctest;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\Bootcamp\part 2\Scheduler Project\ScheduleWizard\Main;C:\Users\user1\Desktop\bootcamp\Main\spdlog\include\spdlog;D:\ספריות\boost_1_85_0\boost_1_85_0;C:\Users\user1\Desktop\bootcamp\project\FakeIt\single_header\doctest;C:\Users\user1\Desktop\bootcamp\project\boost_1_85_0\boost_1_85_0;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>C:\Users\user1\Downloads\boost_1_85_0\boost_1_85_0\libs;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>C:\Users\user1\Downloads\boost_1_85_0\boost_1_85_0\libs;C:\Users\user1\Desktop\bootcamp\project\boost_1_85_0\boost_1_85_0\libs;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -149,7 +150,9 @@
     <ClCompile Include="..\Main\WebSocketSession.cpp" />
     <ClCompile Include="..\Main\WeightRoundRobinScheduler.cpp" />
     <ClCompile Include="IScheduler.cpp" />
+    <ClCompile Include="Test_CheckStarvation.cpp" />
     <ClCompile Include="Test_Job_Scheduling.cpp" />
+    <ClCompile Include="Test_StressTest.cpp" />
     <ClCompile Include="Test_TaskFactory.cpp" />
     <ClCompile Include="Test3_WRR.cpp" />
     <ClCompile Include="Helper.cpp" />

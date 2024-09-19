@@ -7,7 +7,9 @@
 #include <sstream>
 #include <iomanip>
 #include <chrono>
+#include <mutex>
 using namespace std;
+
 class HtmlFormatter : public spdlog::formatter {
 public:
 	void format(const spdlog::details::log_msg& msg, spdlog::memory_buf_t& dest) override;

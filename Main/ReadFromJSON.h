@@ -1,7 +1,10 @@
 #pragma once
+
 #include <iostream>
 #include <fstream>
 #include <nlohmann/json.hpp>
+#include <chrono>
+#include <thread>
 #include "Scheduler.h"
 #include "TaskFactory.h"
 #include "Consts.h"
@@ -12,15 +15,10 @@ public:
     virtual void createTasksFromJSON(const std::string& filePath) = 0;
 };
 
-class ReadFromJSON: public IReadFromJSON
-{
+class ReadFromJSON : public IReadFromJSON {
 private:
-	using json = nlohmann::json;
+    using json = nlohmann::json;
 
 public:
-
-     void createTasksFromJSON(const string&) override;
-
- 
+    void createTasksFromJSON(const std::string& filePath) override;
 };
-

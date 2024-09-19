@@ -338,7 +338,7 @@ TEST_SUITE("TaskFactory Tests") {
 		std::cin.rdbuf(oldCinStream);
 	}
 
-	TEST_CASE("Test deadLineTaskInput function") {
+	TEST_CASE("Test DeadlineTaskInput function") {
 		// Mock input stream
 		stringstream mockInput;
 		mockInput.str("Middle\n300\n400\n"); // Mock user input: priority = Middle, runningTime = 300, deadline = 400

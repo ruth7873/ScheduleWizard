@@ -11,12 +11,12 @@ TEST_CASE("OrderedTaskHandler operations") {
         auto task1 = std::make_shared<Task>(1,PrioritiesLevel::HIGHER, 10, true);
         auto task2 = std::make_shared<Task>(2,PrioritiesLevel::HIGHER, 20, true);
 
-        s.getOrderedTaskHandler().addOrderedtask(task1);
+        s.getOrderedTaskHandler().addOrderedTask(task1);
         CHECK(s.getOrderedTaskHandler().frontOrderedTask() == task1);
         CHECK(s.getWrrQueuesScheduler().getWrrQueues()[task1->getPriority()].queue.size() == 1);
         CHECK(s.getWrrQueuesScheduler().getWrrQueues()[task1->getPriority()].queue.front() == task1);
 
-        s.getOrderedTaskHandler().addOrderedtask(task2);
+        s.getOrderedTaskHandler().addOrderedTask(task2);
         CHECK(s.getOrderedTaskHandler().frontOrderedTask() == task1);
         CHECK(s.getWrrQueuesScheduler().getWrrQueues()[task1->getPriority()].queue.size() == 1);//the task didn't enter the wrr queue yet
 
@@ -31,8 +31,8 @@ TEST_CASE("OrderedTaskHandler operations") {
         auto task1 = std::make_shared<Task>(1, PrioritiesLevel::HIGHER, 10, true);
         auto task2 = std::make_shared<Task>(2, PrioritiesLevel::HIGHER, 20, true);
 
-        s.getOrderedTaskHandler().addOrderedtask(task1);
-        s.getOrderedTaskHandler().addOrderedtask(task2);
+        s.getOrderedTaskHandler().addOrderedTask(task1);
+        s.getOrderedTaskHandler().addOrderedTask(task2);
 
         s.getOrderedTaskHandler().popOrderedTask();
         CHECK(s.getOrderedTaskHandler().frontOrderedTask() == task2);
@@ -67,6 +67,5 @@ TEST_CASE("OrderedTaskHandler operations") {
 
         CHECK_NOTHROW(s.getOrderedTaskHandler().popOrderedTask());  // Should not crash
     }
-
 
 }
