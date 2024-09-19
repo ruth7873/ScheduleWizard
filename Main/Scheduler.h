@@ -30,6 +30,7 @@ class Task;
 class Scheduler
 {
 private:
+
     static RealTimeScheduler realTimeScheduler;
     static IterativeTaskHandler iterativeTaskHandler;
     static WeightRoundRobinScheduler wrrQueuesScheduler;
@@ -42,27 +43,36 @@ private:
     IReadFromJSON* reader;
     IUtility* utilities;
 
+
+	static queue <shared_ptr<Task>> starvationCheckQueue;
+	static const int STARVATION;
 public:
+
     static const unsigned int MAX_TASKS = std::numeric_limits<unsigned int>::max();
     static std::mutex rtLock;
     static int totalRunningTask;
     static unsigned int taskIds;
+  	static unsigned int tasksCounter;
 
     Scheduler(IReadFromJSON* reader, IUtility* utilities);
     void init();
 
-    static void printAtomically(const std::string& message);
-    static void insertTask(std::shared_ptr<Task> newTask);
-    static void execute(std::shared_ptr<Task> task);
-    static void displayMessage(const Task* task);
-    static void preemptive(std::shared_ptr<Task> task);
+	static void printAtomically(const std::string& message);
+	static void insertTask(std::shared_ptr<Task> newTask);
+	static void execute(std::shared_ptr<Task> task);
+	static void displayMessage(const Task* task);
+	static void preemptive(std::shared_ptr<Task> task);
+	static void popTaskFromItsQueue(std::shared_ptr<Task> taskToPop);
+	static void addTaskToItsQueue(std::shared_ptr<Task> taskToAdd);
+	void checkStarvation();
 
-    static void popTaskFromItsQueue(std::shared_ptr<Task> taskToPop);
-    static void addTaskToItsQueue(std::shared_ptr<Task> taskToAdd);
+	static RealTimeScheduler& getRealTimeScheduler();
+	static WeightRoundRobinScheduler& getWrrQueuesScheduler();
+	static IterativeTaskHandler& getIterativeTaskHandler();
+	static DeadlineTaskManager& getDeadlineTaskManager();
+	static OrderedTaskHandler& getOrderedTaskHandler();
 
-    static RealTimeScheduler& getRealTimeScheduler();
-    static WeightRoundRobinScheduler& getWrrQueuesScheduler();
-    static IterativeTaskHandler& getIterativeTaskHandler();
-    static DeadlineTaskManager& getDeadlineTaskManager();
-    static OrderedTaskHandler& getOrderedTaskHandler();
+	static queue<shared_ptr<Task>>& getStarvationCheckQueue();
+	static void setStarvationCheckQueue(queue<shared_ptr<Task>>);
+	static int getSTARVATION();
 };

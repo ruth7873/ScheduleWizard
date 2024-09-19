@@ -47,6 +47,7 @@ std::shared_ptr<IterativeTask> TaskFactory::iterativeTaskInput() {
     return std::make_shared<IterativeTask>(basicTask, iterationsRemaining, executionInterval);
 }
 
+
 std::shared_ptr<Task> TaskFactory::createTask(std::string type) {
     if (type == TaskType::BASIC) {
         return basicTaskInput();
@@ -63,6 +64,93 @@ std::shared_ptr<Task> TaskFactory::createTask(std::string type) {
     else {
         return nullptr;
     }
+}
+
+shared_ptr<Task> TaskFactory::createTask(const nlohmann::json& taskData)
+{
+	try {
+		std::string taskType = taskData["type"];
+
+		// Check if taskData contains the required keys for a basic task
+		if (taskType == TaskType::BASIC || taskType == TaskType::ORDERED) {
+			if (taskData.contains("priority") && taskData.contains("runningTime")) {
+				auto priority = taskData.at("priority").get<std::string>();
+				if (priority != PrioritiesLevel::CRITICAL && priority != PrioritiesLevel::HIGHER &&
+					priority != PrioritiesLevel::MIDDLE && priority != PrioritiesLevel::LOWER) {
+					throw std::runtime_error("Invalid priority. Please enter one of the specified options.");
+
+				}
+				// Make sure priority is treated as a string
+				bool isOrdered = false;
+				if (taskType == TaskType::ORDERED)
+					isOrdered = true;
+
+				return std::make_shared<Task>(
+					Scheduler::taskIds++,
+					taskData.at("priority").get<std::string>(),  // Priority is a string
+					taskData.at("runningTime").get<int>(),        // Running time is an integer
+					isOrdered
+				);
+			}
+			else {
+				throw std::invalid_argument("Invalid Arguments. Please enter one of the specified options.");
+			}
+		}
+		// Check if taskData contains the required keys for a deadline task
+		else if (taskType == TaskType::DEAD_LINE) {
+			if (taskData.contains("priority") && taskData.contains("runningTime") && taskData.contains("deadline")) {
+				auto priority = taskData.at("priority").get<std::string>();
+				if (priority != PrioritiesLevel::CRITICAL && priority != PrioritiesLevel::HIGHER &&
+					priority != PrioritiesLevel::MIDDLE && priority != PrioritiesLevel::LOWER) {
+					throw std::runtime_error("Invalid priority. Please enter one of the specified options.");
+				}
+				Task basicTask(
+					Scheduler::taskIds++,
+					taskData.at("priority").get<std::string>(),  // Priority is a string
+					taskData.at("runningTime").get<int>()        // Running time is an integer
+				);
+
+				int deadlineTime = taskData.at("deadline").get<int>();  // Deadline is an integer
+				auto task = std::make_shared<DeadlineTask>(basicTask, deadlineTime);
+				return dynamic_pointer_cast<Task>(task);
+			}
+			else {
+				throw std::invalid_argument("Invalid Arguments. Please enter one of the specified options.");
+			}
+		}
+		// Check if taskData contains the required keys for an iterative task
+		else if (taskType == TaskType::ITERATIVE) {
+			if (taskData.contains("priority") && taskData.contains("runningTime") && taskData.contains("iterationsRemaining") && taskData.contains("executionInterval")) {
+				auto priority = taskData.at("priority").get<std::string>();
+				if (priority != PrioritiesLevel::CRITICAL && priority != PrioritiesLevel::HIGHER &&
+					priority != PrioritiesLevel::MIDDLE && priority != PrioritiesLevel::LOWER) {
+					throw std::runtime_error("Invalid priority. Please enter one of the specified options.");
+				}
+				Task basicTask(
+					Scheduler::taskIds++,
+					taskData.at("priority").get<std::string>(),  // Priority is a string
+					taskData.at("runningTime").get<int>()        // Running time is an integer
+				);
+				int iterationsRemaining = taskData.at("iterationsRemaining").get<int>();  // Integer
+				int executionInterval = taskData.at("executionInterval").get<int>();      // Integer
+				auto task = std::make_shared<IterativeTask>(basicTask, iterationsRemaining, executionInterval);
+				return dynamic_pointer_cast<Task>(task);
+			}
+			else {
+				throw std::invalid_argument("Invalid Arguments. Please enter one of the specified options.");
+			}
+		}
+		else {
+			throw std::runtime_error("Invalid task type!");
+		}
+	}
+	catch (const std::exception& e) {
+		// Handle exceptions thrown during JSON parsing or task creation
+		std::cerr << "An exception occurred: " << e.what() << std::endl;
+		spdlog::error("An exception occurred: {}", e.what());
+	}
+
+	return nullptr; // Return nullptr if something goes wrong
 }
 
 std::shared_ptr<Task> TaskFactory::createTask(const nlohmann::json& taskData) {

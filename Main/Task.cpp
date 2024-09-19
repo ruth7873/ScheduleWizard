@@ -1,8 +1,9 @@
 #include "Task.h"
 #include "Consts.h"
+#include "Scheduler.h"
 
 Task::Task(int id, string priority, int runningTime, string status, bool isOrdered)
-	: id(id), priority(priority), runningTime(runningTime), status(status), isOrdered(isOrdered)
+	: id(id), priority(priority), runningTime(runningTime), status(status), isOrdered(isOrdered), counter(Scheduler::tasksCounter)
 {
 	Utility::checkTaskIds();
 }
@@ -10,6 +11,7 @@ Task::Task(int id, string priority, int runningTime, string status, bool isOrder
 Task::Task(int id, string priority, int runningTime, bool isOrdered)
 	: Task(id, priority, runningTime, TaskStatus::CREATION, isOrdered)
 {}
+
 Task::Task(const shared_ptr<Task>& other)
 	:Task(other->id, other->priority, other->runningTime, other->status, other->isOrdered) 
 {}
@@ -47,3 +49,8 @@ void Task::setStatus(const string& newStatus) {
 bool Task::getIsOrdered()const {
 	return isOrdered;
 }
+
+int Task::getCounter() const {
+	return counter;
+}
+

@@ -4,6 +4,19 @@
 #include <boost/asio.hpp>
 #include <boost/beast.hpp>
 #include <memory>
+#include <iostream>
+#include "Task.h"
+#include "Scheduler.h"
+#include "TaskFactory.h"
+#include <nlohmann/json.hpp>  // For JSON parsing
+#include <fstream>
+#include <filesystem>
+#include <thread>
+#include <chrono>
+#include <mutex>
+#include <filesystem> // Use C++17 filesystem
+#include <ctime>
+#include <string>
 
 namespace beast = boost::beast;
 namespace http = beast::http;
@@ -30,9 +43,13 @@ private:
     // Function to handle WebSocket write
     void do_write(const std::string& message);
 
+    void monitorLogs();
+    std::string get_latest_log_file(const std::string& directory);
+
     // Socket and WebSocket stream
     websocket::stream<boost::asio::ip::tcp::socket> ws_;
     beast::flat_buffer buffer_;
 };
-
 #endif
+
+

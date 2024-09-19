@@ -2,20 +2,29 @@
 
 int Scheduler::totalRunningTask = 0;
 unsigned int Scheduler::taskIds = 0;
+unsigned int Scheduler::tasksCounter = 0;
+
 std::mutex Scheduler::coutMutex;
 std::mutex Scheduler::rtLock;
 std::mutex Scheduler::realTimeQueueMutex;
 std::mutex Scheduler::wrrQueueMutex;
+
 RealTimeScheduler Scheduler::realTimeScheduler;
 WeightRoundRobinScheduler Scheduler::wrrQueuesScheduler;
 IterativeTaskHandler Scheduler::iterativeTaskHandler;
 DeadlineTaskManager Scheduler::deadlineTaskManager;
 OrderedTaskHandler Scheduler::orderedTaskHandler;
 
+
 Scheduler::Scheduler(IReadFromJSON* reader, IUtility* utilities)
     : reader(reader),
-    utilities(utilities)
-{}
+    utilities(utilities) {}
+
+queue <shared_ptr<Task>> Scheduler::starvationCheckQueue;
+
+const int Scheduler::STARVATION = 10;
+
+
 
 void Scheduler::init() {
     Logger::initialize_logger();
@@ -50,17 +59,33 @@ void Scheduler::init() {
             spdlog::info(Logger::LoggerInfo::START_THREAD, "IterativeTaskHandler");
             iterativeTaskHandler.checkTime();
             });
-
+      
+        // Create a thread for Iterative task manager
+        std::thread CheckStarvation_Thread([this]() {
+          SetThreadDescription(GetCurrentThread(), L"CheckStarvation");
+          spdlog::info(Logger::LoggerInfo::START_THREAD, "CheckStarvation");
+          this->checkStarvation();
+          });
+      
         readtasksFromJSONThread.join();
         insertTaskThread.join();
         RTSchedulerThread.join();
         WRRSchedulerThread.join();
         IterativeTaskHandlerThread.join();
-    }
-    catch (const std::exception& ex) {
+		    CheckStarvation_Thread.join();
+      }
+      catch (const std::exception& ex) {
+        // Handle any exceptions that might occur during thread creation
         spdlog::error(Logger::LoggerError::ERROR_CREATE_THREAD, ex.what());
-    }
+      }
 }
+void Scheduler::checkStarvation() {
+	while (true) {
+		// Wait until the mutex is released
+		{
+			std::unique_lock<std::mutex> lock(Scheduler::rtLock);  // Lock the rtLock
+		}// The mutex will be automatically released at the end of this scope
+
 
 void Scheduler::insertTask(std::shared_ptr<Task> newTask) {
     if (newTask == nullptr) {
@@ -94,6 +119,7 @@ void Scheduler::addTaskToItsQueue(std::shared_ptr<Task> taskToAdd) {
         std::lock_guard<std::mutex> lock(wrrQueueMutex);
         wrrQueuesScheduler.addTask(taskToAdd);
         spdlog::info(Logger::LoggerInfo::ADD_NON_CRITICAL_TASK, taskToAdd->getId(), taskToAdd->getPriority());
+      	starvationCheckQueue.push(taskToAdd);
     }
 }
 
@@ -156,7 +182,59 @@ void Scheduler::execute(std::shared_ptr<Task> task) {
         }
     }
 }
+    
+void Scheduler::checkStarvation() {
+	while (true) {
+		// Wait until the mutex is released
+		{
+			std::unique_lock<std::mutex> lock(Scheduler::rtLock);  // Lock the rtLock
+		}// The mutex will be automatically released at the end of this scope
 
+		if (!starvationCheckQueue.empty()) {
+			if (starvationCheckQueue.front()->getStatus() != TaskStatus::CREATION) {
+				starvationCheckQueue.pop();
+			}
+			else if (starvationCheckQueue.front()->getStatus() == TaskStatus::CREATION && tasksCounter - starvationCheckQueue.front()->getCounter() >= STARVATION) {
+				spdlog::error("there is starvation!!");
+				std::stringstream errorMsg;
+				errorMsg << "Starvation detected! Task ID: " << starvationCheckQueue.front()->getId();
+				throw std::runtime_error(errorMsg.str());
+			}
+			std::this_thread::sleep_for(std::chrono::seconds(1));
+			tasksCounter++;
+		}
+			else
+				tasksCounter = 0;
+	}
+}
+    
+void Scheduler::insertTask(shared_ptr<Task> newTask)
+{
+	if (newTask == nullptr) {
+		std::cerr << "Error: Invalid task input. Please try again." << std::endl;
+		spdlog::error("Error: Invalid task input. Skipping task insertion.");
+	}
+
+	else if (newTask->getIsOrdered() && orderedTaskHandler.frontOrderedTask() != newTask) {
+		orderedTaskHandler.addOrderedtask(newTask);
+	}
+	else {
+		addTaskToItsQueue(newTask);
+		totalRunningTask++;
+		LongTaskHandler::addSumOfAllSeconds(newTask->getRunningTime());
+
+		if (shared_ptr< IterativeTask> iterativeTask = dynamic_pointer_cast<IterativeTask>(newTask)) {
+			// Check if dynamic_pointer_cast succeeded
+			iterativeTaskHandler.pushIterativeTask(iterativeTask);
+			auto u = iterativeTaskHandler.getMinHeap();
+		}
+		else if (shared_ptr< DeadlineTask> deadlineTask = dynamic_pointer_cast<DeadlineTask>(newTask)) {
+			// Check if dynamic_pointer_cast succeeded
+			deadlineTaskManager.addTask(deadLineTask);
+		}
+	}
+}
+  
 void Scheduler::preemptive(std::shared_ptr<Task> task) {
     task->setStatus(TaskStatus::SUSPENDED);
     spdlog::info(Logger::LoggerInfo::TASK_SUSPENDED, task->getId());
@@ -189,4 +267,13 @@ DeadlineTaskManager& Scheduler::getDeadlineTaskManager() {
 
 OrderedTaskHandler& Scheduler::getOrderedTaskHandler() {
     return orderedTaskHandler;
+}
+queue<shared_ptr<Task>>& Scheduler::getStarvationCheckQueue() {
+	return starvationCheckQueue;
+}
+void Scheduler::setStarvationCheckQueue(queue<shared_ptr<Task>> queue) {
+	starvationCheckQueue = queue;
+}
+int Scheduler::getSTARVATION() {
+	return STARVATION;
 }

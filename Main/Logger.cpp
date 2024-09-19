@@ -60,9 +60,8 @@ void Logger::initialize_logger() {
 	// Start a new hourly log file periodically
 	std::thread([]() {
 		while (true) {
-			std::this_thread::sleep_for(std::chrono::hours(1)); // Start a new hourly log file every hour
+			std::this_thread::sleep_for(std::chrono::milliseconds(1));
 			spdlog::get("daily_logger")->flush();
-			spdlog::get("daily_logger")->debug("Starting new hourly log file");
 		}
 		}).detach();
 }
@@ -89,3 +88,12 @@ const string Logger::LoggerInfo::POP_ITERATIVE_TASK_FROM_HEAP = "Task with ID: {
 //Logger Error
 const string Logger::LoggerError::ERROR_CREATE_THREAD = "Error creating threads: {}";
 const string Logger::LoggerError::TASK_TERMINATED = "Exception occurred while executing task with ID: {}: {}";
+
+
+
+
+
+
+
+
+

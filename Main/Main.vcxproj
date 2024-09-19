@@ -107,6 +107,7 @@
       <AdditionalIncludeDirectories>D:\ספריות\boost_1_85_0\boost_1_85_0;C:\Users\user1\Downloads\boost_1_85_0\boost_1_85_0</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <BuildStlModules>true</BuildStlModules>
+
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
