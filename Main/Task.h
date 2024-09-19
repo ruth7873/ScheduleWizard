@@ -16,6 +16,7 @@ private:
 	int runningTime;
 	string status;
 	bool isOrdered;
+	int counter;
 public:
 
 	//c'tors
@@ -37,4 +38,6 @@ public:
 	virtual void setStatus(const string& newStatus);
 	
 	virtual bool getIsOrdered()const;
+
+	virtual int getCounter() const;
 };
