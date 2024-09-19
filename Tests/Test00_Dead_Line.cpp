@@ -15,8 +15,8 @@ TEST_CASE("Test DeadLineTask creation and management") {
     SUBCASE("Test inserting tasks with different deadlines") {
         //clearAll(scheduler);
         // Create deadline tasks with different deadlines
-        auto deadLineTask1 = std::make_shared<DeadLineTask>(DeadLineTask(Task(1, PrioritiesLevel::LOWER, 1), time(nullptr) + 10));
-        auto deadLineTask2 = std::make_shared<DeadLineTask>(DeadLineTask(Task(2, PrioritiesLevel::LOWER, 1), time(nullptr) + 1));
+        auto deadLineTask1 = std::make_shared<DeadlineTask>(DeadlineTask(Task(1, PrioritiesLevel::LOWER, 1), time(nullptr) + 10));
+        auto deadLineTask2 = std::make_shared<DeadlineTask>(DeadlineTask(Task(2, PrioritiesLevel::LOWER, 1), time(nullptr) + 1));
         // Insert tasks into the scheduler
         scheduler.insertTask(deadLineTask1);
         scheduler.insertTask(deadLineTask2);
@@ -40,7 +40,7 @@ TEST_CASE("Test DeadLineTask creation and management") {
     SUBCASE("Test deadline task inserts to the heap") {
         // Create tasks (task1: regular task, task2: deadline task)
         auto task1 = std::make_shared<Task>(1, PrioritiesLevel::HIGHER, 15);
-        auto task2 = std::make_shared<DeadLineTask>(DeadLineTask(Task(2, PrioritiesLevel::LOWER, 10), time(nullptr) + 2));
+        auto task2 = std::make_shared<DeadlineTask>(DeadlineTask(Task(2, PrioritiesLevel::LOWER, 10), time(nullptr) + 2));
         // Insert tasks into the scheduler
         scheduler.insertTask(task1);
         scheduler.insertTask(task2);  // Assuming insertTask accepts both Task and DeadlineTask
@@ -52,7 +52,7 @@ TEST_CASE("Test DeadLineTask creation and management") {
     SUBCASE("Test deadline time becomes critical") {
         clearAll(scheduler);
         auto Task1 = std::make_shared<Task>(1, PrioritiesLevel::HIGHER, 15);
-        auto baseTaskPtr = std::make_shared<DeadLineTask>(DeadLineTask(Task(2, PrioritiesLevel::LOWER, 10), time(nullptr) + 2));
+        auto baseTaskPtr = std::make_shared<DeadlineTask>(DeadlineTask(Task(2, PrioritiesLevel::LOWER, 10), time(nullptr) + 2));
         // Insert tasks into the scheduler
         scheduler.insertTask(Task1);
         scheduler.insertTask(baseTaskPtr);
@@ -78,4 +78,3 @@ TEST_CASE("Test DeadLineTask creation and management") {
    
 
 }
-//

@@ -52,7 +52,7 @@ TEST_CASE_FIXTURE(TaskFactoryFixture, "Create Deadline Task") {
 	auto task = TaskFactory::createTask(taskData);
 
 	CHECK(task != nullptr);
-	auto deadlineTask = dynamic_pointer_cast<DeadLineTask>(task);
+	auto deadlineTask = dynamic_pointer_cast<DeadlineTask>(task);
 	CHECK(deadlineTask != nullptr);
 	CHECK(deadlineTask->getPriority() == PrioritiesLevel::CRITICAL);
 	CHECK(deadlineTask->getRunningTime() == 150);
