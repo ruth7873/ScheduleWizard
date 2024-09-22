@@ -33,7 +33,7 @@ void WeightRoundRobinScheduler::weightRoundRobinFunction() {
 
             while (!taskQueue.queue.empty() && taskCountToRun > 0) {
                 std::shared_ptr<Task> task = taskQueue.queue.front();
-                taskQueue.queue.pop();
+                //taskQueue.queue.pop();
 
                 if (auto iterativeTask = std::dynamic_pointer_cast<IterativeTask>(task)) {
                     task->setStatus(TaskStatus::CREATION);

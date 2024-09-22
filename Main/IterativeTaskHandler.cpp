@@ -21,9 +21,10 @@ void IterativeTaskHandler::pushIterativeTask(std::shared_ptr<IterativeTask> iter
 std::shared_ptr<IterativeTask> IterativeTaskHandler::popIterativeTask()
 {
     if (isEmpty()) {
-        throw std::runtime_error("Heap is empty");
+        cerr << "Heap is empty, can't pop\n";
+        return nullptr;
     }
-
+    
     std::shared_ptr<IterativeTask> topTask = minHeap.top();
     minHeap.pop();
     spdlog::info(Logger::LoggerInfo::POP_ITERATIVE_TASK_FROM_HEAP, topTask->getId());

@@ -46,7 +46,7 @@ TEST_CASE("OrderedTaskHandler operations") {
     SUBCASE("Execute Ordered Task") {
         auto task1 = std::make_shared<Task>(1, PrioritiesLevel::HIGHER, 3, true);
         s.execute(task1);
-        std::this_thread::sleep_for(std::chrono::seconds(4));
+        std::this_thread::sleep_for(std::chrono::milliseconds(4));
         CHECK(s.getOrderedTaskHandler().frontOrderedTask() == nullptr);
     }
 

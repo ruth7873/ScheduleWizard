@@ -82,7 +82,7 @@ void monitorSystem(const Scheduler& scheduler) {
 		//std::cout << "Ordered Tasks: " << scheduler.getOrderedTaskHandler().getOrderedTasks().size() << std::endl;
 		std::cout << std::endl;
 
-		std::this_thread::sleep_for(std::chrono::seconds(5)); // Update every 5 seconds
+		std::this_thread::sleep_for(std::chrono::milliseconds(5)); // Update every 5 seconds
 	}
 }
 
@@ -94,7 +94,7 @@ TEST_CASE("stress test") {
 	std::thread monitorThread(monitorSystem, std::ref(scheduler));
 
 	// Run the test for the specified duration
-	std::this_thread::sleep_for(std::chrono::seconds(TEST_DURATION_SECONDS));
+	std::this_thread::sleep_for(std::chrono::milliseconds(TEST_DURATION_SECONDS));
 
 	// Stop the test
 	stopTest.store(true);

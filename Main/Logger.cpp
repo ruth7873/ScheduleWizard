@@ -70,14 +70,14 @@ void Logger::initialize_logger() {
 const string Logger::LoggerInfo::START_SCHEDULER = "Starting scheduling process.";
 const string Logger::LoggerInfo::START_THREAD = "{} thread started.";
 const string Logger::LoggerInfo::START_READ_FROM_JSON_THREAD = "read tasks From JSON thread started.";
-const string Logger::LoggerInfo::START_EXECUTE = "Executing task with ID: {}";
+const string Logger::LoggerInfo::START_EXECUTE = "Executing Task with ID: {}";
 
 const string Logger::LoggerInfo::CREATE_NEW_TASK = "New task created with priority: {} and running time: {}";
 
 const string Logger::LoggerInfo::TASK_COMPLITED = "Task with ID: {} completed.";
-const string Logger::LoggerInfo::TASK_PREEMPTITVE = "Preempting task with ID: {} for real-time task.";
+const string Logger::LoggerInfo::TASK_PREEMPTITVE = "Preempting Task with ID: {} for real-time task.";
 const string Logger::LoggerInfo::TASK_SUSPENDED = "Task with ID: {} suspended and added back to WRR queue.";
-const string Logger::LoggerInfo::LONG_TASK_SUSPENDED = "The long task with ID: {} is suspended and will continue later.";
+const string Logger::LoggerInfo::LONG_TASK_SUSPENDED = "The long Task with ID: {} is suspended and will continue later.";
 
 const string Logger::LoggerInfo::ADD_CRITICAL_TASK = "Critical task with ID: {} added to RealTimeScheduler.";
 const string Logger::LoggerInfo::ADD_NON_CRITICAL_TASK = "Task with ID: {} added to {} queue.";
@@ -87,7 +87,7 @@ const string Logger::LoggerInfo::POP_ITERATIVE_TASK_FROM_HEAP = "Task with ID: {
 
 //Logger Error
 const string Logger::LoggerError::ERROR_CREATE_THREAD = "Error creating threads: {}";
-const string Logger::LoggerError::TASK_TERMINATED = "Exception occurred while executing task with ID: {}: {}";
+const string Logger::LoggerError::TASK_TERMINATED = "Exception occurred while executing Task with ID: {}: {}";
 
 
 

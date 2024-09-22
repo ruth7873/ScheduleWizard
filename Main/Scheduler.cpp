@@ -178,28 +178,28 @@ void Scheduler::execute(std::shared_ptr<Task> task) {
 }
     
 void Scheduler::checkStarvation() {
-	//while (true) {
-	//	// Wait until the mutex is released
-	//	{
-	//		std::unique_lock<std::mutex> lock(Scheduler::rtLock);  // Lock the rtLock
-	//	}// The mutex will be automatically released at the end of this scope
+	while (true) {
+		// Wait until the mutex is released
+		{
+			std::unique_lock<std::mutex> lock(Scheduler::rtLock);  // Lock the rtLock
+		}// The mutex will be automatically released at the end of this scope
 
-	//	if (!starvationCheckQueue.empty()) {
-	//		if (starvationCheckQueue.front()->getStatus() != TaskStatus::CREATION) {
-	//			starvationCheckQueue.pop();
-	//		}
-	//		else if (starvationCheckQueue.front()->getStatus() == TaskStatus::CREATION && tasksCounter - starvationCheckQueue.front()->getCounter() >= STARVATION) {
-	//			spdlog::error("there is starvation!!");
-	//			std::stringstream errorMsg;
-	//			errorMsg << "Starvation detected! Task ID: " << starvationCheckQueue.front()->getId();
-	//			throw std::runtime_error(errorMsg.str());
-	//		}
-	//		std::this_thread::sleep_for(std::chrono::seconds(1));
-	//		tasksCounter++;
-	//	}
-	//		else
-	//			tasksCounter = 0;
-	//}
+		if (!starvationCheckQueue.empty()) {
+			if (starvationCheckQueue.front()->getStatus() != TaskStatus::CREATION) {
+				starvationCheckQueue.pop();
+			}
+			else if (starvationCheckQueue.front()->getStatus() == TaskStatus::CREATION && tasksCounter - starvationCheckQueue.front()->getCounter() >= STARVATION) {
+				spdlog::error("there is starvation!!");
+				std::stringstream errorMsg;
+				errorMsg << "Starvation detected! Task ID: " << starvationCheckQueue.front()->getId();
+				throw std::runtime_error(errorMsg.str());
+			}
+			std::this_thread::sleep_for(std::chrono::seconds(1));
+			tasksCounter++;
+		}
+			else
+				tasksCounter = 0;
+	}
 }
       
 void Scheduler::preemptive(std::shared_ptr<Task> task) {

@@ -73,7 +73,7 @@ void WebSocketSession::do_read() {
 				std::cout << "Sending a response\n";
 
 				// Prepare and send a response to the client
-				std::string response = "Task with priority " + priority + " and running time " +
+				std::string response = "Task with ID: "+std::to_string(newTask->getId()) + "  priority " + priority + " and running time " +
 					std::to_string(runningTime) + " received and scheduled.";
 
 				// Use 'self' instead of 'this' to call the member function

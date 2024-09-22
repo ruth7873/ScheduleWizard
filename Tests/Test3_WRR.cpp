@@ -34,14 +34,14 @@
 //            scheduler.getWrrQueuesScheduler().weightRoundRobinFunction();
 //            });
 //        // Allow some time for tasks to be processed
-//        std::this_thread::sleep_for(std::chrono::seconds(6));
+//        std::this_thread::sleep_for(std::chrono::milliseconds(6));
 //        // Detach the thread to finish execution
 //        WRRThread.detach();
 //        // The first task suppose to be from the higher Q
 //        cout << "the Higher Q size: " << scheduler.getWrrQueuesScheduler().getWrrQueues()[PrioritiesLevel::HIGHER].queue.size() << endl;
 //        CHECK_EQ(scheduler.getWrrQueuesScheduler().getWrrQueues()[PrioritiesLevel::HIGHER].queue.size(), 0);
 //        // Allow some time for tasks to be processed
-//        std::this_thread::sleep_for(std::chrono::seconds(2));
+//        std::this_thread::sleep_for(std::chrono::milliseconds(2));
 //        // The second task suppose to be from the middle Q
 //        cout << "the middle Q size: " << scheduler.getWrrQueuesScheduler().getWrrQueues()[PrioritiesLevel::MIDDLE].queue.size() << endl;
 //        CHECK_EQ(scheduler.getWrrQueuesScheduler().getWrrQueues()[PrioritiesLevel::MIDDLE].queue.size(), 0);
@@ -66,14 +66,14 @@
 //            });
 //        // By the right calculating the weight of the higher Q = 3 tasks for executing
 //        // let 3 tasks from the higher Q to run:
-//        std::this_thread::sleep_for(std::chrono::seconds(4));
+//        std::this_thread::sleep_for(std::chrono::milliseconds(4));
 //        // Detach the thread to finish execution
 //        WRRThread.detach();
 //        // The higher Q suppose to be empty
 //        cout << "the Higher Q size: " << scheduler.getWrrQueuesScheduler().getWrrQueues()[PrioritiesLevel::HIGHER].queue.size() << endl;
 //        CHECK_EQ(scheduler.getWrrQueuesScheduler().getWrrQueues()[PrioritiesLevel::HIGHER].queue.size(), 0);
 //        // Allow some time for tasks to be processed
-//        std::this_thread::sleep_for(std::chrono::seconds(2));
+//        std::this_thread::sleep_for(std::chrono::milliseconds(2));
 //        //// The second task suppose to be from the middle Q
 //        cout << "the middle Q size: " << scheduler.getWrrQueuesScheduler().getWrrQueues()[PrioritiesLevel::MIDDLE].queue.size() << endl;
 //        CHECK_EQ(scheduler.getWrrQueuesScheduler().getWrrQueues()[PrioritiesLevel::MIDDLE].queue.size(), 0);
@@ -85,7 +85,7 @@
 //        std::thread WRRThread([&scheduler]() {
 //            scheduler.getWrrQueuesScheduler().weightRoundRobinFunction();
 //            });
-//        std::this_thread::sleep_for(std::chrono::seconds(5));
+//        std::this_thread::sleep_for(std::chrono::milliseconds(5));
 //        WRRThread.detach();
 //        // Check that task status is updated after execution
 //        CHECK_EQ(higherTask->getStatus(), TaskStatus::COMPLETED);
@@ -99,13 +99,13 @@
 //            scheduler.getWrrQueuesScheduler().weightRoundRobinFunction();
 //            });
 //        // Add new task while scheduler is running
-//        std::this_thread::sleep_for(std::chrono::seconds(1));
+//        std::this_thread::sleep_for(std::chrono::milliseconds(1));
 //        WRRThread.detach();
 //        
 //        shared_ptr<Task> middleTask(new Task(2, PrioritiesLevel::MIDDLE, 1));
 //        scheduler.insertTask(middleTask);
 //        
-//        std::this_thread::sleep_for(std::chrono::seconds(4));
+//        std::this_thread::sleep_for(std::chrono::milliseconds(4));
 //        // Check that the dynamically added task is executed
 //        CHECK_EQ(middleTask->getStatus(), TaskStatus::COMPLETED);
 //    }
@@ -123,16 +123,16 @@
 //        std::thread schedulerThread(&RealTimeScheduler::realTimeSchedulerFunction, &scheduler.getRealTimeScheduler());
 //        // Give some time for tasks to be executed
 //        schedulerThread.detach();  // We detach instead of join to avoid infinite loop
-//        std::this_thread::sleep_for(std::chrono::seconds(3));
+//        std::this_thread::sleep_for(std::chrono::milliseconds(3));
 //        CHECK(task1->getStatus() == TaskStatus::COMPLETED);
 //        CHECK(task2->getStatus() != TaskStatus::COMPLETED);
 //        CHECK(task3->getStatus() != TaskStatus::COMPLETED);
 //
-//        std::this_thread::sleep_for(std::chrono::seconds(3));
+//        std::this_thread::sleep_for(std::chrono::milliseconds(3));
 //        CHECK(task2->getStatus() == TaskStatus::COMPLETED);
 //        CHECK(task3->getStatus() != TaskStatus::COMPLETED);
 //
-//        std::this_thread::sleep_for(std::chrono::seconds(5));
+//        std::this_thread::sleep_for(std::chrono::milliseconds(5));
 //        CHECK(task3->getStatus() == TaskStatus::COMPLETED);
 //
 //    }

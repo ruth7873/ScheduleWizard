@@ -53,7 +53,7 @@
 //
 //        std::thread t(&TestScheduler::runCheckStarvation, &scheduler);
 //
-//        std::this_thread::sleep_for(std::chrono::seconds(1));
+//        std::this_thread::sleep_for(std::chrono::milliseconds(5));
 //
 //        scheduler.stopThread = true;
 //        t.detach();
@@ -64,7 +64,7 @@
 //        scheduler.setStarvationCheckQueue(std::queue<std::shared_ptr<Task>>());
 //        std::thread t(&TestScheduler::runCheckStarvation, &scheduler);
 //
-//        std::this_thread::sleep_for(std::chrono::seconds(1));
+//        std::this_thread::sleep_for(std::chrono::milliseconds(1));
 //
 //        scheduler.stopThread = true;
 //        t.detach();
@@ -73,7 +73,7 @@
 //    }
 //
 //    SUBCASE("No starvation when task just created") {
-//
+//        scheduler.starvationDetected = false;
 //        auto task = createTask(1, TaskStatus::CREATION);
 //        std::queue<std::shared_ptr<Task>> queue;
 //        queue.push(task);
@@ -82,7 +82,7 @@
 //
 //        std::thread t(&TestScheduler::runCheckStarvation, &scheduler);
 //
-//        std::this_thread::sleep_for(std::chrono::seconds(1));
+//        std::this_thread::sleep_for(std::chrono::milliseconds(5));
 //
 //        scheduler.stopThread = true;
 //        t.detach();
@@ -101,7 +101,7 @@
 //
 //        std::thread t(&TestScheduler::runCheckStarvation, &scheduler);
 //
-//        std::this_thread::sleep_for(std::chrono::seconds(1));
+//        std::this_thread::sleep_for(std::chrono::milliseconds(1));
 //
 //        scheduler.stopThread = true;
 //        t.detach();

@@ -36,7 +36,7 @@ void ReadFromJSON::createTasksFromJSON(const std::string& filePath) {
             // If "delay" field exists, wait for the specified delay
             if (task.find("delay") != task.end()) {
                 int seconds = task["delay"];
-                std::this_thread::sleep_for(std::chrono::seconds(seconds));
+                std::this_thread::sleep_for(std::chrono::milliseconds(seconds));
             }
         }
     }
