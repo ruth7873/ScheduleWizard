@@ -13,7 +13,7 @@ const std::string PrioritiesLevel::LOWER = "Lower";
 
 const std::string TaskType::BASIC = "basic";
 const std::string TaskType::ORDERED = "ordered";
-const std::string TaskType::DEAD_LINE = "deadLine";
+const std::string TaskType::DEAD_LINE = "deadline";
 const std::string TaskType::ITERATIVE = "iterative";
 
 const std::string Scenario::SCENARIO_1_FILE_PATH = "scenarios/scenario_1.json";

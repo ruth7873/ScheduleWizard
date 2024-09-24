@@ -11,7 +11,7 @@ void IterativeTaskHandler::pushIterativeTask(std::shared_ptr<IterativeTask> iter
 
 
     auto currentTime = std::chrono::system_clock::now();
-    auto waitTime = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::seconds(iterativeTask->getExecutionInterval()) + currentTime.time_since_epoch()).count();
+    auto waitTime = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::milliseconds(iterativeTask->getExecutionInterval()) + currentTime.time_since_epoch()).count();
     iterativeTask->setWaitTime(waitTime);
 
     minHeap.emplace(iterativeTask);
@@ -50,6 +50,6 @@ void IterativeTaskHandler::checkTime()
             }
         }
 
-        std::this_thread::sleep_for(std::chrono::milliseconds(100)); // Check every second
+        std::this_thread::sleep_for(std::chrono::milliseconds(1)); // Check every second
     }
 }
