@@ -13,7 +13,7 @@ const std::string PrioritiesLevel::MIDDLE = "Middle";
 const std::string PrioritiesLevel::LOWER = "Lower";
 const std::string TaskType::BASIC = "basic";
 const std::string TaskType::ORDERED = "ordered";
-const std::string TaskType::DEAD_LINE = "deadLine";
+const std::string TaskType::DEAD_LINE = "deadline";
 const std::string TaskType::ITERATIVE = "iterative";
 const std::string Scenario::SCENARIO_1_FILE_PATH = "scenarios/scenario_1.json";
 const std::string Scenario::SCENARIO_2_FILE_PATH = "scenarios/scenario_2.json";
@@ -581,7 +581,7 @@ void Scheduler::checkStarvation() {
 				errorMsg << "Starvation detected! Task ID: " << starvationCheckQueue.front()->getId();
 				throw std::runtime_error(errorMsg.str());
 			}
-			std::this_thread::sleep_for(std::chrono::seconds(1));
+			std::this_thread::sleep_for(std::chrono::milliseconds(10));
 			tasksCounter++;
 		}
 			else
@@ -740,13 +740,13 @@ std::shared_ptr<Task> TaskFactory::createTask(const nlohmann::json& taskData) {
             }
         }
         else if (taskType == TaskType::DEAD_LINE) {
-            if (taskData.contains("priority") && taskData.contains("runningTime") && taskData.contains("deadLine")) {
+            if (taskData.contains("priority") && taskData.contains("runningTime") && taskData.contains("deadline")) {
                 Task basicTask(
                     Scheduler::taskIds++,
                     taskData.at("priority").get<std::string>(),
                     taskData.at("runningTime").get<int>()
                 );
-                int deadLineTime = taskData.at("deadLine").get<int>();
+                int deadLineTime = taskData.at("deadline").get<int>();
                 auto task = std::make_shared<DeadlineTask>(basicTask, deadLineTime);
                 return std::dynamic_pointer_cast<Task>(task);
             }
@@ -906,11 +906,6 @@ void WebSocketSession::do_read() {
 				}
 				else {
 					std::cerr << "Task creation failed for task type: " << task_json["type"] << std::endl;
-					//
-					// 
-					// 
-					// 
-					// ::error("Task creation failed for task type: {}", task_json["type"]);
 				}
 				// Check boundaries before accessing JSON fields
 				std::string priority = task_json["priority"].get<std::string>();
@@ -1014,9 +1009,9 @@ void WebSocketSession::monitorLogs() {
 				if (start != std::string::npos && end != std::string::npos) {
 					size_t contentStart = line.find(">", start) + 1;
 					std::string trimmedLine = line.substr(contentStart, end - contentStart);
-					if (trimmedLine.find("Executing task with ID") != std::string::npos ||
-						trimmedLine.find("completed.") != std::string::npos ||
-						trimmedLine.find("suspended and added back to WRR queue.") != std::string::npos) {
+					if (trimmedLine.find("Executing") != std::string::npos ||
+						trimmedLine.find("completed") != std::string::npos ||
+						trimmedLine.find("suspended") != std::string::npos) {
 						std::cout << " <<<< Reading from the log file: " << trimmedLine << std::endl;
 						send_response(trimmedLine);
 					}

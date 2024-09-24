@@ -85,13 +85,13 @@ std::shared_ptr<Task> TaskFactory::createTask(const nlohmann::json& taskData) {
             }
         }
         else if (taskType == TaskType::DEAD_LINE) {
-            if (taskData.contains("priority") && taskData.contains("runningTime") && taskData.contains("deadLine")) {
+            if (taskData.contains("priority") && taskData.contains("runningTime") && taskData.contains("deadline")) {
                 Task basicTask(
                     Scheduler::taskIds++,
                     taskData.at("priority").get<std::string>(),
                     taskData.at("runningTime").get<int>()
                 );
-                int deadLineTime = taskData.at("deadLine").get<int>();
+                int deadLineTime = taskData.at("deadline").get<int>();
                 auto task = std::make_shared<DeadlineTask>(basicTask, deadLineTime);
                 return std::dynamic_pointer_cast<Task>(task);
             }

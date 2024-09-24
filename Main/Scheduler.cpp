@@ -194,7 +194,7 @@ void Scheduler::checkStarvation() {
 				errorMsg << "Starvation detected! Task ID: " << starvationCheckQueue.front()->getId();
 				throw std::runtime_error(errorMsg.str());
 			}
-			std::this_thread::sleep_for(std::chrono::seconds(1));
+			std::this_thread::sleep_for(std::chrono::milliseconds(10));
 			tasksCounter++;
 		}
 			else

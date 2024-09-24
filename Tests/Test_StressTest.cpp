@@ -100,9 +100,9 @@ TEST_CASE("stress test") {
 	stopTest.store(true);
 
 	// Wait for threads to finish
-	taskGeneratorThread.join();
-	monitorThread.join();
-	schedulerThread.join();
+	taskGeneratorThread.detach();
+	monitorThread.detach();
+	schedulerThread.detach();
 
 	std::cout << "Stress test completed successfully!" << std::endl;
     CHECK(true);

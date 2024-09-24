@@ -35,4 +35,6 @@ queue<shared_ptr<Task>>& RealTimeScheduler::getRealTimeQueue() {
 
 void RealTimeScheduler::addTask(shared_ptr<Task> task) {
 	realTimeQueue.push(task);
+	if (realTimeQueue.size() >= 4)
+		spdlog::warn("There are too many Real Time Tasks, it might cause starvation of the other tasks");
 }

@@ -55,11 +55,6 @@ void WebSocketSession::do_read() {
 				}
 				else {
 					std::cerr << "Task creation failed for task type: " << task_json["type"] << std::endl;
-					//
-					// 
-					// 
-					// 
-					// ::error("Task creation failed for task type: {}", task_json["type"]);
 				}
 				// Check boundaries before accessing JSON fields
 
@@ -190,9 +185,10 @@ void WebSocketSession::monitorLogs() {
 				if (start != std::string::npos && end != std::string::npos) {
 					size_t contentStart = line.find(">", start) + 1;
 					std::string trimmedLine = line.substr(contentStart, end - contentStart);
-					if (trimmedLine.find("Executing task with ID") != std::string::npos ||
-						trimmedLine.find("completed.") != std::string::npos ||
-						trimmedLine.find("suspended and added back to WRR queue.") != std::string::npos) {
+					if (trimmedLine.find("Executing") != std::string::npos ||
+						trimmedLine.find("completed") != std::string::npos ||
+						trimmedLine.find("suspended") != std::string::npos ||
+						trimmedLine.find("There are too many Real Time Tasks") != std::string::npos) {
 						std::cout << " <<<< Reading from the log file: " << trimmedLine << std::endl;
 						send_response(trimmedLine);
 					}

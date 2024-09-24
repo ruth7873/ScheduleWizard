@@ -49,11 +49,11 @@
 //        std::queue<std::shared_ptr<Task>> queue;
 //        queue.push(task);
 //        scheduler.setStarvationCheckQueue(queue);
-//        scheduler.tasksCounter = TestScheduler::STARVATION;
+//        scheduler.tasksCounter = TestScheduler::STARVATION + 5;
 //
 //        std::thread t(&TestScheduler::runCheckStarvation, &scheduler);
 //
-//        std::this_thread::sleep_for(std::chrono::milliseconds(5));
+//        std::this_thread::sleep_for(std::chrono::milliseconds(60));
 //
 //        scheduler.stopThread = true;
 //        t.detach();

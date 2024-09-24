@@ -18,10 +18,10 @@
       "runningTime": 1
     },
     {
-      "type": "deadLine",
+      "type": "deadline",
       "priority": "Lower",
       "runningTime": 5,
-      "deadLine": 10
+      "deadline": 10
     }
   ]
 }
