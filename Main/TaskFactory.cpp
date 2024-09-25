@@ -48,7 +48,7 @@ std::shared_ptr<IterativeTask> TaskFactory::iterativeTaskInput() {
 }
 
 
-std::shared_ptr<Task> TaskFactory::createTask(std::string type) {
+std::shared_ptr<Task> TaskFactory::createTask(const std::string& type) {
     if (type == TaskType::BASIC) {
         return basicTaskInput();
     }

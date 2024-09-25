@@ -18,8 +18,8 @@ void RealTimeScheduler::realTimeSchedulerFunction() {
 
 		std::unique_lock<std::mutex> lock(Scheduler::rtLock);
 		shared_ptr<Task> task;
-		if(!realTimeQueue.empty())
-			task = realTimeQueue.front();
+		//if(!realTimeQueue.empty())
+		task = realTimeQueue.front();
 
 		if (task != nullptr) {
 			if (task->getStatus() != TaskStatus::RUNNING && task->getStatus() != TaskStatus::COMPLETED) {

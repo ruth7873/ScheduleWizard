@@ -19,10 +19,10 @@ private:
 	int counter;
 public:
 	//c'tors
-	Task(int id, string priority, int runningTime, string status, bool isOrdered = false);
-	Task(int id, string priority, int runningTime, bool isOrdered = false);
+	explicit Task(int id, const string& priority, int runningTime, string status, bool isOrdered = false);
+	explicit Task(int id, const string& priority, int runningTime, bool isOrdered = false);
 
-	Task(const shared_ptr<Task>& other);
+	explicit Task(const shared_ptr<Task>& other);
 
 	//getters & setters
 	virtual int getId() const;

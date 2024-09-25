@@ -66,11 +66,15 @@ void WebSocketSession::do_read() {
 				//std::shared_ptr<Task> newTask(new Task(Scheduler::taskIds++, priority, runningTime));
 				//Scheduler::insertTask(newTask);
 				std::cout << "Sending a response\n";
-
+				std::string response;
+				if (newTask == nullptr)
+					response = "Creation task failed";
 				// Prepare and send a response to the client
-				std::string response = "Task with ID: "+std::to_string(newTask->getId()) + "  priority " + priority + " and running time " +
-					std::to_string(runningTime) + " received and scheduled.";
-
+				else
+				{
+					response = "Task with ID: " + std::to_string(newTask->getId()) + "  priority " + priority + " and running time " +
+						std::to_string(runningTime) + " received and scheduled.";
+				}
 				// Use 'self' instead of 'this' to call the member function
 				self->send_response(response);
 			}
@@ -180,10 +184,10 @@ void WebSocketSession::monitorLogs() {
 				newLinesRead = true;
 
 				// Process the line and send response if necessary (as in your existing code)
-				size_t start = line.find("<p");
+				size_t tagStart = line.find("<p");  // Renamed from 'start' to 'tagStart'
 				size_t end = line.find("</p>");
-				if (start != std::string::npos && end != std::string::npos) {
-					size_t contentStart = line.find(">", start) + 1;
+				if (tagStart != std::string::npos && end != std::string::npos) {
+					size_t contentStart = line.find(">", tagStart) + 1; // Updated to use 'tagStart'
 					std::string trimmedLine = line.substr(contentStart, end - contentStart);
 					if (trimmedLine.find("Executing") != std::string::npos ||
 						trimmedLine.find("completed") != std::string::npos ||

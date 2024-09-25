@@ -29,7 +29,7 @@ int Utility::validateIntegerInput(const std::string& inputMessage, const std::st
     return numberInput;
 }
 
-void Utility::displayInviteMessage(Task* task) {
+void Utility::displayInviteMessage(const Task* task) {
     if (task->getStatus() != TaskStatus::CREATION)
         Scheduler::displayMessage(task);
 }

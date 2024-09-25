@@ -73,6 +73,6 @@ public:
 	static OrderedTaskHandler& getOrderedTaskHandler();
 
 	static queue<shared_ptr<Task>>& getStarvationCheckQueue();
-	static void setStarvationCheckQueue(queue<shared_ptr<Task>>);
+	static void setStarvationCheckQueue(const queue<shared_ptr<Task>>&);
 	static int getSTARVATION();
 };

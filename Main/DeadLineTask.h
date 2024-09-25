@@ -7,10 +7,10 @@ class Task;
 
 class DeadlineTask : public Task {
 private:
-    time_t deadline;
+    time_t deadline = 0;
 
 public:
-    DeadlineTask(Task basicTask, int deadLineTime);
+    DeadlineTask(const Task& basicTask, int deadLineTime);
     time_t getDeadline() const;
 
     // Comparator for the min-heap based on deadline

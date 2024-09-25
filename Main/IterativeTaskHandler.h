@@ -33,9 +33,7 @@ public:
 	 bool isEmpty() {
 		 return minHeap.empty();
 	 }
-
-	 std::priority_queue<std::shared_ptr<IterativeTask>, std::vector<std::shared_ptr<IterativeTask>>, CompareIterative> getMinHeap() const {
+	 const std::priority_queue<std::shared_ptr<IterativeTask>, std::vector<std::shared_ptr<IterativeTask>>, CompareIterative>& getMinHeap() const {
 		 return minHeap;
 	 }
-
 };

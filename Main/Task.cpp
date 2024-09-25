@@ -2,13 +2,13 @@
 #include "Consts.h"
 #include "Scheduler.h"
 
-Task::Task(int id, string priority, int runningTime, string status, bool isOrdered)
+Task::Task(int id, const string& priority, int runningTime, string status, bool isOrdered)
 	: id(id), priority(priority), runningTime(runningTime), status(status), isOrdered(isOrdered), counter(Scheduler::tasksCounter)
 {
 	Utility::checkTaskIds();
 }
 
-Task::Task(int id, string priority, int runningTime, bool isOrdered)
+Task::Task(int id, const string& priority, int runningTime, bool isOrdered)
 	: Task(id, priority, runningTime, TaskStatus::CREATION, isOrdered)
 {}
 

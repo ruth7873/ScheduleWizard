@@ -15,8 +15,8 @@ private:
 	static shared_ptr<IterativeTask> iterativeTaskInput();
 
 public:
-	static shared_ptr<Task> createTask(string taskType);
-	static shared_ptr<Task> createTask( const nlohmann::json& taskData);
+	static shared_ptr<Task> createTask(const std::string& taskType);
+	static shared_ptr<Task> createTask(const nlohmann::json& taskData);
 
 };
 

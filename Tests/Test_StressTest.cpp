@@ -55,13 +55,13 @@ void generateTasks(Scheduler& scheduler) {
         // Task type selection
         switch (taskType) {
         case 0: // Regular task
-            task = make_shared<Task>(i, priorityS, runningTime, "NEW"); // Using the first Task constructor
+            task = make_shared<Task>(i, priorityS, runningTime); // Using the first Task constructor
             break;
         case 1: // Iterative task
-            task = make_shared<IterativeTask>(Task(i, priorityS, runningTime, "NEW"), 3, 3); // 3 iterations, 3s interval
+            task = make_shared<IterativeTask>(Task(i, priorityS, runningTime), 3, 3); // 3 iterations, 3s interval
             break;
         case 2: // Deadline task
-            task = make_shared<DeadlineTask>(Task(i, priorityS, runningTime, "NEW"), 30); // 30 seconds deadline
+            task = make_shared<DeadlineTask>(Task(i, priorityS, runningTime), 30); // 30 seconds deadline
             break;
         }
 

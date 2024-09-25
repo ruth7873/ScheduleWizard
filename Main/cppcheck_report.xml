@@ -1,0 +1,259 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<results version="2">
+    <cppcheck version="2.15.0"/>
+    <errors>
+        <error id="missingIncludeSystem" severity="information" msg="Include file: &amp;lt;string&amp;gt; not found. Please note: Cppcheck does not need standard library headers to get proper results." verbose="Include file: &amp;lt;string&amp;gt; not found. Please note: Cppcheck does not need standard library headers to get proper results.">
+            <location file="Consts.h" line="3"/>
+        </error>
+        <error id="passedByValue" severity="performance" msg="Function parameter &amp;#039;basicTask&amp;#039; should be passed by const reference." verbose="Parameter &amp;#039;basicTask&amp;#039; is passed by value. It could be passed as a const reference which is usually faster and recommended in C++." cwe="398" file0="DeadlineTask.cpp">
+            <location file="DeadlineTask.cpp" line="8"/>
+        </error>
+        <error id="missingIncludeSystem" severity="information" msg="Include file: &amp;lt;ctime&amp;gt; not found. Please note: Cppcheck does not need standard library headers to get proper results." verbose="Include file: &amp;lt;ctime&amp;gt; not found. Please note: Cppcheck does not need standard library headers to get proper results.">
+            <location file="DeadlineTask.h" line="3"/>
+        </error>
+        <error id="missingIncludeSystem" severity="information" msg="Include file: &amp;lt;memory&amp;gt; not found. Please note: Cppcheck does not need standard library headers to get proper results." verbose="Include file: &amp;lt;memory&amp;gt; not found. Please note: Cppcheck does not need standard library headers to get proper results.">
+            <location file="DeadlineTask.h" line="4"/>
+        </error>
+        <error id="uninitMemberVar" severity="warning" msg="Member variable &amp;#039;DeadlineTask::deadline&amp;#039; is not initialized in the constructor." verbose="Member variable &amp;#039;DeadlineTask::deadline&amp;#039; is not initialized in the constructor. Member variables of native types, pointers, or references are left uninitialized when the class is instantiated. That may cause bugs or undefined behavior." cwe="398" file0="DeadlineTask.cpp">
+            <location file="DeadlineTask.h" line="19"/>
+        </error>
+        <error id="missingIncludeSystem" severity="information" msg="Include file: &amp;lt;memory&amp;gt; not found. Please note: Cppcheck does not need standard library headers to get proper results." verbose="Include file: &amp;lt;memory&amp;gt; not found. Please note: Cppcheck does not need standard library headers to get proper results.">
+            <location file="DeadlineTaskManager.h" line="2"/>
+        </error>
+        <error id="missingIncludeSystem" severity="information" msg="Include file: &amp;lt;queue&amp;gt; not found. Please note: Cppcheck does not need standard library headers to get proper results." verbose="Include file: &amp;lt;queue&amp;gt; not found. Please note: Cppcheck does not need standard library headers to get proper results.">
+            <location file="DeadlineTaskManager.h" line="3"/>
+        </error>
+        <error id="missingIncludeSystem" severity="information" msg="Include file: &amp;lt;vector&amp;gt; not found. Please note: Cppcheck does not need standard library headers to get proper results." verbose="Include file: &amp;lt;vector&amp;gt; not found. Please note: Cppcheck does not need standard library headers to get proper results.">
+            <location file="DeadlineTaskManager.h" line="4"/>
+        </error>
+        <error id="missingIncludeSystem" severity="information" msg="Include file: &amp;lt;iostream&amp;gt; not found. Please note: Cppcheck does not need standard library headers to get proper results." verbose="Include file: &amp;lt;iostream&amp;gt; not found. Please note: Cppcheck does not need standard library headers to get proper results.">
+            <location file="DeadlineTaskManager.h" line="6"/>
+        </error>
+        <error id="missingIncludeSystem" severity="information" msg="Include file: &amp;lt;ctime&amp;gt; not found. Please note: Cppcheck does not need standard library headers to get proper results." verbose="Include file: &amp;lt;ctime&amp;gt; not found. Please note: Cppcheck does not need standard library headers to get proper results.">
+            <location file="DeadlineTaskManager.h" line="7"/>
+        </error>
+        <error id="missingIncludeSystem" severity="information" msg="Include file: &amp;lt;memory&amp;gt; not found. Please note: Cppcheck does not need standard library headers to get proper results." verbose="Include file: &amp;lt;memory&amp;gt; not found. Please note: Cppcheck does not need standard library headers to get proper results.">
+            <location file="IterativeTaskHandler.h" line="2"/>
+        </error>
+        <error id="missingIncludeSystem" severity="information" msg="Include file: &amp;lt;queue&amp;gt; not found. Please note: Cppcheck does not need standard library headers to get proper results." verbose="Include file: &amp;lt;queue&amp;gt; not found. Please note: Cppcheck does not need standard library headers to get proper results.">
+            <location file="IterativeTaskHandler.h" line="3"/>
+        </error>
+        <error id="missingIncludeSystem" severity="information" msg="Include file: &amp;lt;vector&amp;gt; not found. Please note: Cppcheck does not need standard library headers to get proper results." verbose="Include file: &amp;lt;vector&amp;gt; not found. Please note: Cppcheck does not need standard library headers to get proper results.">
+            <location file="IterativeTaskHandler.h" line="4"/>
+        </error>
+        <error id="missingIncludeSystem" severity="information" msg="Include file: &amp;lt;functional&amp;gt; not found. Please note: Cppcheck does not need standard library headers to get proper results." verbose="Include file: &amp;lt;functional&amp;gt; not found. Please note: Cppcheck does not need standard library headers to get proper results.">
+            <location file="IterativeTaskHandler.h" line="5"/>
+        </error>
+        <error id="missingIncludeSystem" severity="information" msg="Include file: &amp;lt;chrono&amp;gt; not found. Please note: Cppcheck does not need standard library headers to get proper results." verbose="Include file: &amp;lt;chrono&amp;gt; not found. Please note: Cppcheck does not need standard library headers to get proper results.">
+            <location file="IterativeTaskHandler.h" line="6"/>
+        </error>
+        <error id="returnByReference" severity="performance" msg="Function &amp;#039;getMinHeap()&amp;#039; should return member &amp;#039;minHeap&amp;#039; by const reference." verbose="Function &amp;#039;getMinHeap()&amp;#039; should return member &amp;#039;minHeap&amp;#039; by const reference." file0="DeadlineTaskManager.cpp">
+            <location file="IterativeTaskHandler.h" line="37"/>
+        </error>
+        <error id="missingIncludeSystem" severity="information" msg="Include file: &amp;lt;string&amp;gt; not found. Please note: Cppcheck does not need standard library headers to get proper results." verbose="Include file: &amp;lt;string&amp;gt; not found. Please note: Cppcheck does not need standard library headers to get proper results.">
+            <location file="Logger.h" line="2"/>
+        </error>
+        <error id="missingIncludeSystem" severity="information" msg="Include file: &amp;lt;spdlog/sinks/daily_file_sink.h&amp;gt; not found. Please note: Cppcheck does not need standard library headers to get proper results." verbose="Include file: &amp;lt;spdlog/sinks/daily_file_sink.h&amp;gt; not found. Please note: Cppcheck does not need standard library headers to get proper results.">
+            <location file="Logger.h" line="3"/>
+        </error>
+        <error id="missingIncludeSystem" severity="information" msg="Include file: &amp;lt;spdlog/spdlog.h&amp;gt; not found. Please note: Cppcheck does not need standard library headers to get proper results." verbose="Include file: &amp;lt;spdlog/spdlog.h&amp;gt; not found. Please note: Cppcheck does not need standard library headers to get proper results.">
+            <location file="Logger.h" line="4"/>
+        </error>
+        <error id="missingIncludeSystem" severity="information" msg="Include file: &amp;lt;spdlog/formatter.h&amp;gt; not found. Please note: Cppcheck does not need standard library headers to get proper results." verbose="Include file: &amp;lt;spdlog/formatter.h&amp;gt; not found. Please note: Cppcheck does not need standard library headers to get proper results.">
+            <location file="Logger.h" line="5"/>
+        </error>
+        <error id="missingIncludeSystem" severity="information" msg="Include file: &amp;lt;spdlog/details/log_msg.h&amp;gt; not found. Please note: Cppcheck does not need standard library headers to get proper results." verbose="Include file: &amp;lt;spdlog/details/log_msg.h&amp;gt; not found. Please note: Cppcheck does not need standard library headers to get proper results.">
+            <location file="Logger.h" line="6"/>
+        </error>
+        <error id="missingIncludeSystem" severity="information" msg="Include file: &amp;lt;sstream&amp;gt; not found. Please note: Cppcheck does not need standard library headers to get proper results." verbose="Include file: &amp;lt;sstream&amp;gt; not found. Please note: Cppcheck does not need standard library headers to get proper results.">
+            <location file="Logger.h" line="7"/>
+        </error>
+        <error id="missingIncludeSystem" severity="information" msg="Include file: &amp;lt;iomanip&amp;gt; not found. Please note: Cppcheck does not need standard library headers to get proper results." verbose="Include file: &amp;lt;iomanip&amp;gt; not found. Please note: Cppcheck does not need standard library headers to get proper results.">
+            <location file="Logger.h" line="8"/>
+        </error>
+        <error id="missingIncludeSystem" severity="information" msg="Include file: &amp;lt;chrono&amp;gt; not found. Please note: Cppcheck does not need standard library headers to get proper results." verbose="Include file: &amp;lt;chrono&amp;gt; not found. Please note: Cppcheck does not need standard library headers to get proper results.">
+            <location file="Logger.h" line="9"/>
+        </error>
+        <error id="missingIncludeSystem" severity="information" msg="Include file: &amp;lt;mutex&amp;gt; not found. Please note: Cppcheck does not need standard library headers to get proper results." verbose="Include file: &amp;lt;mutex&amp;gt; not found. Please note: Cppcheck does not need standard library headers to get proper results.">
+            <location file="Logger.h" line="10"/>
+        </error>
+        <error id="missingIncludeSystem" severity="information" msg="Include file: &amp;lt;memory&amp;gt; not found. Please note: Cppcheck does not need standard library headers to get proper results." verbose="Include file: &amp;lt;memory&amp;gt; not found. Please note: Cppcheck does not need standard library headers to get proper results.">
+            <location file="LongTaskHandler.h" line="3"/>
+        </error>
+        <error id="missingIncludeSystem" severity="information" msg="Include file: &amp;lt;mutex&amp;gt; not found. Please note: Cppcheck does not need standard library headers to get proper results." verbose="Include file: &amp;lt;mutex&amp;gt; not found. Please note: Cppcheck does not need standard library headers to get proper results.">
+            <location file="LongTaskHandler.h" line="4"/>
+        </error>
+        <error id="missingIncludeSystem" severity="information" msg="Include file: &amp;lt;iostream&amp;gt; not found. Please note: Cppcheck does not need standard library headers to get proper results." verbose="Include file: &amp;lt;iostream&amp;gt; not found. Please note: Cppcheck does not need standard library headers to get proper results.">
+            <location file="Main.cpp" line="2"/>
+        </error>
+        <error id="missingIncludeSystem" severity="information" msg="Include file: &amp;lt;thread&amp;gt; not found. Please note: Cppcheck does not need standard library headers to get proper results." verbose="Include file: &amp;lt;thread&amp;gt; not found. Please note: Cppcheck does not need standard library headers to get proper results.">
+            <location file="Main.cpp" line="4"/>
+        </error>
+        <error id="constParameterReference" severity="style" msg="Parameter &amp;#039;task&amp;#039; can be declared as reference to const" verbose="Parameter &amp;#039;task&amp;#039; can be declared as reference to const" cwe="398" file0="OrderedTaskHandler.cpp">
+            <location file="OrderedTaskHandler.cpp" line="3"/>
+        </error>
+        <error id="missingIncludeSystem" severity="information" msg="Include file: &amp;lt;memory&amp;gt; not found. Please note: Cppcheck does not need standard library headers to get proper results." verbose="Include file: &amp;lt;memory&amp;gt; not found. Please note: Cppcheck does not need standard library headers to get proper results.">
+            <location file="OrderedTaskHandler.h" line="3"/>
+        </error>
+        <error id="missingIncludeSystem" severity="information" msg="Include file: &amp;lt;queue&amp;gt; not found. Please note: Cppcheck does not need standard library headers to get proper results." verbose="Include file: &amp;lt;queue&amp;gt; not found. Please note: Cppcheck does not need standard library headers to get proper results.">
+            <location file="OrderedTaskHandler.h" line="4"/>
+        </error>
+        <error id="variableScope" severity="style" msg="The scope of the variable &amp;#039;taskType&amp;#039; can be reduced." verbose="The scope of the variable &amp;#039;taskType&amp;#039; can be reduced. Warning: Be careful when fixing this message, especially when there are inner loops. Here is an example where cppcheck will write that the scope for &amp;#039;i&amp;#039; can be reduced:&#10;void f(int x)&#10;{&#10;    int i = 0;&#10;    if (x) {&#10;        // it&amp;#039;s safe to move &amp;#039;int i = 0;&amp;#039; here&#10;        for (int n = 0; n &amp;lt; 10; ++n) {&#10;            // it is possible but not safe to move &amp;#039;int i = 0;&amp;#039; here&#10;            do_something(&amp;amp;i);&#10;        }&#10;    }&#10;}&#10;When you see this message it is always safe to reduce the variable scope 1 level." cwe="398" file0="ReadFromJSON.cpp">
+            <location file="ReadFromJSON.cpp" line="22"/>
+        </error>
+        <error id="missingIncludeSystem" severity="information" msg="Include file: &amp;lt;iostream&amp;gt; not found. Please note: Cppcheck does not need standard library headers to get proper results." verbose="Include file: &amp;lt;iostream&amp;gt; not found. Please note: Cppcheck does not need standard library headers to get proper results.">
+            <location file="ReadFromJSON.h" line="3"/>
+        </error>
+        <error id="missingIncludeSystem" severity="information" msg="Include file: &amp;lt;fstream&amp;gt; not found. Please note: Cppcheck does not need standard library headers to get proper results." verbose="Include file: &amp;lt;fstream&amp;gt; not found. Please note: Cppcheck does not need standard library headers to get proper results.">
+            <location file="ReadFromJSON.h" line="4"/>
+        </error>
+        <error id="missingIncludeSystem" severity="information" msg="Include file: &amp;lt;nlohmann/json.hpp&amp;gt; not found. Please note: Cppcheck does not need standard library headers to get proper results." verbose="Include file: &amp;lt;nlohmann/json.hpp&amp;gt; not found. Please note: Cppcheck does not need standard library headers to get proper results.">
+            <location file="ReadFromJSON.h" line="5"/>
+        </error>
+        <error id="missingIncludeSystem" severity="information" msg="Include file: &amp;lt;chrono&amp;gt; not found. Please note: Cppcheck does not need standard library headers to get proper results." verbose="Include file: &amp;lt;chrono&amp;gt; not found. Please note: Cppcheck does not need standard library headers to get proper results.">
+            <location file="ReadFromJSON.h" line="6"/>
+        </error>
+        <error id="missingIncludeSystem" severity="information" msg="Include file: &amp;lt;thread&amp;gt; not found. Please note: Cppcheck does not need standard library headers to get proper results." verbose="Include file: &amp;lt;thread&amp;gt; not found. Please note: Cppcheck does not need standard library headers to get proper results.">
+            <location file="ReadFromJSON.h" line="7"/>
+        </error>
+        <error id="normalCheckLevelMaxBranches" severity="information" msg="Limiting analysis of branches. Use --check-level=exhaustive to analyze all branches." verbose="Limiting analysis of branches. Use --check-level=exhaustive to analyze all branches." file0="RealTimeScheduler.cpp">
+            <location file="RealTimeScheduler.cpp" line="0"/>
+        </error>
+        <error id="knownConditionTrueFalse" severity="style" msg="Condition &amp;#039;!realTimeQueue.empty()&amp;#039; is always true" verbose="Condition &amp;#039;!realTimeQueue.empty()&amp;#039; is always true" cwe="571" file0="RealTimeScheduler.cpp">
+            <location file="RealTimeScheduler.cpp" line="21" info="Condition &amp;#039;!realTimeQueue.empty()&amp;#039; is always true"/>
+            <location file="RealTimeScheduler.cpp" line="17" info="Assuming that condition &amp;#039;realTimeQueue.empty()&amp;#039; is not redundant"/>
+        </error>
+        <error id="missingIncludeSystem" severity="information" msg="Include file: &amp;lt;queue&amp;gt; not found. Please note: Cppcheck does not need standard library headers to get proper results." verbose="Include file: &amp;lt;queue&amp;gt; not found. Please note: Cppcheck does not need standard library headers to get proper results.">
+            <location file="RealTimeScheduler.h" line="2"/>
+        </error>
+        <error id="missingIncludeSystem" severity="information" msg="Include file: &amp;lt;memory&amp;gt; not found. Please note: Cppcheck does not need standard library headers to get proper results." verbose="Include file: &amp;lt;memory&amp;gt; not found. Please note: Cppcheck does not need standard library headers to get proper results.">
+            <location file="RealTimeScheduler.h" line="3"/>
+        </error>
+        <error id="missingIncludeSystem" severity="information" msg="Include file: &amp;lt;mutex&amp;gt; not found. Please note: Cppcheck does not need standard library headers to get proper results." verbose="Include file: &amp;lt;mutex&amp;gt; not found. Please note: Cppcheck does not need standard library headers to get proper results.">
+            <location file="RealTimeScheduler.h" line="4"/>
+        </error>
+        <error id="knownConditionTrueFalse" severity="style" msg="Condition &amp;#039;starvationCheckQueue.front()-&amp;gt;getStatus()==TaskStatus::CREATION&amp;#039; is always true" verbose="Condition &amp;#039;starvationCheckQueue.front()-&amp;gt;getStatus()==TaskStatus::CREATION&amp;#039; is always true" cwe="571" file0="Scheduler.cpp">
+            <location file="Scheduler.cpp" line="191" info="Condition &amp;#039;starvationCheckQueue.front()-&amp;gt;getStatus()==TaskStatus::CREATION&amp;#039; is always true"/>
+            <location file="Scheduler.cpp" line="188" info="Assuming that condition &amp;#039;starvationCheckQueue.front()-&amp;gt;getStatus()!=TaskStatus::CREATION&amp;#039; is not redundant"/>
+        </error>
+        <error id="passedByValue" severity="performance" msg="Function parameter &amp;#039;queue&amp;#039; should be passed by const reference." verbose="Parameter &amp;#039;queue&amp;#039; is passed by value. It could be passed as a const reference which is usually faster and recommended in C++." cwe="398" file0="Scheduler.cpp">
+            <location file="Scheduler.cpp" line="241"/>
+        </error>
+        <error id="missingIncludeSystem" severity="information" msg="Include file: &amp;lt;thread&amp;gt; not found. Please note: Cppcheck does not need standard library headers to get proper results." verbose="Include file: &amp;lt;thread&amp;gt; not found. Please note: Cppcheck does not need standard library headers to get proper results.">
+            <location file="Scheduler.h" line="3"/>
+        </error>
+        <error id="missingIncludeSystem" severity="information" msg="Include file: &amp;lt;chrono&amp;gt; not found. Please note: Cppcheck does not need standard library headers to get proper results." verbose="Include file: &amp;lt;chrono&amp;gt; not found. Please note: Cppcheck does not need standard library headers to get proper results.">
+            <location file="Scheduler.h" line="4"/>
+        </error>
+        <error id="missingIncludeSystem" severity="information" msg="Include file: &amp;lt;string&amp;gt; not found. Please note: Cppcheck does not need standard library headers to get proper results." verbose="Include file: &amp;lt;string&amp;gt; not found. Please note: Cppcheck does not need standard library headers to get proper results.">
+            <location file="Scheduler.h" line="5"/>
+        </error>
+        <error id="missingIncludeSystem" severity="information" msg="Include file: &amp;lt;memory&amp;gt; not found. Please note: Cppcheck does not need standard library headers to get proper results." verbose="Include file: &amp;lt;memory&amp;gt; not found. Please note: Cppcheck does not need standard library headers to get proper results.">
+            <location file="Scheduler.h" line="6"/>
+        </error>
+        <error id="missingIncludeSystem" severity="information" msg="Include file: &amp;lt;mutex&amp;gt; not found. Please note: Cppcheck does not need standard library headers to get proper results." verbose="Include file: &amp;lt;mutex&amp;gt; not found. Please note: Cppcheck does not need standard library headers to get proper results.">
+            <location file="Scheduler.h" line="7"/>
+        </error>
+        <error id="missingIncludeSystem" severity="information" msg="Include file: &amp;lt;iostream&amp;gt; not found. Please note: Cppcheck does not need standard library headers to get proper results." verbose="Include file: &amp;lt;iostream&amp;gt; not found. Please note: Cppcheck does not need standard library headers to get proper results.">
+            <location file="Scheduler.h" line="8"/>
+        </error>
+        <error id="missingIncludeSystem" severity="information" msg="Include file: &amp;lt;iostream&amp;gt; not found. Please note: Cppcheck does not need standard library headers to get proper results." verbose="Include file: &amp;lt;iostream&amp;gt; not found. Please note: Cppcheck does not need standard library headers to get proper results.">
+            <location file="TCPServer.cpp" line="2"/>
+        </error>
+        <error id="missingIncludeSystem" severity="information" msg="Include file: &amp;lt;boost/asio.hpp&amp;gt; not found. Please note: Cppcheck does not need standard library headers to get proper results." verbose="Include file: &amp;lt;boost/asio.hpp&amp;gt; not found. Please note: Cppcheck does not need standard library headers to get proper results.">
+            <location file="TCPServer.h" line="4"/>
+        </error>
+        <error id="missingIncludeSystem" severity="information" msg="Include file: &amp;lt;memory&amp;gt; not found. Please note: Cppcheck does not need standard library headers to get proper results." verbose="Include file: &amp;lt;memory&amp;gt; not found. Please note: Cppcheck does not need standard library headers to get proper results.">
+            <location file="TCPServer.h" line="5"/>
+        </error>
+        <error id="passedByValue" severity="performance" msg="Function parameter &amp;#039;priority&amp;#039; should be passed by const reference." verbose="Parameter &amp;#039;priority&amp;#039; is passed by value. It could be passed as a const reference which is usually faster and recommended in C++." cwe="398" file0="Task.cpp">
+            <location file="Task.cpp" line="11"/>
+        </error>
+        <error id="missingIncludeSystem" severity="information" msg="Include file: &amp;lt;string&amp;gt; not found. Please note: Cppcheck does not need standard library headers to get proper results." verbose="Include file: &amp;lt;string&amp;gt; not found. Please note: Cppcheck does not need standard library headers to get proper results.">
+            <location file="Task.h" line="2"/>
+        </error>
+        <error id="missingIncludeSystem" severity="information" msg="Include file: &amp;lt;ctime&amp;gt; not found. Please note: Cppcheck does not need standard library headers to get proper results." verbose="Include file: &amp;lt;ctime&amp;gt; not found. Please note: Cppcheck does not need standard library headers to get proper results.">
+            <location file="Task.h" line="3"/>
+        </error>
+        <error id="missingIncludeSystem" severity="information" msg="Include file: &amp;lt;chrono&amp;gt; not found. Please note: Cppcheck does not need standard library headers to get proper results." verbose="Include file: &amp;lt;chrono&amp;gt; not found. Please note: Cppcheck does not need standard library headers to get proper results.">
+            <location file="Task.h" line="4"/>
+        </error>
+        <error id="noExplicitConstructor" severity="style" msg="Class &amp;#039;Task&amp;#039; has a constructor with 1 argument that is not explicit." verbose="Class &amp;#039;Task&amp;#039; has a constructor with 1 argument that is not explicit. Such, so called &amp;quot;Converting constructors&amp;quot;, should in general be explicit for type safety reasons as that prevents unintended implicit conversions." cwe="398" file0="DeadlineTask.cpp">
+            <location file="Task.h" line="25"/>
+        </error>
+        <error id="passedByValue" severity="performance" msg="Function parameter &amp;#039;type&amp;#039; should be passed by const reference." verbose="Parameter &amp;#039;type&amp;#039; is passed by value. It could be passed as a const reference which is usually faster and recommended in C++." cwe="398" file0="TaskFactory.cpp">
+            <location file="TaskFactory.cpp" line="51"/>
+        </error>
+        <error id="missingIncludeSystem" severity="information" msg="Include file: &amp;lt;memory&amp;gt; not found. Please note: Cppcheck does not need standard library headers to get proper results." verbose="Include file: &amp;lt;memory&amp;gt; not found. Please note: Cppcheck does not need standard library headers to get proper results.">
+            <location file="TaskFactory.h" line="5"/>
+        </error>
+        <error id="missingIncludeSystem" severity="information" msg="Include file: &amp;lt;nlohmann/json.hpp&amp;gt; not found. Please note: Cppcheck does not need standard library headers to get proper results." verbose="Include file: &amp;lt;nlohmann/json.hpp&amp;gt; not found. Please note: Cppcheck does not need standard library headers to get proper results.">
+            <location file="TaskFactory.h" line="6"/>
+        </error>
+        <error id="constParameterPointer" severity="style" msg="Parameter &amp;#039;task&amp;#039; can be declared as pointer to const" verbose="Parameter &amp;#039;task&amp;#039; can be declared as pointer to const" cwe="398" file0="Utility.cpp">
+            <location file="Utility.cpp" line="32"/>
+        </error>
+        <error id="missingIncludeSystem" severity="information" msg="Include file: &amp;lt;iostream&amp;gt; not found. Please note: Cppcheck does not need standard library headers to get proper results." verbose="Include file: &amp;lt;iostream&amp;gt; not found. Please note: Cppcheck does not need standard library headers to get proper results.">
+            <location file="Utility.h" line="3"/>
+        </error>
+        <error id="missingIncludeSystem" severity="information" msg="Include file: &amp;lt;string&amp;gt; not found. Please note: Cppcheck does not need standard library headers to get proper results." verbose="Include file: &amp;lt;string&amp;gt; not found. Please note: Cppcheck does not need standard library headers to get proper results.">
+            <location file="Utility.h" line="4"/>
+        </error>
+        <error id="nullPointerRedundantCheck" severity="warning" msg="Either the condition &amp;#039;newTask&amp;#039; is redundant or there is possible null pointer dereference: newTask." verbose="Either the condition &amp;#039;newTask&amp;#039; is redundant or there is possible null pointer dereference: newTask." cwe="476" file0="WebSocketSession.cpp">
+            <location file="WebSocketSession.cpp" line="71" info="Null pointer dereference"/>
+            <location file="WebSocketSession.cpp" line="53" info="Assuming that condition &amp;#039;newTask&amp;#039; is not redundant"/>
+        </error>
+        <error id="shadowFunction" severity="style" msg="Local variable &amp;#039;start&amp;#039; shadows outer function" verbose="Local variable &amp;#039;start&amp;#039; shadows outer function" cwe="398" file0="WebSocketSession.cpp">
+            <location file="WebSocketSession.h" line="32" info="Shadowed declaration"/>
+            <location file="WebSocketSession.cpp" line="183" info="Shadow variable"/>
+        </error>
+        <error id="missingIncludeSystem" severity="information" msg="Include file: &amp;lt;boost/asio.hpp&amp;gt; not found. Please note: Cppcheck does not need standard library headers to get proper results." verbose="Include file: &amp;lt;boost/asio.hpp&amp;gt; not found. Please note: Cppcheck does not need standard library headers to get proper results.">
+            <location file="WebSocketSession.h" line="4"/>
+        </error>
+        <error id="missingIncludeSystem" severity="information" msg="Include file: &amp;lt;boost/beast.hpp&amp;gt; not found. Please note: Cppcheck does not need standard library headers to get proper results." verbose="Include file: &amp;lt;boost/beast.hpp&amp;gt; not found. Please note: Cppcheck does not need standard library headers to get proper results.">
+            <location file="WebSocketSession.h" line="5"/>
+        </error>
+        <error id="missingIncludeSystem" severity="information" msg="Include file: &amp;lt;memory&amp;gt; not found. Please note: Cppcheck does not need standard library headers to get proper results." verbose="Include file: &amp;lt;memory&amp;gt; not found. Please note: Cppcheck does not need standard library headers to get proper results.">
+            <location file="WebSocketSession.h" line="6"/>
+        </error>
+        <error id="missingIncludeSystem" severity="information" msg="Include file: &amp;lt;iostream&amp;gt; not found. Please note: Cppcheck does not need standard library headers to get proper results." verbose="Include file: &amp;lt;iostream&amp;gt; not found. Please note: Cppcheck does not need standard library headers to get proper results.">
+            <location file="WebSocketSession.h" line="7"/>
+        </error>
+        <error id="missingIncludeSystem" severity="information" msg="Include file: &amp;lt;nlohmann/json.hpp&amp;gt; not found. Please note: Cppcheck does not need standard library headers to get proper results." verbose="Include file: &amp;lt;nlohmann/json.hpp&amp;gt; not found. Please note: Cppcheck does not need standard library headers to get proper results.">
+            <location file="WebSocketSession.h" line="11"/>
+        </error>
+        <error id="missingIncludeSystem" severity="information" msg="Include file: &amp;lt;fstream&amp;gt; not found. Please note: Cppcheck does not need standard library headers to get proper results." verbose="Include file: &amp;lt;fstream&amp;gt; not found. Please note: Cppcheck does not need standard library headers to get proper results.">
+            <location file="WebSocketSession.h" line="12"/>
+        </error>
+        <error id="missingIncludeSystem" severity="information" msg="Include file: &amp;lt;filesystem&amp;gt; not found. Please note: Cppcheck does not need standard library headers to get proper results." verbose="Include file: &amp;lt;filesystem&amp;gt; not found. Please note: Cppcheck does not need standard library headers to get proper results.">
+            <location file="WebSocketSession.h" line="13"/>
+        </error>
+        <error id="missingIncludeSystem" severity="information" msg="Include file: &amp;lt;thread&amp;gt; not found. Please note: Cppcheck does not need standard library headers to get proper results." verbose="Include file: &amp;lt;thread&amp;gt; not found. Please note: Cppcheck does not need standard library headers to get proper results.">
+            <location file="WebSocketSession.h" line="14"/>
+        </error>
+        <error id="missingIncludeSystem" severity="information" msg="Include file: &amp;lt;chrono&amp;gt; not found. Please note: Cppcheck does not need standard library headers to get proper results." verbose="Include file: &amp;lt;chrono&amp;gt; not found. Please note: Cppcheck does not need standard library headers to get proper results.">
+            <location file="WebSocketSession.h" line="15"/>
+        </error>
+        <error id="missingIncludeSystem" severity="information" msg="Include file: &amp;lt;mutex&amp;gt; not found. Please note: Cppcheck does not need standard library headers to get proper results." verbose="Include file: &amp;lt;mutex&amp;gt; not found. Please note: Cppcheck does not need standard library headers to get proper results.">
+            <location file="WebSocketSession.h" line="16"/>
+        </error>
+        <error id="missingIncludeSystem" severity="information" msg="Include file: &amp;lt;filesystem&amp;gt; not found. Please note: Cppcheck does not need standard library headers to get proper results." verbose="Include file: &amp;lt;filesystem&amp;gt; not found. Please note: Cppcheck does not need standard library headers to get proper results.">
+            <location file="WebSocketSession.h" line="17"/>
+        </error>
+        <error id="missingIncludeSystem" severity="information" msg="Include file: &amp;lt;ctime&amp;gt; not found. Please note: Cppcheck does not need standard library headers to get proper results." verbose="Include file: &amp;lt;ctime&amp;gt; not found. Please note: Cppcheck does not need standard library headers to get proper results.">
+            <location file="WebSocketSession.h" line="18"/>
+        </error>
+        <error id="missingIncludeSystem" severity="information" msg="Include file: &amp;lt;string&amp;gt; not found. Please note: Cppcheck does not need standard library headers to get proper results." verbose="Include file: &amp;lt;string&amp;gt; not found. Please note: Cppcheck does not need standard library headers to get proper results.">
+            <location file="WebSocketSession.h" line="19"/>
+        </error>
+        <error id="missingIncludeSystem" severity="information" msg="Include file: &amp;lt;unordered_map&amp;gt; not found. Please note: Cppcheck does not need standard library headers to get proper results." verbose="Include file: &amp;lt;unordered_map&amp;gt; not found. Please note: Cppcheck does not need standard library headers to get proper results.">
+            <location file="WeightRoundRobinScheduler.h" line="3"/>
+        </error>
+        <error id="missingIncludeSystem" severity="information" msg="Include file: &amp;lt;string&amp;gt; not found. Please note: Cppcheck does not need standard library headers to get proper results." verbose="Include file: &amp;lt;string&amp;gt; not found. Please note: Cppcheck does not need standard library headers to get proper results.">
+            <location file="WeightRoundRobinScheduler.h" line="4"/>
+        </error>
+        <error id="missingIncludeSystem" severity="information" msg="Include file: &amp;lt;memory&amp;gt; not found. Please note: Cppcheck does not need standard library headers to get proper results." verbose="Include file: &amp;lt;memory&amp;gt; not found. Please note: Cppcheck does not need standard library headers to get proper results.">
+            <location file="WeightRoundRobinScheduler.h" line="5"/>
+        </error>
+    </errors>
+</results>

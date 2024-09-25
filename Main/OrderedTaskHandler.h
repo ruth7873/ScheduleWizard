@@ -10,7 +10,7 @@ class OrderedTaskHandler
     std::queue<std::shared_ptr<Task>> orderedTaskQueue;
 
 public:
-    void addOrderedTask(std::shared_ptr<Task>& task);
+    void addOrderedTask(const std::shared_ptr<Task>& task);
     void popOrderedTask();
     std::shared_ptr<Task> frontOrderedTask();
 };

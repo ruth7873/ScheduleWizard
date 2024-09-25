@@ -1,5 +1,5 @@
 #pragma once
-
+// cppcheck-suppress missingIncludeSystem
 #include <string>
 
 class PrioritiesLevel {

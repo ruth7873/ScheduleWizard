@@ -19,7 +19,7 @@ void ReadFromJSON::createTasksFromJSON(const std::string& filePath) {
 
         for (const auto& task : tasksData) {
             // Get the task type from JSON
-            std::string taskType = task["type"];
+           const std::string taskType = task["type"];
 
             // Use TaskFactory to create the correct type of task based on the taskType
             std::shared_ptr<Task> newTask = TaskFactory::createTask(task);

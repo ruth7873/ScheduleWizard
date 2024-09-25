@@ -188,7 +188,7 @@ void Scheduler::checkStarvation() {
 			if (starvationCheckQueue.front()->getStatus() != TaskStatus::CREATION) {
 				starvationCheckQueue.pop();
 			}
-			else if (starvationCheckQueue.front()->getStatus() == TaskStatus::CREATION && tasksCounter - starvationCheckQueue.front()->getCounter() >= STARVATION) {
+			else if (tasksCounter - starvationCheckQueue.front()->getCounter() >= STARVATION) {
 				spdlog::error("there is starvation!!");
 				std::stringstream errorMsg;
 				errorMsg << "Starvation detected! Task ID: " << starvationCheckQueue.front()->getId();
@@ -238,7 +238,7 @@ OrderedTaskHandler& Scheduler::getOrderedTaskHandler() {
 queue<shared_ptr<Task>>& Scheduler::getStarvationCheckQueue() {
 	return starvationCheckQueue;
 }
-void Scheduler::setStarvationCheckQueue(queue<shared_ptr<Task>> queue) {
+void Scheduler::setStarvationCheckQueue(const queue<shared_ptr<Task>>& queue) {
 	starvationCheckQueue = queue;
 }
 int Scheduler::getSTARVATION() {

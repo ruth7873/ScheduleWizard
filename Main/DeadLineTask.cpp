@@ -5,7 +5,7 @@
 // Definition of the static member
 //DeadlineTaskManager DeadlineTask::manager;
 
-DeadlineTask::DeadlineTask(Task basicTask, int deadLineTime)
+DeadlineTask::DeadlineTask(const Task& basicTask, int deadLineTime)
     : Task(basicTask.getId(), basicTask.getPriority(), basicTask.getRunningTime(), basicTask.getStatus()),
     deadline(deadLineTime * 100) {
     // Automatically add the task to the manager's min-heap when it's created

@@ -1,6 +1,6 @@
 #include "OrderedTaskHandler.h"
 
-void OrderedTaskHandler::addOrderedTask(std::shared_ptr<Task>& task) {
+void OrderedTaskHandler::addOrderedTask(const std::shared_ptr<Task>& task) {
     orderedTaskQueue.push(task);
     if (orderedTaskQueue.size() == 1) {
         Scheduler::insertTask(task);
