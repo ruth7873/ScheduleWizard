@@ -15,7 +15,7 @@ void IterativeTaskHandler::pushIterativeTask(std::shared_ptr<IterativeTask> iter
     iterativeTask->setWaitTime(waitTime);
 
     minHeap.emplace(iterativeTask);
-    spdlog::info(Logger::LoggerInfo::PUSH_ITERATIVE_TASK_TO_HEAP, iterativeTask->getId(), iterativeTask->getIterationsRemaining());
+    spdlog::info(Logger::LoggerInfo::PUSH_ITERATIVE_TASK_TO_HEAP, iterativeTask->getId(), iterativeTask->getIterationsRemaining(), iterativeTask->getPriority());
 }
 
 std::shared_ptr<IterativeTask> IterativeTaskHandler::popIterativeTask()
