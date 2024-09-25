@@ -20,7 +20,7 @@ bool LongTaskHandler::haveToSuspendLongTask(std::shared_ptr<Task> task) {
 
 void LongTaskHandler::stopLongTask(std::shared_ptr<Task> longTask) {
 	longTask->setStatus(TaskStatus::SUSPENDED);
-	spdlog::info(Logger::LoggerInfo::LONG_TASK_SUSPENDED, longTask->getId());
+	spdlog::info(Logger::LoggerInfo::LONG_TASK_SUSPENDED, longTask->getId(), longTask->getPriority());
 
 	Scheduler::popTaskFromItsQueue(longTask);
 	Scheduler::addTaskToItsQueue(longTask);

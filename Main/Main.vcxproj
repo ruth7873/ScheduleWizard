@@ -105,14 +105,14 @@
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;_WIN32_WINNT=0x0601;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>C:\Users\מיכל\Documents\BootCamp\ExternalLib\boost_1_85_0;C:\Users\מיכל\Documents\BootCamp\ExternalLib\spdlog.native.1.0.0;C:\Users\user1\Desktop\bootcamp\project\ScheduleWizard\boost_1_85_0\boost_1_85_0</AdditionalIncludeDirectories>
-      <AdditionalIncludeDirectories>D:\ספריות\boost_1_85_0\boost_1_85_0;C:\Users\user1\Desktop\bootcamp\project\boost_1_85_0\boost_1_85_0</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\מיכל\Documents\BootCamp\ExternalLib\boost_1_85_0;C:\Users\מיכל\Documents\BootCamp\ExternalLib\spdlog.native.1.0.0</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <BuildStlModules>true</BuildStlModules>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>D:\ספריות\boost_1_85_0\boost_1_85_0\libs;C:\Users\מיכל\Documents\BootCamp\ExternalLib\boost_1_85_0\libs;C:\Users\user1\Desktop\bootcamp\project\boost_1_85_0\boost_1_85_0\libs</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>C:\Users\מיכל\Documents\BootCamp\ExternalLib\boost_1_85_0\libs</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">

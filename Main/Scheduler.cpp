@@ -31,11 +31,11 @@ void Scheduler::init() {
 
     spdlog::info(Logger::LoggerInfo::START_SCHEDULER);
     try {
-        std::thread readtasksFromJSONThread([this]() {
+  /*      std::thread readtasksFromJSONThread([this]() {
             SetThreadDescription(GetCurrentThread(), L"createTasksFromJSON");
             spdlog::info(Logger::LoggerInfo::START_READ_FROM_JSON_THREAD);
             reader->createTasksFromJSON(Scenario::SCENARIO_1_FILE_PATH);
-        }); 
+        }); */
         std::thread insertTaskThread([this]() {
             SetThreadDescription(GetCurrentThread(), L"InsertTask");
             spdlog::info(Logger::LoggerInfo::START_THREAD, "InsertTask");
@@ -67,7 +67,7 @@ void Scheduler::init() {
           this->checkStarvation();
           });
       
-        readtasksFromJSONThread.join();
+        //readtasksFromJSONThread.join();
         insertTaskThread.join();
         RTSchedulerThread.join();
         WRRSchedulerThread.join();
@@ -136,7 +136,7 @@ void Scheduler::execute(std::shared_ptr<Task> task) {
     deadlineTaskManager.deadlineMechanism();
     LongTaskHandler::calculateAverageLength();
     LongTaskHandler::setNumOfSeconds(0);
-    spdlog::info(Logger::LoggerInfo::START_EXECUTE, task->getId());
+    spdlog::info(Logger::LoggerInfo::START_EXECUTE, task->getId(), task->getPriority());
     task->setStatus(TaskStatus::RUNNING);
 
     while (true) {
@@ -144,7 +144,7 @@ void Scheduler::execute(std::shared_ptr<Task> task) {
             task->setStatus(TaskStatus::COMPLETED);
             popTaskFromItsQueue(task);
             totalRunningTask--;
-            spdlog::info(Logger::LoggerInfo::TASK_COMPLITED, task->getId());
+            spdlog::info(Logger::LoggerInfo::TASK_COMPLITED, task->getId(), task->getPriority());
             if (task->getIsOrdered()) {
                 orderedTaskHandler.popOrderedTask();
             }
@@ -155,7 +155,7 @@ void Scheduler::execute(std::shared_ptr<Task> task) {
             break;
         }
         if (task->getPriority() != PrioritiesLevel::CRITICAL && !realTimeScheduler.getRealTimeQueue().empty()) {
-            spdlog::info(Logger::LoggerInfo::TASK_PREEMPTITVE, task->getId());
+            spdlog::info(Logger::LoggerInfo::TASK_PREEMPTITVE, task->getId(), task->getPriority());
             preemptive(task);
             return;
         }
@@ -204,7 +204,7 @@ void Scheduler::checkStarvation() {
       
 void Scheduler::preemptive(std::shared_ptr<Task> task) {
     task->setStatus(TaskStatus::SUSPENDED);
-    spdlog::info(Logger::LoggerInfo::TASK_SUSPENDED, task->getId());
+    spdlog::info(Logger::LoggerInfo::TASK_SUSPENDED, task->getId(), task->getPriority());
 }
 
 void Scheduler::displayMessage(const Task* task) {
