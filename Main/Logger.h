@@ -27,8 +27,9 @@ public:
 
 		static const string CREATE_NEW_TASK;
 
-		static const string TASK_COMPLITED;
-		static const string TASK_PREEMPTITVE;
+		static const string TASK_COMPLETED;
+
+		static const string TASK_PREEMPTIVE;
 		static const string TASK_SUSPENDED;
 		static const string LONG_TASK_SUSPENDED;
 

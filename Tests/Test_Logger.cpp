@@ -129,7 +129,8 @@
 //    // Test that the cloned formatter behaves the same as the original
 //    spdlog::memory_buf_t original_buffer, cloned_buffer;
 //    spdlog::details::log_msg msg;
-//    msg.level = spdlog::level::info;
+//    msg.level = spdlog::level::
+// ;
 //    msg.payload = spdlog::string_view_t("Test message");
 //
 //    original_formatter.format(msg, original_buffer);

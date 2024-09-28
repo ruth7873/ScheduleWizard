@@ -192,6 +192,7 @@ void WebSocketSession::monitorLogs() {
 					if (trimmedLine.find("Executing") != std::string::npos ||
 						trimmedLine.find("completed") != std::string::npos ||
 						trimmedLine.find("suspended") != std::string::npos ||
+						trimmedLine.find("Preempting") != std::string::npos ||
 						trimmedLine.find("There are too many Real Time Tasks") != std::string::npos) {
 						std::cout << " <<<< Reading from the log file: " << trimmedLine << std::endl;
 						send_response(trimmedLine);

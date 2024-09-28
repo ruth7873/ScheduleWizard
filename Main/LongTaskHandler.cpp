@@ -14,7 +14,8 @@ bool LongTaskHandler::haveToSuspendLongTask(std::shared_ptr<Task> task) {
 	if (task->getPriority() == PrioritiesLevel::CRITICAL &&
 		Scheduler::getRealTimeScheduler().getRealTimeQueue().size() == 1)
 		return false;
-
+	if (Scheduler::getWrrQueuesScheduler().getWrrQueues()[task->getPriority()].queue.size() <= 1)
+		return false;
 	return numOfSeconds > averageLength;
 }
 
