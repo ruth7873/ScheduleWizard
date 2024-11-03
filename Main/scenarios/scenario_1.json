@@ -1,0 +1,27 @@
+{
+  "title": "Deadline Task Execution",
+  "objective": "To verify that tasks are executed in the correct order based on their priority and that long tasks are handled properly.",
+  "tasks": [
+    {
+      "type": "basic",
+      "priority": "Higher",
+      "runningTime": 7
+    },    
+    {
+      "type": "basic",
+      "priority": "Middle",
+      "runningTime": 1
+    },
+    {
+      "type": "basic",
+      "priority": "Lower",
+      "runningTime": 1
+    },
+    {
+      "type": "deadline",
+      "priority": "Lower",
+      "runningTime": 5,
+      "deadline": 1
+    }
+  ]
+}

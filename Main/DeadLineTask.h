@@ -3,17 +3,19 @@
 #include <ctime>
 #include <memory> // for std::shared_ptr
 
-class DeadlineTaskManager;
+class Task;
 
-class DeadLineTask : public Task {
+class DeadlineTask : public Task {
 private:
-    time_t deadline;
-    // Static instance of DeadlineTaskManager
-    static DeadlineTaskManager manager;
+    time_t deadline = 0;
+
 public:
-    DeadLineTask(Task basicTask, int deadLineTime);
+    DeadlineTask(const Task& basicTask, int deadLineTime);
     time_t getDeadline() const;
 
     // Comparator for the min-heap based on deadline
-    bool operator>(const DeadLineTask& other) const;
+    bool operator>(const DeadlineTask& other) const;
+
+    DeadlineTask() = default;
 };
+

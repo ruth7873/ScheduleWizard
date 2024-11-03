@@ -1,34 +1,40 @@
 #include "LongTaskHandler.h"
-int LongTaskHandler::sumOfAllSeconds = 0;
-int LongTaskHandler::numOfSeconds = 0;
-double LongTaskHandler::AverageLength = 0.0;
-mutex LongTaskHandler::longTaskMutex;
 
-bool LongTaskHandler::haveToSuspendLongTask(shared_ptr<Task> task) {
+std::mutex LongTaskHandler::longTaskMutex;
+int LongTaskHandler::numOfSeconds = 0;
+int LongTaskHandler::sumOfAllSeconds = 0;
+double LongTaskHandler::averageLength = 0.0;
+
+bool LongTaskHandler::haveToSuspendLongTask(std::shared_ptr<Task> task) {
 	std::lock_guard<std::mutex> lock(longTaskMutex);
-	//Scheduler::printAtomically("average is " +to_string(AverageLength) +"\n");
-	if (Scheduler::totalRunningTask <= 1)//if there is only one task in the system
+
+	if (Scheduler::totalRunningTask <= 1)
 		return false;
-	if (task->getPriority() == PrioritiesLevel::CRITICAL && Scheduler::getRealTimeScheduler().getRealTimeQueue().size() == 1)//there is one critical task - not suspend it!!
+
+	if (task->getPriority() == PrioritiesLevel::CRITICAL &&
+		Scheduler::getRealTimeScheduler().getRealTimeQueue().size() == 1)
 		return false;
-	if (numOfSeconds > AverageLength)
-		return true;
-	return false;
+	if (Scheduler::getWrrQueuesScheduler().getWrrQueues()[task->getPriority()].queue.size() <= 1)
+		return false;
+	return numOfSeconds > averageLength;
 }
-void LongTaskHandler::stopLongTask(shared_ptr<Task> longTask) {
+
+void LongTaskHandler::stopLongTask(std::shared_ptr<Task> longTask) {
 	longTask->setStatus(TaskStatus::SUSPENDED);
-	spdlog::info("The long task with ID: {} is suspended and will continue later.", longTask->getId());
+	spdlog::info(Logger::LoggerInfo::LONG_TASK_SUSPENDED, longTask->getId(), longTask->getPriority());
+
 	Scheduler::popTaskFromItsQueue(longTask);
 	Scheduler::addTaskToItsQueue(longTask);
 }
 
 void LongTaskHandler::calculateAverageLength() {
 	std::lock_guard<std::mutex> lock(longTaskMutex);
-	if (Scheduler::totalRunningTask)
-		AverageLength = static_cast<double> (sumOfAllSeconds) / Scheduler::totalRunningTask;
-	Scheduler::printAtomically("the average is: " + to_string(AverageLength) + "\n");
-}
 
+	if (Scheduler::totalRunningTask != 0)
+		averageLength = static_cast<double>(sumOfAllSeconds) / Scheduler::totalRunningTask;
+
+	Scheduler::printAtomically("The average is: " + std::to_string(averageLength) + "\n");
+}
 
 // Getters
 int LongTaskHandler::getSumOfAllSeconds() {
@@ -40,7 +46,7 @@ int LongTaskHandler::getNumOfSeconds() {
 }
 
 double LongTaskHandler::getAverageLength() {
-	return AverageLength;
+	return averageLength;
 }
 
 // Setters
@@ -51,9 +57,15 @@ void LongTaskHandler::addSumOfAllSeconds(int value) {
 void LongTaskHandler::increaseNumOfSeconds() {
 	numOfSeconds++;
 }
+
+void LongTaskHandler::setSumOfAllSeconds(int value) {
+	sumOfAllSeconds = value;
+}
+
 void LongTaskHandler::setNumOfSeconds(int value) {
 	numOfSeconds = value;
 }
+
 void LongTaskHandler::setAverageLength(double value) {
-	AverageLength = value;
+	averageLength = value;
 }

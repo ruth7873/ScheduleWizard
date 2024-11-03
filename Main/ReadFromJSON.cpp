@@ -1,95 +1,49 @@
 #include "ReadFromJSON.h"
 
-/**
- * @brief Reads task data from a JSON file and creates Task objects from it.
- *
- * This function reads task data from a JSON file specified by the filePath parameter.
- * It then creates Task objects based on the data and inserts them into the Scheduler.
- *
- * @param filePath The path to the JSON file containing task data.
- */
-void ReadFromJSON::createTasksFromJSON(const string& filePath) {
-	try {
-		// Read data from JSON file
-		std::ifstream file(filePath);
-		json jsonData;
-		file >> jsonData;
+void ReadFromJSON::createTasksFromJSON(const std::string& filePath) {
+    std::ifstream file(filePath);
+    json jsonData;
 
-		// Access the "tasks" array in the JSON object
-		json tasksData = jsonData["tasks"];
+    try {
+        if (!file.is_open()) {
+            std::cerr << "Failed to open file: " << filePath << std::endl;
+            spdlog::error("Failed to open file: {}", filePath);
+            return;
+        }
 
-        // Iterate over the tasks array and create Task objects
+        // Read data from JSON file
+        file >> jsonData;
+
+        // Access the "tasks" array in the JSON object
+        json tasksData = jsonData["tasks"];
+
         for (const auto& task : tasksData) {
-            // Create a new Task object using data from JSON
-            shared_ptr<Task> newTask (new Task(Scheduler::taskIds++, task["priority"], task["runningTime"], task["status"]));
-	
+            // Get the task type from JSON
+           const std::string taskType = task["type"];
 
-			// Insert the new Task into the Scheduler's queues
-			Scheduler::insertTask(newTask);
-		}
-	}
-	catch (const std::exception& e) {
-		// Handle exceptions thrown during JSON parsing or task creation
-		std::cerr << "An exception occurred: " << e.what() << std::endl;
-		// Log the exception
-		spdlog::error("An exception occurred: {}", e.what());
-	}
-}
+            // Use TaskFactory to create the correct type of task based on the taskType
+            std::shared_ptr<Task> newTask = TaskFactory::createTask(task);
 
-/**
- * @brief Reads task data from a JSON file and creates Task objects from it with a delay between reads.
- *
- * This function reads task data from a JSON file specified by the filePath parameter.
- * It then creates Task objects based on the data and inserts them into the Scheduler with a specified delay between reads.
- *
- * @param filePath The path to the JSON file containing task data.
- * @param linesToRead Number of tasks to read at a time.
- * @param delaySeconds Time to wait between reading tasks.
- * @param message Message to display while waiting.
- */
-void ReadFromJSON::createTasksFromJSONWithDelay(const string& filePath, int linesToRead, int delaySeconds, string message) {
-	try {
-		// Read data from JSON file
-		std::ifstream file(filePath);
-		json jsonData;
-		file >> jsonData;
+            // Insert the new Task into the Scheduler's queues
+            if (newTask) {
+                Scheduler::insertTask(newTask);
+            }
+            else {
+                std::cerr << "Task creation failed for task type: " << taskType << std::endl;
+                spdlog::error("Task creation failed for task type: {}", taskType);
+            }
 
-		// Access the "tasks" array in the JSON object
-		json tasksData = jsonData["tasks"];
-		json title = jsonData["title"];
-		json objective = jsonData["objective"];
-		spdlog::debug("execute scenario " + to_string(title) + " the objective is: " + to_string(objective));
-		cout << "execute scenario " << to_string(title) << " the objective is : " << to_string(objective) << endl;
-		// Variable to keep track of the number of lines read
-		int linesRead = 0;
+            // If "delay" field exists, wait for the specified delay
+            if (task.find("delay") != task.end()) {
+                int seconds = task["delay"];
+                std::this_thread::sleep_for(std::chrono::milliseconds(seconds));
+            }
+        }
+    }
+    catch (const std::exception& e) {
+        std::cerr << "An exception occurred: " << e.what() << std::endl;
+        spdlog::error("An exception occurred: {}", e.what());
+    }
 
-		// Iterate over the tasks array and create Task objects
-		for (const auto& task : tasksData) {
-			// Create a new Task object using data from JSON
-			shared_ptr<Task> newTask(new Task(Scheduler::taskIds++, task["priority"], task["runningTime"]));
-
-			// Insert the new Task into the Scheduler's queues
-			Scheduler::insertTask(newTask);
-
-			// Increment the lines read
-			linesRead++;
-
-			// Check if the number of lines read equals the specified lines to read
-			if (linesRead == linesToRead) {
-				// Wait for the specified delay between reading tasks
-				auto startTime = std::chrono::steady_clock::now();
-				//checkLoopTimeout(startTime, delaySeconds, message);
-				std::this_thread::sleep_for(std::chrono::seconds(delaySeconds));  // busy-wait
-
-				// Reset the lines read counter
-				linesRead = 0;
-			}
-		}
-	}
-	catch (const std::exception& e) {
-		// Handle exceptions thrown during JSON parsing or task creation
-		std::cerr << "An exception occurred: " << e.what() << std::endl;
-		// Log the exception
-		spdlog::error("An exception occurred: {}", e.what());
-	}
+    file.close();
 }

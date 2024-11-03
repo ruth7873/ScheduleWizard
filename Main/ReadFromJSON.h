@@ -1,18 +1,24 @@
 #pragma once
+
 #include <iostream>
 #include <fstream>
 #include <nlohmann/json.hpp>
+#include <chrono>
+#include <thread>
 #include "Scheduler.h"
-#include "Timer.h"
+#include "TaskFactory.h"
+#include "Consts.h"
 
-class ReadFromJSON
-{
-private:
-	using json = nlohmann::json;
-
+class IReadFromJSON {
 public:
-	static void createTasksFromJSON(const string&);
-
-	static void createTasksFromJSONWithDelay(const string& filePath, int linesToRead, int delaySeconds, string message = "Waiting a long time");
+    virtual ~IReadFromJSON() = default;
+    virtual void createTasksFromJSON(const std::string& filePath) = 0;
 };
 
+class ReadFromJSON : public IReadFromJSON {
+private:
+    using json = nlohmann::json;
+
+public:
+    void createTasksFromJSON(const std::string& filePath) override;
+};

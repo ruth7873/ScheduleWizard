@@ -2,10 +2,10 @@
 
 RealTimeScheduler::~RealTimeScheduler() {
 	while (!realTimeQueue.empty()) {
-
 		realTimeQueue.pop();
 	}
 }
+
 /**
 * @brief Function that manages the execution of real-time tasks.
 *
@@ -14,23 +14,27 @@ RealTimeScheduler::~RealTimeScheduler() {
 void RealTimeScheduler::realTimeSchedulerFunction() {
 	while (true)
 	{
-
 		while (realTimeQueue.empty());
 
-		std::unique_lock<std::mutex> lock(Scheduler::rtLock); // שימוש ב-lock לנעילה אוטומטית
-
-		shared_ptr<Task> task = realTimeQueue.front();
-
-		//shared_ptr<Task> task (realTimeQueue.front());
+		std::unique_lock<std::mutex> lock(Scheduler::rtLock);
+		shared_ptr<Task> task;
+		//if(!realTimeQueue.empty())
+		task = realTimeQueue.front();
 
 		if (task != nullptr) {
-			Scheduler::execute(task);
+			if (task->getStatus() != TaskStatus::RUNNING && task->getStatus() != TaskStatus::COMPLETED) {
+				Scheduler::execute(task);
+			}
 		}
 	}
 }
+
 queue<shared_ptr<Task>>& RealTimeScheduler::getRealTimeQueue() {
 	return realTimeQueue;
 }
+
 void RealTimeScheduler::addTask(shared_ptr<Task> task) {
 	realTimeQueue.push(task);
+	if (realTimeQueue.size() >= 4)
+		spdlog::warn("There are too many Real Time Tasks, it might cause starvation of the other tasks");
 }

@@ -102,13 +102,17 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;_WIN32_WINNT=0x0601;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\Users\user1\Desktop\bootcamp\Main\spdlog\include\spdlog;C:\Users\מיכל\Documents\BootCamp\ExternalLib\spdlog\include\spdlog;C:\Users\מיכל\Documents\BootCamp\OurProject\boost_1_85_0</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\מיכל\Documents\BootCamp\ExternalLib\boost_1_85_0;C:\Users\מיכל\Documents\BootCamp\ExternalLib\spdlog.native.1.0.0;C:\Users\user1\Desktop\bootcamp\project\ScheduleWizard\boost_1_85_0\boost_1_85_0</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\מיכל\Documents\BootCamp\ExternalLib\boost_1_85_0;C:\Users\מיכל\Documents\BootCamp\ExternalLib\spdlog.native.1.0.0;C:\Users\user1\Desktop\bootcamp\project\boost_1_85_0\boost_1_85_0</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <BuildStlModules>true</BuildStlModules>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>C:\Users\מיכל\Documents\BootCamp\ExternalLib\boost_1_85_0\libs;C:\Users\user1\Desktop\bootcamp\project\boost_1_85_0\boost_1_85_0\libs</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -119,66 +123,68 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>D:\ספריות\boost_1_85_0\boost_1_85_0</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>D:\ספריות\boost_1_85_0\boost_1_85_0\libs</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Consts.cpp" />
-    <ClCompile Include="Deadline.cpp" />
-    <ClCompile Include="DeadLineTask.cpp" />
+    <ClCompile Include="DeadlineTask.cpp" />
     <ClCompile Include="DeadlineTaskManager.cpp" />
     <ClCompile Include="IterativeTask.cpp" />
+    <ClCompile Include="IterativeTaskHandler.cpp" />
     <ClCompile Include="Logger.cpp" />
     <ClCompile Include="LongTaskHandler.cpp" />
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="OrderedTaskHandler.cpp" />
     <ClCompile Include="ReadFromJSON.cpp" />
     <ClCompile Include="RealTimeScheduler.cpp" />
     <ClCompile Include="Scheduler.cpp" />
     <ClCompile Include="Task.cpp" />
-    <ClCompile Include="TestMain.cpp" />
-    <ClCompile Include="TestWeightRoundRobinScheduler.cpp" />
     <ClCompile Include="TaskFactory.cpp" />
-    <ClCompile Include="Timer.cpp" />
+    <ClCompile Include="TCPServer.cpp" />
     <ClCompile Include="Utility.cpp" />
+    <ClCompile Include="WebSocketSession.cpp" />
     <ClCompile Include="WeightRoundRobinScheduler.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Consts.h" />
-    <ClInclude Include="Deadline.h" />
     <ClInclude Include="DeadlineTaskManager.h" />
-    <ClInclude Include="doctest.h" />
-    <ClInclude Include="DeadLineTask.h" />
+    <ClInclude Include="DeadlineTask.h" />
+    <ClInclude Include="IterativeTaskHandler.h" />
     <ClInclude Include="IterativeTask.h" />
     <ClInclude Include="Logger.h" />
     <ClInclude Include="LongTaskHandler.h" />
+    <ClInclude Include="OrderedTaskHandler.h" />
     <ClInclude Include="ReadFromJSON.h" />
     <ClInclude Include="RealTimeScheduler.h" />
     <ClInclude Include="Scheduler.h" />
     <ClInclude Include="Task.h" />
     <ClInclude Include="TaskFactory.h" />
-    <ClInclude Include="Timer.h" />
+    <ClInclude Include="TCPServer.h" />
     <ClInclude Include="Utility.h" />
+    <ClInclude Include="WebSocketSession.h" />
     <ClInclude Include="WeightRoundRobinScheduler.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="cpp.hint" />
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
-    <Import Project="..\packages\spdlog.native.1.0.0\build\native\spdlog.native.targets" Condition="Exists('..\packages\spdlog.native.1.0.0\build\native\spdlog.native.targets')" />
     <Import Project="..\packages\nlohmann.json.3.11.2\build\native\nlohmann.json.targets" Condition="Exists('..\packages\nlohmann.json.3.11.2\build\native\nlohmann.json.targets')" />
+    <Import Project="..\packages\spdlog.native.1.0.0\build\native\spdlog.native.targets" Condition="Exists('..\packages\spdlog.native.1.0.0\build\native\spdlog.native.targets')" />
   </ImportGroup>
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
-    <Error Condition="!Exists('..\packages\spdlog.native.1.0.0\build\native\spdlog.native.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\spdlog.native.1.0.0\build\native\spdlog.native.targets'))" />
     <Error Condition="!Exists('..\packages\nlohmann.json.3.11.2\build\native\nlohmann.json.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\nlohmann.json.3.11.2\build\native\nlohmann.json.targets'))" />
+    <Error Condition="!Exists('..\packages\spdlog.native.1.0.0\build\native\spdlog.native.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\spdlog.native.1.0.0\build\native\spdlog.native.targets'))" />
   </Target>
 </Project>

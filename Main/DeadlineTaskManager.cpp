@@ -1,43 +1,54 @@
 #include "DeadlineTaskManager.h"
-#include "Scheduler.h"
-#include <memory> // for std::shared_ptr
-#include <iostream>
-#include <ctime>
+
 
 // Definition of the static member
-std::priority_queue<std::shared_ptr<DeadLineTask>, std::vector<std::shared_ptr<DeadLineTask>>, std::greater<std::shared_ptr<DeadLineTask>>> DeadlineTaskManager::minHeap;
+std::priority_queue<std::shared_ptr<DeadlineTask>, std::vector<std::shared_ptr<DeadlineTask>>, DeadlineTaskManager::CompareDeadline> DeadlineTaskManager::minHeap;
 
-void DeadlineTaskManager::addTask(const std::shared_ptr<DeadLineTask>& task) {
-    minHeap.push(task);
+void DeadlineTaskManager::addTask(const std::shared_ptr<DeadlineTask>& task) {
+	if (task->getPriority() != PrioritiesLevel::CRITICAL)
+		minHeap.push(task);
 }
 
+std::shared_ptr<DeadlineTask> DeadlineTaskManager::getUpcomingTask() {
+	if (minHeap.empty()) {
+		cerr << "Heap is empty, can't pop\n";
+		return nullptr;
+	}
+	return minHeap.top();
+}
+
+
 void DeadlineTaskManager::deadlineMechanism() {
-    if (!minHeap.empty()) {
-        std::shared_ptr<DeadLineTask> earliestTask = minHeap.top();
-        time_t currentTime = time(nullptr);
+	while (true) {
+		if (!minHeap.empty()) {
+			std::shared_ptr<DeadlineTask> earliestTask = minHeap.top();
+			time_t currentTime = time(nullptr) * 100;
+			// Check if the current time is close to the task's deadline
+			if (currentTime >= earliestTask->getDeadline() - earliestTask->getRunningTime() &&
+				earliestTask->getPriority() != PrioritiesLevel::CRITICAL &&
+				earliestTask->getStatus() != TaskStatus::COMPLETED &&
+				earliestTask->getStatus() != TaskStatus::TERMINATED) {
 
-        // Check if the current time is close to the task's deadline
-        if (currentTime >= earliestTask->getDeadline() - earliestTask->getRunningTime() &&
-            earliestTask->getPriority() != PrioritiesLevel::CRITICAL) {
+				// Change the status of the task
+				earliestTask->setPriority(PrioritiesLevel::CRITICAL);
 
-            cout << " ----- DEADLINE COMMIMG ----- " << endl;
-            std::cout << "The Task id: " << earliestTask->getId() << " became critical" << std::endl;
+				// Insert the task into the scheduler
+				Scheduler::insertTask(dynamic_pointer_cast<Task>(earliestTask));
+				// Remove the task from the heap
+				{
+					std::unique_lock<std::mutex> lock(Scheduler::rtLock);  // Lock the rtLock
+					if (!minHeap.empty())
+						minHeap.pop();
+				}
+			}
+			else {
+				if (earliestTask->getPriority() == PrioritiesLevel::CRITICAL ||
+					earliestTask->getStatus() == TaskStatus::COMPLETED)
 
-            // Change the status of the task
-            earliestTask->setPriority(PrioritiesLevel::CRITICAL);
+					minHeap.pop();
+			}
+		}
+		std::this_thread::sleep_for(std::chrono::milliseconds(1)); // Check every second
 
-            // Insert the task into the scheduler
-            std::shared_ptr<Task> taskPtr = std::make_shared<DeadLineTask>(*earliestTask);
-            Scheduler::insertTask(taskPtr);
-
-            // Remove the task from the heap
-            minHeap.pop();
-        }
-        else {
-            if (earliestTask->getPriority() != PrioritiesLevel::CRITICAL) {
-                minHeap.pop();
-
-            }
-        }
-    }
+	}
 }

@@ -6,8 +6,10 @@
 #include "Scheduler.h"
 using namespace std;
 
-class Scheduler; // Forward declaration
+// Forward declaration
+class Scheduler; 
 class Task;
+
 /**
  * @class RealTimeScheduler
  * @brief Manages real-time tasks.
@@ -21,14 +23,14 @@ private:
 
 public:
 	//c'rots, d'tors
-	RealTimeScheduler() {}
-	RealTimeScheduler(const RealTimeScheduler& rt) = delete;
-	RealTimeScheduler(RealTimeScheduler&& rt) = delete;
+	RealTimeScheduler() = default;
 	~RealTimeScheduler();
 
+	RealTimeScheduler(const RealTimeScheduler& rt) = delete;
 
     void realTimeSchedulerFunction();
 
 	queue<shared_ptr<Task>>& getRealTimeQueue();
+
 	void addTask(shared_ptr<Task> task);
 };

@@ -1,0 +1,66 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="..\Main\Consts.cpp" />
+    <ClCompile Include="..\Main\DeadlineTask.cpp" />
+    <ClCompile Include="..\Main\DeadlineTaskManager.cpp" />
+    <ClCompile Include="..\Main\IterativeTask.cpp" />
+    <ClCompile Include="..\Main\IterativeTaskHandler.cpp" />
+    <ClCompile Include="..\Main\Logger.cpp" />
+    <ClCompile Include="..\Main\LongTaskHandler.cpp" />
+    <ClCompile Include="..\Main\OrderedTaskHandler.cpp" />
+    <ClCompile Include="..\Main\ReadFromJSON.cpp" />
+    <ClCompile Include="..\Main\RealTimeScheduler.cpp" />
+    <ClCompile Include="..\Main\Scheduler.cpp" />
+    <ClCompile Include="..\Main\Task.cpp" />
+    <ClCompile Include="..\Main\TaskFactory.cpp" />
+    <ClCompile Include="..\Main\TCPServer.cpp" />
+    <ClCompile Include="..\Main\Utility.cpp" />
+    <ClCompile Include="..\Main\WebSocketSession.cpp" />
+    <ClCompile Include="..\Main\WeightRoundRobinScheduler.cpp" />
+    <ClCompile Include="IScheduler.cpp" />
+    <ClCompile Include="Test_Job_Scheduling.cpp" />
+    <ClCompile Include="Test_TaskFactory.cpp" />
+    <ClCompile Include="Test3_WRR.cpp" />
+    <ClCompile Include="Helper.cpp" />
+    <ClCompile Include="Test1_Execute.cpp" />
+    <ClCompile Include="Test2_RealTimeScheduler.cpp" />
+    <ClCompile Include="Tests_Main.cpp" />
+    <ClCompile Include="Test00_Dead_Line.cpp" />
+    <ClCompile Include="Test_InsertTask.cpp" />
+    <ClCompile Include="Test11_Iterative_Task.cpp" />
+    <ClCompile Include="Test_Logger.cpp" />
+    <ClCompile Include="Test_Long_task.cpp" />
+    <ClCompile Include="Test_Ordered_Task.cpp" />
+    <ClCompile Include="Test0_ReadFromJson.cpp" />
+    <ClCompile Include="Test_Utility.cpp" />
+    <ClCompile Include="Test_TaskFactory.cpp" />
+    <ClCompile Include="Test_CheckStarvation.cpp" />
+    <ClCompile Include="Test_StressTest.cpp" />
+
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\Main\Consts.h" />
+    <ClInclude Include="..\Main\DeadlineTask.h" />
+    <ClInclude Include="..\Main\DeadlineTaskManager.h" />
+    <ClInclude Include="..\Main\IterativeTask.h" />
+    <ClInclude Include="..\Main\IterativeTaskHandler.h" />
+    <ClInclude Include="..\Main\Logger.h" />
+    <ClInclude Include="..\Main\LongTaskHandler.h" />
+    <ClInclude Include="..\Main\OrderedTaskHandler.h" />
+    <ClInclude Include="..\Main\ReadFromJSON.h" />
+    <ClInclude Include="..\Main\RealTimeScheduler.h" />
+    <ClInclude Include="..\Main\Scheduler.h" />
+    <ClInclude Include="..\Main\Task.h" />
+    <ClInclude Include="..\Main\TaskFactory.h" />
+    <ClInclude Include="..\Main\TCPServer.h" />
+    <ClInclude Include="..\Main\Utility.h" />
+    <ClInclude Include="..\Main\WebSocketSession.h" />
+    <ClInclude Include="..\Main\WeightRoundRobinScheduler.h" />
+    <ClInclude Include="doctest.h" />
+    <ClInclude Include="Helper.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+</Project>

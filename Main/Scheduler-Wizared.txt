@@ -1,0 +1,1729 @@
+// author: maly&michal&ruth
+// source file: C:\Users\user1\Desktop\bootcamp\project\ScheduleWizard\Main  name: Main
+==Consts.cpp
+#include "Consts.h"
+
+const std::string TaskStatus::COMPLETED = "Completed";
+const std::string TaskStatus::SUSPENDED = "Suspended";
+const std::string TaskStatus::TERMINATED = "Terminated";
+const std::string TaskStatus::RUNNING = "Running";
+const std::string TaskStatus::CREATION = "Creation";
+
+const std::string PrioritiesLevel::CRITICAL = "Critical";
+const std::string PrioritiesLevel::HIGHER = "Higher";
+const std::string PrioritiesLevel::MIDDLE = "Middle";
+const std::string PrioritiesLevel::LOWER = "Lower";
+
+const std::string TaskType::BASIC = "basic";
+const std::string TaskType::ORDERED = "ordered";
+const std::string TaskType::DEAD_LINE = "deadLine";
+const std::string TaskType::ITERATIVE = "iterative";
+
+const std::string Scenario::SCENARIO_1_FILE_PATH = "scenarios/scenario_1.json";
+const std::string Scenario::SCENARIO_2_FILE_PATH = "scenarios/scenario_2.json";
+const std::string Scenario::SCENARIO_3_FILE_PATH = "scenarios/scenario_3.json";
+const std::string Scenario::SCENARIO_4_FILE_PATH = "scenarios/scenario_4.json";
+const std::string Scenario::SCENARIO_5_FILE_PATH = "scenarios/scenario_5.json";
+const std::string Scenario::SCENARIO_6_FILE_PATH = "scenarios/scenario_6.json";
+const std::string Scenario::SCENARIO_7_FILE_PATH = "scenarios/scenario_7.json";
+const std::string Scenario::SCENARIO_8_FILE_PATH = "scenarios/scenario_8.json";
+const std::string Scenario::SCENARIO_9_FILE_PATH = "scenarios/scenario_9.json";
+const std::string Scenario::SCENARIO_10_FILE_PATH = "scenarios/scenario_10.json";
+const std::string Scenario::SCENARIO_11_FILE_PATH = "scenarios/scenario_11.json";
+==DeadlineTask.cpp
+#include "DeadlineTask.h"
+
+
+
+// Definition of the static member
+//DeadlineTaskManager DeadlineTask::manager;
+
+DeadlineTask::DeadlineTask(Task basicTask, int deadLineTime)
+    : Task(basicTask.getId(), basicTask.getPriority(), basicTask.getRunningTime(), basicTask.getStatus()),
+    deadline(deadLineTime * 100) {
+    // Automatically add the task to the manager's min-heap when it's created
+    //manager.addTask(std::make_shared<DeadlineTask>(*this));
+}
+
+time_t DeadlineTask::getDeadline() const {
+    return deadline;
+}
+bool DeadlineTask::operator>(const DeadlineTask& other) const {
+    return deadline < other.deadline;
+}
+
+==DeadlineTaskManager.cpp
+#include "DeadlineTaskManager.h"
+
+
+// Definition of the static member
+std::priority_queue<std::shared_ptr<DeadlineTask>, std::vector<std::shared_ptr<DeadlineTask>>, DeadlineTaskManager::CompareDeadline> DeadlineTaskManager::minHeap;
+
+void DeadlineTaskManager::addTask(const std::shared_ptr<DeadlineTask>& task) {
+    if (task->getPriority() != PrioritiesLevel::CRITICAL)
+        minHeap.push(task);
+}
+
+std::shared_ptr<DeadlineTask> DeadlineTaskManager::getUpcomingTask() {
+    if (minHeap.empty()) {
+        cerr << "Heap is empty, can't pop\n";
+        return nullptr;
+    }
+    return minHeap.top();
+}
+
+
+void DeadlineTaskManager::deadlineMechanism() {
+    if (!minHeap.empty()) {
+        std::shared_ptr<DeadlineTask> earliestTask = minHeap.top();
+        time_t currentTime = time(nullptr) * 100;
+        // Check if the current time is close to the task's deadline
+        if (currentTime >= earliestTask->getDeadline() - earliestTask->getRunningTime() &&
+            earliestTask->getPriority() != PrioritiesLevel::CRITICAL &&
+            earliestTask->getStatus() != TaskStatus::COMPLETED &&
+            earliestTask->getStatus() != TaskStatus::TERMINATED) {
+
+            // Change the status of the task
+            earliestTask->setPriority(PrioritiesLevel::CRITICAL);
+
+            // Insert the task into the scheduler
+            Scheduler::insertTask(dynamic_pointer_cast<Task>(earliestTask));
+            // Remove the task from the heap
+            {
+                std::unique_lock<std::mutex> lock(Scheduler::rtLock);  // Lock the rtLock
+                if (!minHeap.empty())
+                    minHeap.pop();
+            }
+        }
+        else {
+            if (earliestTask->getPriority() == PrioritiesLevel::CRITICAL ||
+                earliestTask->getStatus() == TaskStatus::COMPLETED)
+
+                minHeap.pop();
+        }
+    }
+}
+==Helper.cpp
+#include "Helper.h"
+void PopAllTheQueue(Scheduler scheduler) {
+
+	while (!scheduler.getRealTimeScheduler().getRealTimeQueue().empty())
+		scheduler.getRealTimeScheduler().getRealTimeQueue().pop();
+
+	while (!scheduler.getWrrQueuesScheduler().getWrrQueues()[PrioritiesLevel::HIGHER].queue.empty())
+		scheduler.getWrrQueuesScheduler().getWrrQueues()[PrioritiesLevel::HIGHER].queue.pop();
+
+	while (!scheduler.getWrrQueuesScheduler().getWrrQueues()[PrioritiesLevel::MIDDLE].queue.empty())
+		scheduler.getWrrQueuesScheduler().getWrrQueues()[PrioritiesLevel::MIDDLE].queue.pop();
+
+	while (!scheduler.getWrrQueuesScheduler().getWrrQueues()[PrioritiesLevel::LOWER].queue.empty())
+
+		scheduler.getWrrQueuesScheduler().getWrrQueues()[PrioritiesLevel::LOWER].queue.pop();
+}
+==IScheduler.cpp
+#pragma once
+
+==IterativeTask.cpp
+
+#include "IterativeTask.h"
+
+
+IterativeTask::IterativeTask(const Task& basicTask, int iterationsRemaining, int executionInterval)
+    : Task(basicTask.getId(), basicTask.getPriority(), basicTask.getRunningTime(), basicTask.getStatus()),
+    iterationsRemaining(iterationsRemaining),
+    executionInterval(executionInterval),
+    waitTime(0),
+    runTime(basicTask.getRunningTime())
+{}
+==IterativeTaskHandler.cpp
+#include "IterativeTaskHandler.h"
+
+void IterativeTaskHandler::pushIterativeTask(std::shared_ptr<IterativeTask> iterativeTask)
+{
+    int iterationsRemaining = iterativeTask->getIterationsRemaining();
+    if (iterationsRemaining <= 1) {
+        return;
+    }
+
+    iterativeTask->decreaseIterationsRemaining();
+
+
+    auto currentTime = std::chrono::system_clock::now();
+    auto waitTime = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::seconds(iterativeTask->getExecutionInterval()) + currentTime.time_since_epoch()).count();
+    iterativeTask->setWaitTime(waitTime);
+
+    minHeap.emplace(iterativeTask);
+    spdlog::info(Logger::LoggerInfo::PUSH_ITERATIVE_TASK_TO_HEAP, iterativeTask->getId(), iterativeTask->getIterationsRemaining());
+}
+
+std::shared_ptr<IterativeTask> IterativeTaskHandler::popIterativeTask()
+{
+    if (isEmpty()) {
+        cerr << "Heap is empty, can't pop\n";
+        return nullptr;
+    }
+    
+    std::shared_ptr<IterativeTask> topTask = minHeap.top();
+    minHeap.pop();
+    spdlog::info(Logger::LoggerInfo::POP_ITERATIVE_TASK_FROM_HEAP, topTask->getId());
+    topTask->setRunningTime(topTask->getRunTime());
+
+    return topTask;
+}
+
+void IterativeTaskHandler::checkTime()
+{
+    while (true) {
+        if (!isEmpty()) {
+            auto currentTime = std::chrono::system_clock::now();
+            auto currentTimeMs = std::chrono::duration_cast<std::chrono::milliseconds>(currentTime.time_since_epoch()).count();
+            auto waitTime = minHeap.top()->getWaitTime();
+
+            if (currentTimeMs >= waitTime) {
+                auto poppedTask = popIterativeTask();
+                Task task(std::dynamic_pointer_cast<Task>(poppedTask));
+                task.setStatus(TaskStatus::CREATION);
+                Scheduler::insertTask(std::make_shared<Task>(task));
+                pushIterativeTask(poppedTask);
+            }
+        }
+
+        std::this_thread::sleep_for(std::chrono::milliseconds(100)); // Check every second
+    }
+}
+==Logger.cpp
+#define _CRT_SECURE_NO_WARNINGS
+#include "Logger.h"
+
+void HtmlFormatter::format(const spdlog::details::log_msg& msg, spdlog::memory_buf_t& dest) {
+	// Determine color based on log level
+	std::string color;
+	switch (msg.level) {
+	case spdlog::level::info:
+		color = "green";
+		break;
+	case spdlog::level::warn:
+		color = "yellow";
+		break;
+	case spdlog::level::err:
+		color = "red";
+		break;
+	case spdlog::level::debug:
+		color = "blue";
+		break;
+	default:
+		color = "black";
+		break;
+	}
+
+	// Create HTML formatted log message
+	std::ostringstream oss;
+
+	// Get current time
+	auto now = std::chrono::system_clock::now();
+	std::time_t now_c = std::chrono::system_clock::to_time_t(now);
+	std::tm now_tm = *std::localtime(&now_c);
+
+	// Format time and date
+	oss << "<p style=\"color:" << color << "\">";
+	oss << "[" << std::put_time(&now_tm, "%Y-%m-%d %H:%M:%S") << "] ";
+	oss << "[" << spdlog::level::to_string_view(msg.level).data() << "] ";
+	oss << msg.payload.data();
+	oss << "</p>\n";
+
+	// Append formatted message to destination buffer
+	std::string formatted_msg = oss.str();
+	dest.append(formatted_msg.data(), formatted_msg.data() + formatted_msg.size());
+}
+
+std::unique_ptr<spdlog::formatter> HtmlFormatter::clone() const {
+	return std::make_unique<HtmlFormatter>();
+}
+
+void Logger::initialize_logger() {
+	// Create a daily logger to create a new file every day
+	auto daily_logger = spdlog::daily_logger_mt("daily_logger", "logs/daily_log.html", 0, 0); // Midnight rollover
+
+	// Set the custom HTML formatter
+	daily_logger->set_formatter(std::make_unique<HtmlFormatter>());
+
+	spdlog::set_default_logger(daily_logger);
+	spdlog::set_level(spdlog::level::debug);
+	spdlog::get("daily_logger")->debug("Logger initialized and logging to daily and hourly files");
+
+	// Start a new hourly log file periodically
+	std::thread([]() {
+		while (true) {
+			std::this_thread::sleep_for(std::chrono::milliseconds(1));
+			spdlog::get("daily_logger")->flush();
+		}
+		}).detach();
+}
+
+//Logger Info
+const string Logger::LoggerInfo::START_SCHEDULER = "Starting scheduling process.";
+const string Logger::LoggerInfo::START_THREAD = "{} thread started.";
+const string Logger::LoggerInfo::START_READ_FROM_JSON_THREAD = "read tasks From JSON thread started.";
+const string Logger::LoggerInfo::START_EXECUTE = "Executing Task with ID: {}";
+
+const string Logger::LoggerInfo::CREATE_NEW_TASK = "New task created with priority: {} and running time: {}";
+
+const string Logger::LoggerInfo::TASK_COMPLITED = "Task with ID: {} completed.";
+const string Logger::LoggerInfo::TASK_PREEMPTITVE = "Preempting Task with ID: {} for real-time task.";
+const string Logger::LoggerInfo::TASK_SUSPENDED = "Task with ID: {} suspended and added back to WRR queue.";
+const string Logger::LoggerInfo::LONG_TASK_SUSPENDED = "The long Task with ID: {} is suspended and will continue later.";
+
+const string Logger::LoggerInfo::ADD_CRITICAL_TASK = "Critical task with ID: {} added to RealTimeScheduler.";
+const string Logger::LoggerInfo::ADD_NON_CRITICAL_TASK = "Task with ID: {} added to {} queue.";
+
+const string Logger::LoggerInfo::PUSH_ITERATIVE_TASK_TO_HEAP = "Task with ID: {} added to iterative min heap. return number: {}";
+const string Logger::LoggerInfo::POP_ITERATIVE_TASK_FROM_HEAP = "Task with ID: {} popped from iterative min heap.";
+
+//Logger Error
+const string Logger::LoggerError::ERROR_CREATE_THREAD = "Error creating threads: {}";
+const string Logger::LoggerError::TASK_TERMINATED = "Exception occurred while executing Task with ID: {}: {}";
+
+
+
+
+
+
+
+
+
+==LongTaskHandler.cpp
+#include "LongTaskHandler.h"
+
+std::mutex LongTaskHandler::longTaskMutex;
+int LongTaskHandler::numOfSeconds = 0;
+int LongTaskHandler::sumOfAllSeconds = 0;
+double LongTaskHandler::averageLength = 0.0;
+
+bool LongTaskHandler::haveToSuspendLongTask(std::shared_ptr<Task> task) {
+	std::lock_guard<std::mutex> lock(longTaskMutex);
+
+	if (Scheduler::totalRunningTask <= 1)
+		return false;
+
+	if (task->getPriority() == PrioritiesLevel::CRITICAL &&
+		Scheduler::getRealTimeScheduler().getRealTimeQueue().size() == 1)
+		return false;
+
+	return numOfSeconds > averageLength;
+}
+
+void LongTaskHandler::stopLongTask(std::shared_ptr<Task> longTask) {
+	longTask->setStatus(TaskStatus::SUSPENDED);
+	spdlog::info(Logger::LoggerInfo::LONG_TASK_SUSPENDED, longTask->getId());
+
+	Scheduler::popTaskFromItsQueue(longTask);
+	Scheduler::addTaskToItsQueue(longTask);
+}
+
+void LongTaskHandler::calculateAverageLength() {
+	std::lock_guard<std::mutex> lock(longTaskMutex);
+
+	if (Scheduler::totalRunningTask != 0)
+		averageLength = static_cast<double>(sumOfAllSeconds) / Scheduler::totalRunningTask;
+
+	Scheduler::printAtomically("The average is: " + std::to_string(averageLength) + "\n");
+}
+
+// Getters
+int LongTaskHandler::getSumOfAllSeconds() {
+	return sumOfAllSeconds;
+}
+
+int LongTaskHandler::getNumOfSeconds() {
+	return numOfSeconds;
+}
+
+double LongTaskHandler::getAverageLength() {
+	return averageLength;
+}
+
+// Setters
+void LongTaskHandler::addSumOfAllSeconds(int value) {
+	sumOfAllSeconds += value;
+}
+
+void LongTaskHandler::increaseNumOfSeconds() {
+	numOfSeconds++;
+}
+
+void LongTaskHandler::setSumOfAllSeconds(int value) {
+	sumOfAllSeconds = value;
+}
+
+void LongTaskHandler::setNumOfSeconds(int value) {
+	numOfSeconds = value;
+}
+
+void LongTaskHandler::setAverageLength(double value) {
+	averageLength = value;
+}
+==Main.cpp
+#include "TCPServer.h"
+#include <iostream>
+#include "Scheduler.h"
+#include <thread>
+
+
+int main() {
+    Scheduler s(new ReadFromJSON(), new Utility());
+
+    std::thread schedulerThread([&s]() {
+        std::cerr << "Initializing Scheduler...\n";
+        s.init();
+        });
+
+    try {
+        // Initialize the TCP server
+        boost::asio::io_context io_context;
+        TCPServer server(io_context, 8080);  // Port 8080
+
+        // Run the io_context to process incoming tasks
+        io_context.run();
+    }
+    catch (const std::exception& e) {
+        std::cerr << "Exception: " << e.what() << std::endl;
+    }
+    schedulerThread.join();
+    return 0;
+}
+==OrderedTaskHandler.cpp
+#include "OrderedTaskHandler.h"
+
+void OrderedTaskHandler::addOrderedTask(std::shared_ptr<Task>& task) {
+    orderedTaskQueue.push(task);
+    if (orderedTaskQueue.size() == 1) {
+        Scheduler::insertTask(task);
+    }
+}
+
+void OrderedTaskHandler::popOrderedTask() {
+    if (orderedTaskQueue.empty()) {
+        spdlog::warn("Can't pop from an empty queue");
+    }
+    else {
+        orderedTaskQueue.pop();
+        if (!orderedTaskQueue.empty()) {
+            Scheduler::insertTask(orderedTaskQueue.front());
+        }
+    }
+}
+
+std::shared_ptr<Task> OrderedTaskHandler::frontOrderedTask() {
+    if (!orderedTaskQueue.empty()) {
+        return orderedTaskQueue.front();
+    }
+    else {
+        spdlog::warn("Can't get front from an empty queue");
+        return nullptr;
+    }
+}
+==ReadFromJSON.cpp
+#include "ReadFromJSON.h"
+
+void ReadFromJSON::createTasksFromJSON(const std::string& filePath) {
+    std::ifstream file(filePath);
+    json jsonData;
+
+    try {
+        if (!file.is_open()) {
+            std::cerr << "Failed to open file: " << filePath << std::endl;
+            spdlog::error("Failed to open file: {}", filePath);
+            return;
+        }
+
+        // Read data from JSON file
+        file >> jsonData;
+
+        // Access the "tasks" array in the JSON object
+        json tasksData = jsonData["tasks"];
+
+        for (const auto& task : tasksData) {
+            // Get the task type from JSON
+            std::string taskType = task["type"];
+
+            // Use TaskFactory to create the correct type of task based on the taskType
+            std::shared_ptr<Task> newTask = TaskFactory::createTask(task);
+
+            // Insert the new Task into the Scheduler's queues
+            if (newTask) {
+                Scheduler::insertTask(newTask);
+            }
+            else {
+                std::cerr << "Task creation failed for task type: " << taskType << std::endl;
+                spdlog::error("Task creation failed for task type: {}", taskType);
+            }
+
+            // If "delay" field exists, wait for the specified delay
+            if (task.find("delay") != task.end()) {
+                int seconds = task["delay"];
+                std::this_thread::sleep_for(std::chrono::milliseconds(seconds));
+            }
+        }
+    }
+    catch (const std::exception& e) {
+        std::cerr << "An exception occurred: " << e.what() << std::endl;
+        spdlog::error("An exception occurred: {}", e.what());
+    }
+
+    file.close();
+}
+==RealTimeScheduler.cpp
+#include "RealTimeScheduler.h"
+
+RealTimeScheduler::~RealTimeScheduler() {
+	while (!realTimeQueue.empty()) {
+		realTimeQueue.pop();
+	}
+}
+
+/**
+* @brief Function that manages the execution of real-time tasks.
+*
+* This function runs in an infinite loop. It checks if the real-time queue is not empty, and if it is not, it retrieves the first task from the queue and passes it to the `Scheduler::execute` function for processing.
+*/
+void RealTimeScheduler::realTimeSchedulerFunction() {
+	while (true)
+	{
+		while (realTimeQueue.empty());
+
+		std::unique_lock<std::mutex> lock(Scheduler::rtLock);
+		shared_ptr<Task> task;
+		if(!realTimeQueue.empty())
+			task = realTimeQueue.front();
+
+		if (task != nullptr) {
+			if (task->getStatus() != TaskStatus::RUNNING && task->getStatus() != TaskStatus::COMPLETED) {
+				Scheduler::execute(task);
+			}
+		}
+	}
+}
+
+queue<shared_ptr<Task>>& RealTimeScheduler::getRealTimeQueue() {
+	return realTimeQueue;
+}
+
+void RealTimeScheduler::addTask(shared_ptr<Task> task) {
+	realTimeQueue.push(task);
+}
+==Scheduler.cpp
+#include "Scheduler.h"
+
+int Scheduler::totalRunningTask = 0;
+unsigned int Scheduler::taskIds = 0;
+unsigned int Scheduler::tasksCounter = 0;
+
+std::mutex Scheduler::coutMutex;
+std::mutex Scheduler::rtLock;
+std::mutex Scheduler::realTimeQueueMutex;
+std::mutex Scheduler::wrrQueueMutex;
+
+RealTimeScheduler Scheduler::realTimeScheduler;
+WeightRoundRobinScheduler Scheduler::wrrQueuesScheduler;
+IterativeTaskHandler Scheduler::iterativeTaskHandler;
+DeadlineTaskManager Scheduler::deadlineTaskManager;
+OrderedTaskHandler Scheduler::orderedTaskHandler;
+
+
+Scheduler::Scheduler(IReadFromJSON* reader, IUtility* utilities)
+    : reader(reader),
+    utilities(utilities) {}
+
+queue <shared_ptr<Task>> Scheduler::starvationCheckQueue;
+
+const int Scheduler::STARVATION = 10;
+
+
+
+void Scheduler::init() {
+    Logger::initialize_logger();
+
+    spdlog::info(Logger::LoggerInfo::START_SCHEDULER);
+    try {
+        std::thread readtasksFromJSONThread([this]() {
+            SetThreadDescription(GetCurrentThread(), L"createTasksFromJSON");
+            spdlog::info(Logger::LoggerInfo::START_READ_FROM_JSON_THREAD);
+            reader->createTasksFromJSON(Scenario::SCENARIO_1_FILE_PATH);
+        }); 
+        std::thread insertTaskThread([this]() {
+            SetThreadDescription(GetCurrentThread(), L"InsertTask");
+            spdlog::info(Logger::LoggerInfo::START_THREAD, "InsertTask");
+            utilities->insertTaskFromInput();
+            });
+
+        std::thread RTSchedulerThread([this]() {
+            SetThreadDescription(GetCurrentThread(), L"RealTimeScheduler");
+            spdlog::info(Logger::LoggerInfo::START_THREAD, "RealTimeScheduler");
+            realTimeScheduler.realTimeSchedulerFunction();
+            });
+
+        std::thread WRRSchedulerThread([this]() {
+            SetThreadDescription(GetCurrentThread(), L"WeightRoundRobinScheduler");
+            spdlog::info(Logger::LoggerInfo::START_THREAD, "WeightRoundRobinScheduler");
+            wrrQueuesScheduler.weightRoundRobinFunction();
+            });
+
+        std::thread IterativeTaskHandlerThread([this]() {
+            SetThreadDescription(GetCurrentThread(), L"IterativeTaskHandler");
+            spdlog::info(Logger::LoggerInfo::START_THREAD, "IterativeTaskHandler");
+            iterativeTaskHandler.checkTime();
+            });
+      
+        // Create a thread for Iterative task manager
+        std::thread CheckStarvation_Thread([this]() {
+          SetThreadDescription(GetCurrentThread(), L"CheckStarvation");
+          spdlog::info(Logger::LoggerInfo::START_THREAD, "CheckStarvation");
+          this->checkStarvation();
+          });
+      
+        readtasksFromJSONThread.join();
+        insertTaskThread.join();
+        RTSchedulerThread.join();
+        WRRSchedulerThread.join();
+        IterativeTaskHandlerThread.join();
+		    CheckStarvation_Thread.join();
+      }
+      catch (const std::exception& ex) {
+        // Handle any exceptions that might occur during thread creation
+        spdlog::error(Logger::LoggerError::ERROR_CREATE_THREAD, ex.what());
+      }
+}
+
+
+void Scheduler::insertTask(std::shared_ptr<Task> newTask) {
+    if (newTask == nullptr) {
+        std::cerr << "Error: Invalid task input. Please try again." << std::endl;
+        spdlog::error("Error: Invalid task input. Skipping task insertion.");
+    }
+    else if (newTask->getIsOrdered() && orderedTaskHandler.frontOrderedTask() != newTask) {
+        orderedTaskHandler.addOrderedTask(newTask);
+    }
+    else {
+        addTaskToItsQueue(newTask);
+        totalRunningTask++;
+        LongTaskHandler::addSumOfAllSeconds(newTask->getRunningTime());
+
+        if (auto iterativeTask = std::dynamic_pointer_cast<IterativeTask>(newTask)) {
+            iterativeTaskHandler.pushIterativeTask(iterativeTask);
+        }
+        else if (auto deadlineTask = std::dynamic_pointer_cast<DeadlineTask>(newTask)) {
+            deadlineTaskManager.addTask(deadlineTask);
+        }
+    }
+}
+
+void Scheduler::addTaskToItsQueue(std::shared_ptr<Task> taskToAdd) {
+    if (taskToAdd->getPriority() == PrioritiesLevel::CRITICAL) {
+        std::lock_guard<std::mutex> lock(realTimeQueueMutex);
+        realTimeScheduler.addTask(taskToAdd);
+        spdlog::info(Logger::LoggerInfo::ADD_CRITICAL_TASK, taskToAdd->getId());
+    }
+    else {
+        std::lock_guard<std::mutex> lock(wrrQueueMutex);
+        wrrQueuesScheduler.addTask(taskToAdd);
+        spdlog::info(Logger::LoggerInfo::ADD_NON_CRITICAL_TASK, taskToAdd->getId(), taskToAdd->getPriority());
+      	starvationCheckQueue.push(taskToAdd);
+    }
+}
+
+void Scheduler::popTaskFromItsQueue(std::shared_ptr<Task> taskToPop) {
+    if (taskToPop->getPriority() == PrioritiesLevel::CRITICAL) {
+        std::lock_guard<std::mutex> lock(realTimeQueueMutex);
+        if (!realTimeScheduler.getRealTimeQueue().empty()) {
+            realTimeScheduler.getRealTimeQueue().pop();
+        }
+    }
+    else {
+        std::lock_guard<std::mutex> lock(wrrQueueMutex);
+        if (!wrrQueuesScheduler.getWrrQueues()[taskToPop->getPriority()].queue.empty()) {
+            wrrQueuesScheduler.getWrrQueues()[taskToPop->getPriority()].queue.pop();
+        }
+    }
+}
+
+void Scheduler::execute(std::shared_ptr<Task> task) {
+    deadlineTaskManager.deadlineMechanism();
+    LongTaskHandler::calculateAverageLength();
+    LongTaskHandler::setNumOfSeconds(0);
+    spdlog::info(Logger::LoggerInfo::START_EXECUTE, task->getId());
+    task->setStatus(TaskStatus::RUNNING);
+
+    while (true) {
+        if (task->getRunningTime() == 0) {
+            task->setStatus(TaskStatus::COMPLETED);
+            popTaskFromItsQueue(task);
+            totalRunningTask--;
+            spdlog::info(Logger::LoggerInfo::TASK_COMPLITED, task->getId());
+            if (task->getIsOrdered()) {
+                orderedTaskHandler.popOrderedTask();
+            }
+            break;
+        }
+        if (LongTaskHandler::haveToSuspendLongTask(task)) {
+            LongTaskHandler::stopLongTask(task);
+            break;
+        }
+        if (task->getPriority() != PrioritiesLevel::CRITICAL && !realTimeScheduler.getRealTimeQueue().empty()) {
+            spdlog::info(Logger::LoggerInfo::TASK_PREEMPTITVE, task->getId());
+            preemptive(task);
+            return;
+        }
+
+        try {
+            task->setRunningTime(task->getRunningTime() - 1);
+            LongTaskHandler::increaseNumOfSeconds();
+            LongTaskHandler::addSumOfAllSeconds(-1);
+            std::this_thread::sleep_for(std::chrono::milliseconds(1));
+        }
+        catch (const std::exception& e) {
+            spdlog::error(Logger::LoggerError::TASK_TERMINATED, task->getId(), e.what());
+            task->setStatus(TaskStatus::TERMINATED);
+            popTaskFromItsQueue(task);
+            totalRunningTask--;
+            LongTaskHandler::addSumOfAllSeconds(task->getRunningTime() * -1);
+            break;
+        }
+    }
+}
+    
+void Scheduler::checkStarvation() {
+	while (true) {
+		// Wait until the mutex is released
+		{
+			std::unique_lock<std::mutex> lock(Scheduler::rtLock);  // Lock the rtLock
+		}// The mutex will be automatically released at the end of this scope
+
+		if (!starvationCheckQueue.empty()) {
+			if (starvationCheckQueue.front()->getStatus() != TaskStatus::CREATION) {
+				starvationCheckQueue.pop();
+			}
+			else if (starvationCheckQueue.front()->getStatus() == TaskStatus::CREATION && tasksCounter - starvationCheckQueue.front()->getCounter() >= STARVATION) {
+				spdlog::error("there is starvation!!");
+				std::stringstream errorMsg;
+				errorMsg << "Starvation detected! Task ID: " << starvationCheckQueue.front()->getId();
+				throw std::runtime_error(errorMsg.str());
+			}
+			std::this_thread::sleep_for(std::chrono::seconds(1));
+			tasksCounter++;
+		}
+			else
+				tasksCounter = 0;
+	}
+}
+      
+void Scheduler::preemptive(std::shared_ptr<Task> task) {
+    task->setStatus(TaskStatus::SUSPENDED);
+    spdlog::info(Logger::LoggerInfo::TASK_SUSPENDED, task->getId());
+}
+
+void Scheduler::displayMessage(const Task* task) {
+    printAtomically("task " + std::to_string(task->getId()) + " with priority: " + task->getPriority() + " and running time " + std::to_string(task->getRunningTime()) + " is " + task->getStatus() + "\n");
+}
+
+void Scheduler::printAtomically(const std::string& message) {
+    std::lock_guard<std::mutex> lock(coutMutex);
+    std::cout << message;
+}
+
+RealTimeScheduler& Scheduler::getRealTimeScheduler() {
+    return realTimeScheduler;
+}
+
+WeightRoundRobinScheduler& Scheduler::getWrrQueuesScheduler() {
+    return wrrQueuesScheduler;
+}
+
+IterativeTaskHandler& Scheduler::getIterativeTaskHandler() {
+    return iterativeTaskHandler;
+}
+
+DeadlineTaskManager& Scheduler::getDeadlineTaskManager() {
+    return deadlineTaskManager;
+}
+
+OrderedTaskHandler& Scheduler::getOrderedTaskHandler() {
+    return orderedTaskHandler;
+}
+queue<shared_ptr<Task>>& Scheduler::getStarvationCheckQueue() {
+	return starvationCheckQueue;
+}
+void Scheduler::setStarvationCheckQueue(queue<shared_ptr<Task>> queue) {
+	starvationCheckQueue = queue;
+}
+int Scheduler::getSTARVATION() {
+	return STARVATION;
+}
+==Task.cpp
+#include "Task.h"
+#include "Consts.h"
+#include "Scheduler.h"
+
+Task::Task(int id, string priority, int runningTime, string status, bool isOrdered)
+	: id(id), priority(priority), runningTime(runningTime), status(status), isOrdered(isOrdered), counter(Scheduler::tasksCounter)
+{
+	Utility::checkTaskIds();
+}
+
+Task::Task(int id, string priority, int runningTime, bool isOrdered)
+	: Task(id, priority, runningTime, TaskStatus::CREATION, isOrdered)
+{}
+
+Task::Task(const shared_ptr<Task>& other)
+	:Task(other->id, other->priority, other->runningTime, other->status, other->isOrdered) 
+{}
+
+
+int Task::getId() const {
+	return id;
+}
+
+const string& Task::getPriority() const {
+	return priority;
+}
+
+void Task::setPriority(const string& newPriority) {
+	priority = newPriority;
+}
+
+int Task::getRunningTime() const {
+	return runningTime;
+}
+
+void Task::setRunningTime(int newRunningTime) {
+	runningTime = newRunningTime;
+}
+
+const string& Task::getStatus() const {
+	return status;
+}
+
+void Task::setStatus(const string& newStatus) {
+	status = newStatus;
+	Utility::displayInviteMessage(this);
+}
+
+bool Task::getIsOrdered()const {
+	return isOrdered;
+}
+
+int Task::getCounter() const {
+	return counter;
+}
+
+==TaskFactory.cpp
+#include "TaskFactory.h"
+
+Task TaskFactory::basicInput() {
+    std::string priority;
+    int runningTime;
+
+    std::cout << "Enter the priority for the task. Options: Critical, Higher, Middle, Lower: \n";
+    std::cin >> priority;
+
+    // Input validation for priority
+    while (priority != PrioritiesLevel::CRITICAL && priority != PrioritiesLevel::HIGHER &&
+        priority != PrioritiesLevel::MIDDLE && priority != PrioritiesLevel::LOWER) {
+        spdlog::error("Invalid priority. Please enter one of the specified options.");
+        std::cout << "Invalid priority. Please enter one of the specified options." << std::endl;
+        std::cout << "Enter the priority for the task. Options: Critical, Higher, Middle, Lower: \n";
+        std::cin >> priority;
+    }
+
+    // Input validation for runningTime
+    runningTime = Utility::validateIntegerInput("Enter the task Running time:", "running Time", 0);
+    spdlog::info(Logger::LoggerInfo::CREATE_NEW_TASK, priority, runningTime);
+
+    return Task((Scheduler::taskIds++) % Scheduler::MAX_TASKS, priority, runningTime);
+}
+
+std::shared_ptr<Task> TaskFactory::basicTaskInput(bool isOrdered = false) {
+    Task basicTask = basicInput();
+    return std::make_shared<Task>(basicTask.getId(), basicTask.getPriority(), basicTask.getRunningTime(), isOrdered);
+}
+
+shared_ptr<DeadlineTask> TaskFactory::deadlineTaskInput()
+{
+    Task basicTask = basicInput();
+    int dealLineTime = Utility::validateIntegerInput("Enter the Dead line:", "Dead line", 0);
+
+    // Create some DeadlineTask objects
+    time_t now = time(nullptr);
+    return shared_ptr<DeadlineTask>(new DeadlineTask(basicTask, now + dealLineTime));
+}
+
+
+std::shared_ptr<IterativeTask> TaskFactory::iterativeTaskInput() {
+    Task basicTask = basicInput();
+    int iterationsRemaining = Utility::validateIntegerInput("Enter the number of repetitions:", "repetition", 0);
+    int executionInterval = Utility::validateIntegerInput("Enter the Execution interval between tasks:", "Execution interval", 0);
+
+    return std::make_shared<IterativeTask>(basicTask, iterationsRemaining, executionInterval);
+}
+
+
+std::shared_ptr<Task> TaskFactory::createTask(std::string type) {
+    if (type == TaskType::BASIC) {
+        return basicTaskInput();
+    }
+    else if (type == TaskType::ORDERED) {
+        return basicTaskInput(true);
+    }
+    else if (type == TaskType::DEAD_LINE) {
+        return std::dynamic_pointer_cast<Task>(deadlineTaskInput());
+    }
+    else if (type == TaskType::ITERATIVE) {
+        return std::dynamic_pointer_cast<Task>(iterativeTaskInput());
+    }
+    else {
+        return nullptr;
+    }
+}
+
+std::shared_ptr<Task> TaskFactory::createTask(const nlohmann::json& taskData) {
+    try {
+        std::string taskType = taskData["type"];
+
+        if (taskType == TaskType::BASIC || taskType == TaskType::ORDERED) {
+            if (taskData.contains("priority") && taskData.contains("runningTime")) {
+                bool isOrdered = taskType == TaskType::ORDERED;
+                return std::make_shared<Task>(
+                    Scheduler::taskIds++,
+                    taskData.at("priority").get<std::string>(),
+                    taskData.at("runningTime").get<int>(),
+                    isOrdered
+                );
+            }
+            else {
+                std::cerr << "Missing required fields for BASIC task!" << std::endl;
+            }
+        }
+        else if (taskType == TaskType::DEAD_LINE) {
+            if (taskData.contains("priority") && taskData.contains("runningTime") && taskData.contains("deadLine")) {
+                Task basicTask(
+                    Scheduler::taskIds++,
+                    taskData.at("priority").get<std::string>(),
+                    taskData.at("runningTime").get<int>()
+                );
+                int deadLineTime = taskData.at("deadLine").get<int>();
+                auto task = std::make_shared<DeadlineTask>(basicTask, deadLineTime);
+                return std::dynamic_pointer_cast<Task>(task);
+            }
+            else {
+                std::cerr << "Missing required fields for DEAD_LINE task!" << std::endl;
+            }
+        }
+        else if (taskType == TaskType::ITERATIVE) {
+            if (taskData.contains("priority") && taskData.contains("runningTime") &&
+                taskData.contains("iterationsRemaining") && taskData.contains("executionInterval")) {
+                Task basicTask(
+                    Scheduler::taskIds++,
+                    taskData.at("priority").get<std::string>(),
+                    taskData.at("runningTime").get<int>()
+                );
+                int iterationsRemaining = taskData.at("iterationsRemaining").get<int>();
+                int executionInterval = taskData.at("executionInterval").get<int>();
+                auto task = std::make_shared<IterativeTask>(basicTask, iterationsRemaining, executionInterval);
+                return std::dynamic_pointer_cast<Task>(task);
+            }
+            else {
+                std::cerr << "Missing required fields for ITERATIVE task!" << std::endl;
+            }
+        }
+        else {
+            std::cout << "Invalid task type!" << std::endl;
+            return nullptr;
+        }
+    }
+    catch (const std::exception& e) {
+        std::cerr << "An exception occurred: " << e.what() << std::endl;
+        spdlog::error("An exception occurred: {}", e.what());
+    }
+
+    return nullptr;
+}
+==TCPServer.cpp
+#include "TCPServer.h"
+#include <iostream>
+#include "WebSocketSession.h"
+
+
+// Constructor to initialize the acceptor and start accepting connections
+TCPServer::TCPServer(boost::asio::io_context& io_context, short port)
+    : io_context_(io_context),
+    acceptor_(io_context, boost::asio::ip::tcp::endpoint(boost::asio::ip::tcp::v4(), port)) {
+    start_accept();
+}
+
+void TCPServer::start_accept() {
+    // Create a socket for the new connection using the io_context directly
+    auto socket = std::make_shared<boost::asio::ip::tcp::socket>(io_context_);
+
+    // Start asynchronous accept operation
+    acceptor_.async_accept(*socket, [this, socket](const boost::system::error_code& error) {
+        if (!error) {
+            // Create a WebSocket session using the accepted socket
+            auto session = std::make_shared<WebSocketSession>(std::move(*socket));
+            session->start();
+        }
+        else {
+            std::cerr << "Accept error: " << error.message() << std::endl;
+        }
+
+        // Continue accepting new connections
+        start_accept();
+        });
+}
+==Utility.cpp
+#include "Utility.h"
+#include "Scheduler.h"
+
+int Utility::validateIntegerInput(const std::string& inputMessage, const std::string& variableName, bool allowNegative) {
+    int numberInput;
+    std::string input;
+
+    while (true) {
+        std::cout << inputMessage << std::endl;
+        std::cin >> input;
+
+        // Check if the input contains only digits
+        if (input.find_first_not_of("0123456789-") != std::string::npos) {
+            std::cerr << "Invalid input. " << variableName << " should contain only numeric digits." << std::endl;
+            continue; // Restart the loop for a valid input
+        }
+
+        // Convert the input to an integer
+        numberInput = std::stoi(input);
+
+        if (!allowNegative && numberInput < 0) {
+            std::cerr << "Invalid input: " << variableName << " cannot be negative." << std::endl;
+            continue; // Restart the loop for a valid input
+        }
+
+        break; // If numberInput is valid, exit the loop
+    }
+
+    return numberInput;
+}
+
+void Utility::displayInviteMessage(Task* task) {
+    if (task->getStatus() != TaskStatus::CREATION)
+        Scheduler::displayMessage(task);
+}
+
+void Utility::checkTaskIds()
+{
+    if (Scheduler::taskIds == Scheduler::MAX_TASKS * 0.8)
+        spdlog::warn("System overload, the number of tasks has exceeded 80% of the capacity");
+
+    if (Scheduler::taskIds == Scheduler::MAX_TASKS)
+        spdlog::error("The number of tasks in the system has exceeded its capacity. Please contact the manufacturer for a fix.");
+}
+
+
+void Utility::insertTaskFromInput() {
+    TaskFactory taskFactory;
+
+    while (true) {
+        std::cout << "Enter task type: basic/deadLine/iterative/ordered:" << std::endl;
+        std::string type;
+        std::cin >> type;
+
+        // Validate the input task type
+        if (type == TaskType::BASIC || type == TaskType::DEAD_LINE || type == TaskType::ITERATIVE || type == TaskType::ORDERED) {
+            std::shared_ptr<Task> newTask = taskFactory.createTask(type);
+            Scheduler::insertTask(newTask);
+        }
+        else {
+            std::cout << "Invalid task type." << std::endl;
+        }
+    }
+}
+==WebSocketSession.cpp
+#include "WebSocketSession.h"
+#define _SILENCE_EXPERIMENTAL_FILESYSTEM_DEPRECATION_WARNING
+
+
+using json = nlohmann::json;
+namespace fs = std::filesystem; // Use standard filesystem instead of experimental
+
+// Path to the logs directory
+const std::string logDirectoryPath = ".\\logs";
+
+// Modify the constructor to take a socket and move it into the WebSocket stream
+WebSocketSession::WebSocketSession(boost::asio::ip::tcp::socket socket)
+	: ws_(std::move(socket)) {
+
+	// Start the log monitoring thread
+	std::thread(&WebSocketSession::monitorLogs, this).detach();
+
+}
+
+boost::asio::ip::tcp::socket& WebSocketSession::get_socket() {
+	return ws_.next_layer();
+}
+
+void WebSocketSession::start() {
+	// Accept the WebSocket handshake
+	ws_.async_accept([self = shared_from_this()](beast::error_code ec) {
+		if (!ec) {
+			self->do_read();
+		}
+		else {
+			std::cerr << "WebSocket accept error: " << ec.message() << std::endl;
+		}
+		});
+}
+
+void WebSocketSession::do_read() {
+	// Read data from the WebSocket
+	ws_.async_read(buffer_, [self = shared_from_this()](beast::error_code ec, std::size_t bytes_transferred) {
+		if (!ec) {
+			// Handle the received message (convert buffer to string)
+			std::string message = beast::buffers_to_string(self->buffer_.data());
+
+			// Log or handle the message as needed
+			std::cout << "Received: " << message << std::endl;
+
+			// Parse the message as JSON
+			json task_json = json::parse(message);
+			if (task_json.contains("priority") && task_json.contains("runningTime")) {
+				// Use TaskFactory to create the correct type of task based on the taskType
+				shared_ptr<Task> newTask = TaskFactory::createTask(task_json);
+
+				// Insert the new Task into the Scheduler's queues
+				if (newTask) {
+					Scheduler::insertTask(newTask);
+				}
+				else {
+					std::cerr << "Task creation failed for task type: " << task_json["type"] << std::endl;
+					//
+					// 
+					// 
+					// 
+					// ::error("Task creation failed for task type: {}", task_json["type"]);
+				}
+				// Check boundaries before accessing JSON fields
+
+				std::string priority = task_json["priority"].get<std::string>();
+				int runningTime = task_json["runningTime"].get<int>();  // Expecting an integer
+
+				// Create a new Task and insert it into the scheduler
+
+				//std::shared_ptr<Task> newTask(new Task(Scheduler::taskIds++, priority, runningTime));
+				//Scheduler::insertTask(newTask);
+				std::cout << "Sending a response\n";
+
+				// Prepare and send a response to the client
+				std::string response = "Task with ID: "+std::to_string(newTask->getId()) + "  priority " + priority + " and running time " +
+					std::to_string(runningTime) + " received and scheduled.";
+
+				// Use 'self' instead of 'this' to call the member function
+				self->send_response(response);
+			}
+
+			// Clear the buffer
+			self->buffer_.consume(bytes_transferred);
+
+			// Continue reading
+			self->do_read();
+		}
+		else {
+			std::cerr << "WebSocket read error: " << ec.message() << std::endl;
+		}
+		});
+}
+
+void WebSocketSession::send_response(const std::string& response) {
+	// Ensure response is valid
+	if (response.empty()) {
+		std::cerr << "Error: Empty response string" << std::endl;
+		return;
+	}
+
+	ws_.text(ws_.got_text());
+	std::cout << "---- send response in action ----" << std::endl;
+
+	try {
+		// Synchronous write
+		ws_.write(net::buffer(response));
+
+		std::cout << "Successfully wrote " << response.size() << " bytes" << std::endl;
+	}
+	catch (const std::exception& e) {
+		std::cerr << "Write Error: " << e.what() << std::endl;
+	}
+
+	// Continue reading after writing
+	//do_read();
+}
+
+void WebSocketSession::do_write(const std::string& message) {
+	// Write data to the WebSocket
+	ws_.async_write(net::buffer(message), [self = shared_from_this()](beast::error_code ec, std::size_t /*bytes_transferred*/) {
+		if (ec) {
+			std::cerr << "WebSocket write error: " << ec.message() << std::endl;
+		}
+		});
+}
+
+
+// Helper function to get the latest log file
+std::string WebSocketSession::get_latest_log_file(const std::string& directory) {
+	std::string latestFile;
+	std::time_t latestTime = 0;
+
+	for (const auto& entry : fs::directory_iterator(directory)) {
+		if (fs::is_regular_file(entry)) {
+			// Get the last write time of the file
+			auto ftime = fs::last_write_time(entry);
+
+			// Convert file_time_type to system_clock::time_point
+			auto sctp = std::chrono::time_point_cast<std::chrono::system_clock::duration>(
+				ftime - fs::file_time_type::clock::now() + std::chrono::system_clock::now()
+			);
+
+			// Convert to time_t
+			std::time_t fileTime_t = std::chrono::system_clock::to_time_t(sctp);
+
+			// Check if this file is the latest one
+			if (fileTime_t > latestTime) {
+				latestTime = fileTime_t;
+				latestFile = entry.path().string();
+			}
+		}
+	}
+
+	return latestFile;
+}
+
+void WebSocketSession::monitorLogs() {
+	std::string logFilePath = get_latest_log_file(logDirectoryPath);
+	std::ifstream logFile(logFilePath);
+
+	// Track the position in the log file
+	std::streampos lastPosition = logFile.tellg();
+
+	while (true) {
+		{
+			// Open log file and check for new entries
+			if (!logFile.is_open()) {
+				logFile.open(logFilePath);
+				if (!logFile.is_open()) {
+					std::cerr << "Error opening log file: " << logFilePath << std::endl;
+					std::this_thread::sleep_for(std::chrono::seconds(1));
+					continue;
+				}
+			}
+
+			// Move the file pointer to the last known position
+			logFile.seekg(lastPosition);
+
+			std::string line;
+			bool newLinesRead = false;
+
+			// Read new lines from the file
+			while (std::getline(logFile, line)) {
+				newLinesRead = true;
+
+				// Process the line and send response if necessary (as in your existing code)
+				size_t start = line.find("<p");
+				size_t end = line.find("</p>");
+				if (start != std::string::npos && end != std::string::npos) {
+					size_t contentStart = line.find(">", start) + 1;
+					std::string trimmedLine = line.substr(contentStart, end - contentStart);
+					if (trimmedLine.find("Executing task with ID") != std::string::npos ||
+						trimmedLine.find("completed.") != std::string::npos ||
+						trimmedLine.find("suspended and added back to WRR queue.") != std::string::npos) {
+						std::cout << " <<<< Reading from the log file: " << trimmedLine << std::endl;
+						send_response(trimmedLine);
+					}
+				}
+
+				// Update the last known position
+				lastPosition = logFile.tellg();
+			}
+
+			// Close the log file after reading
+			logFile.close();
+
+			// Handle log rotation if needed (as in your existing code)
+			if (!newLinesRead) {
+				std::string latestLogFilePath = get_latest_log_file(logDirectoryPath);
+				if (latestLogFilePath != logFilePath) {
+					logFile.close();
+					logFilePath = latestLogFilePath;
+					logFile.open(logFilePath);
+					if (!logFile.is_open()) {
+						std::cerr << "Error opening new log file: " << logFilePath << std::endl;
+						std::this_thread::sleep_for(std::chrono::seconds(1));
+						continue;
+					}
+					lastPosition = logFile.tellg();
+				}
+			}
+		}
+		// Sleep briefly before checking for new entries again
+		std::this_thread::sleep_for(std::chrono::seconds(1));
+	}
+}
+==daily_log_2024-09-17.html
+<p style="color:blue">[2024-09-17 19:13:44] [debug] Logger initialized and logging to daily and hourly files</p>
+<p style="color:green">[2024-09-17 19:13:44] [info] Starting scheduling process.</p>
+<p style="color:green">[2024-09-17 19:13:44] [info] InsertTask thread started.</p>
+<p style="color:green">[2024-09-17 19:13:44] [info] RealTimeScheduler thread started.</p>
+<p style="color:green">[2024-09-17 19:13:44] [info] WeightRoundRobinScheduler thread started.</p>
+<p style="color:green">[2024-09-17 19:13:44] [info] IterativeTaskHandler thread started.</p>
+<p style="color:blue">[2024-09-17 19:29:52] [debug] Logger initialized and logging to daily and hourly files</p>
+<p style="color:green">[2024-09-17 19:29:52] [info] Starting scheduling process.</p>
+<p style="color:green">[2024-09-17 19:29:52] [info] InsertTask thread started.</p>
+<p style="color:green">[2024-09-17 19:29:52] [info] RealTimeScheduler thread started.</p>
+<p style="color:green">[2024-09-17 19:29:52] [info] WeightRoundRobinScheduler thread started.</p>
+<p style="color:green">[2024-09-17 19:29:52] [info] IterativeTaskHandler thread started.</p>
+<p style="color:blue">[2024-09-17 19:31:16] [debug] Logger initialized and logging to daily and hourly files</p>
+<p style="color:green">[2024-09-17 19:31:17] [info] Starting scheduling process.</p>
+<p style="color:green">[2024-09-17 19:31:17] [info] RealTimeScheduler thread started.</p>
+<p style="color:green">[2024-09-17 19:31:17] [info] InsertTask thread started.</p>
+<p style="color:green">[2024-09-17 19:31:17] [info] WeightRoundRobinScheduler thread started.</p>
+<p style="color:green">[2024-09-17 19:31:17] [info] IterativeTaskHandler thread started.</p>
+<p style="color:blue">[2024-09-17 19:31:44] [debug] Logger initialized and logging to daily and hourly files</p>
+<p style="color:green">[2024-09-17 19:31:44] [info] Starting scheduling process.</p>
+<p style="color:green">[2024-09-17 19:31:44] [info] WeightRoundRobinScheduler thread started.</p>
+<p style="color:green">[2024-09-17 19:31:44] [info] InsertTask thread started.</p>
+<p style="color:green">[2024-09-17 19:31:44] [info] RealTimeScheduler thread started.</p>
+<p style="color:green">[2024-09-17 19:31:44] [info] IterativeTaskHandler thread started.</p>
+<p style="color:blue">[2024-09-17 19:32:59] [debug] Logger initialized and logging to daily and hourly files</p>
+<p style="color:green">[2024-09-17 19:32:59] [info] Starting scheduling process.</p>
+<p style="color:green">[2024-09-17 19:32:59] [info] InsertTask thread started.</p>
+<p style="color:green">[2024-09-17 19:32:59] [info] RealTimeScheduler thread started.</p>
+<p style="color:green">[2024-09-17 19:32:59] [info] WeightRoundRobinScheduler thread started.</p>
+<p style="color:green">[2024-09-17 19:32:59] [info] IterativeTaskHandler thread started.</p>
+==daily_log_2024-09-18.html
+<p style="color:blue">[2024-09-18 11:47:26] [debug] Logger initialized and logging to daily and hourly files</p>
+<p style="color:green">[2024-09-18 11:47:26] [info] Starting scheduling process.</p>
+<p style="color:green">[2024-09-18 11:47:26] [info] InsertTask thread started.</p>
+<p style="color:green">[2024-09-18 11:47:26] [info] RealTimeScheduler thread started.</p>
+<p style="color:green">[2024-09-18 11:47:26] [info] WeightRoundRobinScheduler thread started.</p>
+<p style="color:green">[2024-09-18 11:47:26] [info] IterativeTaskHandler thread started.</p>
+<p style="color:green">[2024-09-18 11:47:26] [info] CheckStarvation thread started.</p>
+<p style="color:blue">[2024-09-18 11:48:11] [debug] Logger initialized and logging to daily and hourly files</p>
+<p style="color:green">[2024-09-18 11:48:11] [info] Starting scheduling process.</p>
+<p style="color:green">[2024-09-18 11:48:11] [info] InsertTask thread started.</p>
+<p style="color:green">[2024-09-18 11:48:11] [info] RealTimeScheduler thread started.</p>
+<p style="color:green">[2024-09-18 11:48:11] [info] IterativeTaskHandler thread started.</p>
+<p style="color:green">[2024-09-18 11:48:11] [info] WeightRoundRobinScheduler thread started.</p>
+<p style="color:green">[2024-09-18 11:48:11] [info] CheckStarvation thread started.</p>
+<p style="color:green">[2024-09-18 11:48:21] [info] New task created with priority: Critical and running time: 5</p>
+<p style="color:green">[2024-09-18 11:48:21] [info] Critical task with ID: 0 added to RealTimeScheduler.</p>
+<p style="color:green">[2024-09-18 11:48:21] [info] Executing task with ID: 0</p>
+<p style="color:blue">[2024-09-18 11:49:45] [debug] Logger initialized and logging to daily and hourly files</p>
+<p style="color:green">[2024-09-18 11:49:45] [info] Starting scheduling process.</p>
+<p style="color:green">[2024-09-18 11:49:45] [info] IterativeTaskHandler thread started.</p>
+<p style="color:green">[2024-09-18 11:49:45] [info] RealTimeScheduler thread started.</p>
+<p style="color:green">[2024-09-18 11:49:45] [info] InsertTask thread started.</p>
+<p style="color:green">[2024-09-18 11:49:45] [info] CheckStarvation thread started.</p>
+<p style="color:green">[2024-09-18 11:49:53] [info] New task created with priority: Lower and running time: 5</p>
+<p style="color:green">[2024-09-18 11:49:53] [info] Task with ID: 0 added to Lower queue.</p>
+<p style="color:green">[2024-09-18 11:49:53] [info] Task with ID: 0 added to Lower queue.</p>
+<p style="color:blue">[2024-09-18 11:51:49] [debug] Logger initialized and logging to daily and hourly files</p>
+<p style="color:green">[2024-09-18 11:51:49] [info] Starting scheduling process.</p>
+<p style="color:green">[2024-09-18 11:51:49] [info] InsertTask thread started.</p>
+<p style="color:green">[2024-09-18 11:51:49] [info] RealTimeScheduler thread started.</p>
+<p style="color:green">[2024-09-18 11:51:49] [info] IterativeTaskHandler thread started.</p>
+<p style="color:green">[2024-09-18 11:51:49] [info] CheckStarvation thread started.</p>
+<p style="color:blue">[2024-09-18 11:52:58] [debug] Logger initialized and logging to daily and hourly files</p>
+<p style="color:green">[2024-09-18 11:52:58] [info] Starting scheduling process.</p>
+<p style="color:green">[2024-09-18 11:52:58] [info] InsertTask thread started.</p>
+<p style="color:green">[2024-09-18 11:52:58] [info] RealTimeScheduler thread started.</p>
+<p style="color:green">[2024-09-18 11:52:58] [info] CheckStarvation thread started.</p>
+<p style="color:green">[2024-09-18 11:52:58] [info] IterativeTaskHandler thread started.</p>
+<p style="color:green">[2024-09-18 11:53:04] [info] New task created with priority: Lower and running time: 5</p>
+<p style="color:green">[2024-09-18 11:53:04] [info] Task with ID: 0 added to Lower queue.</p>
+<p style="color:green">[2024-09-18 11:53:04] [info] Task with ID: 0 added to Lower queue.</p>
+<p style="color:blue">[2024-09-18 11:53:44] [debug] Logger initialized and logging to daily and hourly files</p>
+<p style="color:green">[2024-09-18 11:53:44] [info] Starting scheduling process.</p>
+<p style="color:green">[2024-09-18 11:53:44] [info] InsertTask thread started.</p>
+<p style="color:green">[2024-09-18 11:53:44] [info] RealTimeScheduler thread started.</p>
+<p style="color:green">[2024-09-18 11:53:44] [info] IterativeTaskHandler thread started.</p>
+<p style="color:green">[2024-09-18 11:53:44] [info] CheckStarvation thread started.</p>
+<p style="color:blue">[2024-09-18 11:59:00] [debug] Logger initialized and logging to daily and hourly files</p>
+<p style="color:green">[2024-09-18 11:59:00] [info] Starting scheduling process.</p>
+<p style="color:green">[2024-09-18 11:59:00] [info] InsertTask thread started.</p>
+<p style="color:green">[2024-09-18 11:59:00] [info] RealTimeScheduler thread started.</p>
+<p style="color:green">[2024-09-18 11:59:00] [info] CheckStarvation thread started.</p>
+<p style="color:green">[2024-09-18 11:59:00] [info] IterativeTaskHandler thread started.</p>
+<p style="color:blue">[2024-09-18 12:28:00] [debug] Logger initialized and logging to daily and hourly files</p>
+<p style="color:green">[2024-09-18 12:28:00] [info] Starting scheduling process.</p>
+<p style="color:green">[2024-09-18 12:28:00] [info] InsertTask thread started.</p>
+<p style="color:green">[2024-09-18 12:28:00] [info] IterativeTaskHandler thread started.</p>
+<p style="color:green">[2024-09-18 12:28:00] [info] CheckStarvation thread started.</p>
+<p style="color:green">[2024-09-18 12:28:00] [info] RealTimeScheduler thread started.</p>
+<p style="color:blue">[2024-09-18 12:29:04] [debug] Logger initialized and logging to daily and hourly files</p>
+<p style="color:green">[2024-09-18 12:29:04] [info] Starting scheduling process.</p>
+<p style="color:green">[2024-09-18 12:29:04] [info] InsertTask thread started.</p>
+<p style="color:green">[2024-09-18 12:29:04] [info] RealTimeScheduler thread started.</p>
+<p style="color:green">[2024-09-18 12:29:04] [info] IterativeTaskHandler thread started.</p>
+<p style="color:green">[2024-09-18 12:29:04] [info] CheckStarvation thread started.</p>
+==daily_log_2024-09-19.html
+<p style="color:blue">[2024-09-19 18:24:11] [debug] Logger initialized and logging to daily and hourly files</p>
+<p style="color:green">[2024-09-19 18:24:11] [info] Starting scheduling process.</p>
+<p style="color:green">[2024-09-19 18:24:11] [info] read tasks From JSON thread started.</p>
+<p style="color:green">[2024-09-19 18:24:11] [info] InsertTask thread started.</p>
+<p style="color:green">[2024-09-19 18:24:11] [info] CheckStarvation thread started.</p>
+<p style="color:green">[2024-09-19 18:24:11] [info] WeightRoundRobinScheduler thread started.</p>
+<p style="color:green">[2024-09-19 18:24:11] [info] IterativeTaskHandler thread started.</p>
+<p style="color:green">[2024-09-19 18:24:11] [info] RealTimeScheduler thread started.</p>
+<p style="color:green">[2024-09-19 18:24:11] [info] Task with ID: 0 added to Higher queue.</p>
+<p style="color:green">[2024-09-19 18:24:11] [info] Task with ID: 0 added to Higher queue.</p>
+<p style="color:green">[2024-09-19 18:24:11] [info] Task with ID: 1 added to Middle queue.</p>
+<p style="color:green">[2024-09-19 18:24:11] [info] Task with ID: 1 added to Middle queue.</p>
+<p style="color:green">[2024-09-19 18:24:11] [info] Task with ID: 2 added to Lower queue.</p>
+<p style="color:green">[2024-09-19 18:24:11] [info] Task with ID: 2 added to Lower queue.</p>
+<p style="color:green">[2024-09-19 18:24:11] [info] Executing task with ID: 0</p>
+<p style="color:green">[2024-09-19 18:24:11] [info] Task with ID: 3 added to Lower queue.</p>
+<p style="color:green">[2024-09-19 18:24:11] [info] Task with ID: 3 added to Lower queue.</p>
+<p style="color:green">[2024-09-19 18:24:11] [info] Task with ID: 0 completed.</p>
+<p style="color:green">[2024-09-19 18:24:11] [info] Critical task with ID: 3 added to RealTimeScheduler.</p>
+<p style="color:green">[2024-09-19 18:24:11] [info] Executing task with ID: 1</p>
+<p style="color:green">[2024-09-19 18:24:11] [info] Preempting task with ID: 1 for real-time task.</p>
+<p style="color:green">[2024-09-19 18:24:11] [info] Task with ID: 1 suspended and added back to WRR queue.</p>
+<p style="color:green">[2024-09-19 18:24:11] [info] Executing task with ID: 2</p>
+<p style="color:green">[2024-09-19 18:24:11] [info] Executing task with ID: 3</p>
+<p style="color:green">[2024-09-19 18:24:11] [info] Preempting task with ID: 2 for real-time task.</p>
+<p style="color:green">[2024-09-19 18:24:11] [info] Task with ID: 2 suspended and added back to WRR queue.</p>
+<p style="color:green">[2024-09-19 18:24:11] [info] Task with ID: 3 completed.</p>
+<p style="color:green">[2024-09-19 18:24:29] [info] Critical task with ID: 4 added to RealTimeScheduler.</p>
+<p style="color:green">[2024-09-19 18:24:29] [info] Executing task with ID: 4</p>
+<p style="color:green">[2024-09-19 18:24:29] [info] Task with ID: 4 completed.</p>
+<p style="color:green">[2024-09-19 18:24:39] [info] Critical task with ID: 5 added to RealTimeScheduler.</p>
+<p style="color:green">[2024-09-19 18:24:39] [info] Executing task with ID: 5</p>
+<p style="color:green">[2024-09-19 18:24:39] [info] Task with ID: 5 completed.</p>
+<p style="color:green">[2024-09-19 18:24:49] [info] Critical task with ID: 6 added to RealTimeScheduler.</p>
+<p style="color:green">[2024-09-19 18:24:49] [info] Executing task with ID: 6</p>
+<p style="color:green">[2024-09-19 18:24:51] [info] Task with ID: 6 completed.</p>
+<p style="color:blue">[2024-09-19 18:27:37] [debug] Logger initialized and logging to daily and hourly files</p>
+<p style="color:green">[2024-09-19 18:27:37] [info] Starting scheduling process.</p>
+<p style="color:green">[2024-09-19 18:27:37] [info] read tasks From JSON thread started.</p>
+<p style="color:green">[2024-09-19 18:27:37] [info] Task with ID: 0 added to Higher queue.</p>
+<p style="color:green">[2024-09-19 18:27:37] [info] Task with ID: 0 added to Higher queue.</p>
+<p style="color:green">[2024-09-19 18:27:37] [info] Task with ID: 1 added to Middle queue.</p>
+<p style="color:green">[2024-09-19 18:27:37] [info] Task with ID: 1 added to Middle queue.</p>
+<p style="color:green">[2024-09-19 18:27:37] [info] Task with ID: 2 added to Lower queue.</p>
+<p style="color:green">[2024-09-19 18:27:37] [info] Task with ID: 2 added to Lower queue.</p>
+<p style="color:green">[2024-09-19 18:27:37] [info] Task with ID: 3 added to Lower queue.</p>
+<p style="color:green">[2024-09-19 18:27:37] [info] Task with ID: 3 added to Lower queue.</p>
+<p style="color:green">[2024-09-19 18:27:37] [info] InsertTask thread started.</p>
+<p style="color:green">[2024-09-19 18:27:37] [info] WeightRoundRobinScheduler thread started.</p>
+<p style="color:green">[2024-09-19 18:27:37] [info] Critical task with ID: 3 added to RealTimeScheduler.</p>
+<p style="color:green">[2024-09-19 18:27:37] [info] RealTimeScheduler thread started.</p>
+<p style="color:green">[2024-09-19 18:27:37] [info] IterativeTaskHandler thread started.</p>
+<p style="color:green">[2024-09-19 18:27:37] [info] CheckStarvation thread started.</p>
+<p style="color:green">[2024-09-19 18:27:37] [info] Executing task with ID: 0</p>
+<p style="color:green">[2024-09-19 18:27:37] [info] Executing task with ID: 3</p>
+<p style="color:green">[2024-09-19 18:27:37] [info] Preempting task with ID: 0 for real-time task.</p>
+<p style="color:green">[2024-09-19 18:27:37] [info] Task with ID: 0 suspended and added back to WRR queue.</p>
+<p style="color:green">[2024-09-19 18:27:37] [info] Task with ID: 3 completed.</p>
+<p style="color:green">[2024-09-19 18:27:37] [info] Executing task with ID: 1</p>
+<p style="color:green">[2024-09-19 18:27:37] [info] Task with ID: 1 completed.</p>
+<p style="color:green">[2024-09-19 18:27:37] [info] Executing task with ID: 2</p>
+<p style="color:green">[2024-09-19 18:27:37] [info] Task with ID: 2 completed.</p>
+<p style="color:green">[2024-09-19 18:27:54] [info] Critical task with ID: 4 added to RealTimeScheduler.</p>
+<p style="color:green">[2024-09-19 18:27:54] [info] Executing task with ID: 4</p>
+<p style="color:blue">[2024-09-19 18:28:37] [debug] Logger initialized and logging to daily and hourly files</p>
+<p style="color:green">[2024-09-19 18:28:37] [info] Starting scheduling process.</p>
+<p style="color:green">[2024-09-19 18:28:37] [info] read tasks From JSON thread started.</p>
+<p style="color:green">[2024-09-19 18:28:37] [info] InsertTask thread started.</p>
+<p style="color:green">[2024-09-19 18:28:37] [info] RealTimeScheduler thread started.</p>
+<p style="color:green">[2024-09-19 18:28:37] [info] WeightRoundRobinScheduler thread started.</p>
+<p style="color:green">[2024-09-19 18:28:37] [info] Task with ID: 0 added to Higher queue.</p>
+<p style="color:green">[2024-09-19 18:28:37] [info] Task with ID: 0 added to Higher queue.</p>
+<p style="color:green">[2024-09-19 18:28:37] [info] Task with ID: 1 added to Middle queue.</p>
+<p style="color:green">[2024-09-19 18:28:37] [info] Task with ID: 1 added to Middle queue.</p>
+<p style="color:green">[2024-09-19 18:28:37] [info] Task with ID: 2 added to Lower queue.</p>
+<p style="color:green">[2024-09-19 18:28:37] [info] Task with ID: 2 added to Lower queue.</p>
+<p style="color:green">[2024-09-19 18:28:37] [info] Task with ID: 3 added to Lower queue.</p>
+<p style="color:green">[2024-09-19 18:28:37] [info] Task with ID: 3 added to Lower queue.</p>
+<p style="color:green">[2024-09-19 18:28:37] [info] Executing task with ID: 0</p>
+<p style="color:green">[2024-09-19 18:28:37] [info] IterativeTaskHandler thread started.</p>
+<p style="color:green">[2024-09-19 18:28:37] [info] CheckStarvation thread started.</p>
+<p style="color:green">[2024-09-19 18:28:37] [info] The long task with ID: 0 is suspended and will continue later.</p>
+<p style="color:green">[2024-09-19 18:28:37] [info] Task with ID: 0 added to Higher queue.</p>
+<p style="color:green">[2024-09-19 18:28:37] [info] Task with ID: 0 added to Higher queue.</p>
+<p style="color:green">[2024-09-19 18:28:37] [info] Critical task with ID: 3 added to RealTimeScheduler.</p>
+<p style="color:green">[2024-09-19 18:28:37] [info] Executing task with ID: 3</p>
+<p style="color:green">[2024-09-19 18:28:37] [info] Task with ID: 3 completed.</p>
+<p style="color:green">[2024-09-19 18:28:37] [info] Executing task with ID: 1</p>
+<p style="color:green">[2024-09-19 18:28:37] [info] Task with ID: 1 completed.</p>
+<p style="color:green">[2024-09-19 18:28:37] [info] Executing task with ID: 2</p>
+<p style="color:green">[2024-09-19 18:28:37] [info] Task with ID: 2 completed.</p>
+<p style="color:green">[2024-09-19 18:28:37] [info] Executing task with ID: 0</p>
+<p style="color:green">[2024-09-19 18:28:37] [info] Task with ID: 0 completed.</p>
+==daily_log_2024-09-20.html
+<p style="color:blue">[2024-09-20 02:28:44] [debug] Logger initialized and logging to daily and hourly files</p>
+<p style="color:green">[2024-09-20 02:28:44] [info] Starting scheduling process.</p>
+<p style="color:green">[2024-09-20 02:28:44] [info] read tasks From JSON thread started.</p>
+<p style="color:green">[2024-09-20 02:28:44] [info] RealTimeScheduler thread started.</p>
+<p style="color:green">[2024-09-20 02:28:44] [info] WeightRoundRobinScheduler thread started.</p>
+<p style="color:green">[2024-09-20 02:28:44] [info] InsertTask thread started.</p>
+<p style="color:green">[2024-09-20 02:28:44] [info] CheckStarvation thread started.</p>
+<p style="color:green">[2024-09-20 02:28:44] [info] Task with ID: 0 added to Higher queue.</p>
+<p style="color:green">[2024-09-20 02:28:44] [info] Executing Task with ID: 0</p>
+<p style="color:green">[2024-09-20 02:28:44] [info] IterativeTaskHandler thread started.</p>
+<p style="color:green">[2024-09-20 02:28:44] [info] Task with ID: 0 added to Higher queue.</p>
+<p style="color:green">[2024-09-20 02:28:44] [info] Task with ID: 1 added to Middle queue.</p>
+<p style="color:green">[2024-09-20 02:28:44] [info] Task with ID: 1 added to Middle queue.</p>
+<p style="color:green">[2024-09-20 02:28:44] [info] Task with ID: 2 added to Lower queue.</p>
+<p style="color:green">[2024-09-20 02:28:44] [info] Task with ID: 2 added to Lower queue.</p>
+<p style="color:green">[2024-09-20 02:28:44] [info] Task with ID: 3 added to Lower queue.</p>
+<p style="color:green">[2024-09-20 02:28:44] [info] Task with ID: 3 added to Lower queue.</p>
+<p style="color:green">[2024-09-20 02:28:44] [info] The long Task with ID: 0 is suspended and will continue later.</p>
+<p style="color:green">[2024-09-20 02:28:44] [info] Task with ID: 0 added to Higher queue.</p>
+<p style="color:green">[2024-09-20 02:28:44] [info] Task with ID: 0 added to Higher queue.</p>
+<p style="color:green">[2024-09-20 02:28:44] [info] Critical task with ID: 3 added to RealTimeScheduler.</p>
+<p style="color:green">[2024-09-20 02:28:44] [info] Executing Task with ID: 3</p>
+<p style="color:green">[2024-09-20 02:28:44] [info] Task with ID: 3 completed.</p>
+<p style="color:green">[2024-09-20 02:28:44] [info] Executing Task with ID: 1</p>
+<p style="color:green">[2024-09-20 02:28:44] [info] Task with ID: 1 completed.</p>
+<p style="color:green">[2024-09-20 02:28:44] [info] Executing Task with ID: 2</p>
+<p style="color:green">[2024-09-20 02:28:44] [info] Task with ID: 2 completed.</p>
+<p style="color:green">[2024-09-20 02:28:44] [info] Executing Task with ID: 0</p>
+<p style="color:green">[2024-09-20 02:28:44] [info] Task with ID: 0 completed.</p>
+<p style="color:green">[2024-09-20 02:28:56] [info] Critical task with ID: 4 added to RealTimeScheduler.</p>
+<p style="color:green">[2024-09-20 02:28:56] [info] Executing Task with ID: 4</p>
+<p style="color:green">[2024-09-20 02:28:57] [info] Task with ID: 4 completed.</p>
+<p style="color:blue">[2024-09-20 02:29:43] [debug] Logger initialized and logging to daily and hourly files</p>
+<p style="color:green">[2024-09-20 02:29:43] [info] Starting scheduling process.</p>
+<p style="color:green">[2024-09-20 02:29:43] [info] read tasks From JSON thread started.</p>
+<p style="color:green">[2024-09-20 02:29:43] [info] InsertTask thread started.</p>
+<p style="color:green">[2024-09-20 02:29:43] [info] Task with ID: 0 added to Higher queue.</p>
+<p style="color:green">[2024-09-20 02:29:43] [info] Task with ID: 0 added to Higher queue.</p>
+<p style="color:green">[2024-09-20 02:29:43] [info] Task with ID: 1 added to Middle queue.</p>
+<p style="color:green">[2024-09-20 02:29:43] [info] Task with ID: 1 added to Middle queue.</p>
+<p style="color:green">[2024-09-20 02:29:43] [info] Task with ID: 2 added to Lower queue.</p>
+<p style="color:green">[2024-09-20 02:29:43] [info] Task with ID: 2 added to Lower queue.</p>
+<p style="color:green">[2024-09-20 02:29:43] [info] RealTimeScheduler thread started.</p>
+<p style="color:green">[2024-09-20 02:29:43] [info] Task with ID: 3 added to Lower queue.</p>
+<p style="color:green">[2024-09-20 02:29:43] [info] Task with ID: 3 added to Lower queue.</p>
+<p style="color:green">[2024-09-20 02:29:43] [info] WeightRoundRobinScheduler thread started.</p>
+<p style="color:green">[2024-09-20 02:29:43] [info] Critical task with ID: 3 added to RealTimeScheduler.</p>
+<p style="color:green">[2024-09-20 02:29:43] [info] IterativeTaskHandler thread started.</p>
+<p style="color:green">[2024-09-20 02:29:43] [info] CheckStarvation thread started.</p>
+<p style="color:green">[2024-09-20 02:29:43] [info] Executing Task with ID: 3</p>
+<p style="color:green">[2024-09-20 02:29:44] [info] Task with ID: 3 completed.</p>
+<p style="color:green">[2024-09-20 02:29:44] [info] Executing Task with ID: 0</p>
+<p style="color:green">[2024-09-20 02:29:44] [info] The long Task with ID: 0 is suspended and will continue later.</p>
+<p style="color:green">[2024-09-20 02:29:44] [info] Task with ID: 0 added to Higher queue.</p>
+<p style="color:green">[2024-09-20 02:29:44] [info] Task with ID: 0 added to Higher queue.</p>
+<p style="color:green">[2024-09-20 02:29:44] [info] Executing Task with ID: 0</p>
+<p style="color:green">[2024-09-20 02:29:44] [info] Task with ID: 0 completed.</p>
+<p style="color:green">[2024-09-20 02:29:44] [info] Executing Task with ID: 1</p>
+<p style="color:green">[2024-09-20 02:29:44] [info] Task with ID: 1 completed.</p>
+<p style="color:green">[2024-09-20 02:29:44] [info] Executing Task with ID: 2</p>
+<p style="color:green">[2024-09-20 02:29:44] [info] Task with ID: 2 completed.</p>
+<p style="color:green">[2024-09-20 02:29:51] [info] Critical task with ID: 4 added to RealTimeScheduler.</p>
+<p style="color:green">[2024-09-20 02:29:51] [info] Executing Task with ID: 4</p>
+<p style="color:green">[2024-09-20 02:29:52] [info] Task with ID: 4 completed.</p>
+<p style="color:green">[2024-09-20 02:29:53] [info] Critical task with ID: 5 added to RealTimeScheduler.</p>
+<p style="color:green">[2024-09-20 02:29:53] [info] Executing Task with ID: 5</p>
+<p style="color:green">[2024-09-20 02:29:53] [info] Task with ID: 5 completed.</p>
+<p style="color:green">[2024-09-20 02:29:59] [info] Critical task with ID: 6 added to RealTimeScheduler.</p>
+<p style="color:green">[2024-09-20 02:29:59] [info] Executing Task with ID: 6</p>
+<p style="color:green">[2024-09-20 02:29:59] [info] Task with ID: 6 completed.</p>
+<p style="color:green">[2024-09-20 02:30:03] [info] Critical task with ID: 7 added to RealTimeScheduler.</p>
+<p style="color:green">[2024-09-20 02:30:03] [info] Executing Task with ID: 7</p>
+<p style="color:green">[2024-09-20 02:30:04] [info] Task with ID: 7 completed.</p>
+<p style="color:blue">[2024-09-20 12:54:37] [debug] Logger initialized and logging to daily and hourly files</p>
+<p style="color:green">[2024-09-20 12:54:37] [info] Starting scheduling process.</p>
+<p style="color:green">[2024-09-20 12:54:37] [info] read tasks From JSON thread started.</p>
+<p style="color:green">[2024-09-20 12:54:37] [info] InsertTask thread started.</p>
+<p style="color:green">[2024-09-20 12:54:37] [info] RealTimeScheduler thread started.</p>
+<p style="color:green">[2024-09-20 12:54:37] [info] WeightRoundRobinScheduler thread started.</p>
+<p style="color:green">[2024-09-20 12:54:37] [info] IterativeTaskHandler thread started.</p>
+<p style="color:green">[2024-09-20 12:54:37] [info] Task with ID: 0 added to Higher queue.</p>
+<p style="color:green">[2024-09-20 12:54:37] [info] Task with ID: 0 added to Higher queue.</p>
+<p style="color:green">[2024-09-20 12:54:37] [info] Task with ID: 1 added to Middle queue.</p>
+<p style="color:green">[2024-09-20 12:54:37] [info] Task with ID: 1 added to Middle queue.</p>
+<p style="color:green">[2024-09-20 12:54:37] [info] Task with ID: 2 added to Lower queue.</p>
+<p style="color:green">[2024-09-20 12:54:37] [info] Task with ID: 2 added to Lower queue.</p>
+<p style="color:green">[2024-09-20 12:54:37] [info] Task with ID: 3 added to Lower queue.</p>
+<p style="color:green">[2024-09-20 12:54:37] [info] Task with ID: 3 added to Lower queue.</p>
+<p style="color:green">[2024-09-20 12:54:37] [info] Executing Task with ID: 0</p>
+<p style="color:green">[2024-09-20 12:54:37] [info] CheckStarvation thread started.</p>
+<p style="color:green">[2024-09-20 12:54:37] [info] The long Task with ID: 0 is suspended and will continue later.</p>
+<p style="color:green">[2024-09-20 12:54:37] [info] Task with ID: 0 added to Higher queue.</p>
+<p style="color:green">[2024-09-20 12:54:37] [info] Task with ID: 0 added to Higher queue.</p>
+<p style="color:green">[2024-09-20 12:54:37] [info] Critical task with ID: 3 added to RealTimeScheduler.</p>
+<p style="color:green">[2024-09-20 12:54:37] [info] Executing Task with ID: 3</p>
+<p style="color:green">[2024-09-20 12:54:37] [info] Task with ID: 3 completed.</p>
+<p style="color:green">[2024-09-20 12:54:37] [info] Executing Task with ID: 1</p>
+<p style="color:green">[2024-09-20 12:54:37] [info] Task with ID: 1 completed.</p>
+<p style="color:green">[2024-09-20 12:54:37] [info] Executing Task with ID: 2</p>
+<p style="color:green">[2024-09-20 12:54:37] [info] Task with ID: 2 completed.</p>
+<p style="color:green">[2024-09-20 12:54:37] [info] Executing Task with ID: 0</p>
+<p style="color:green">[2024-09-20 12:54:38] [info] Task with ID: 0 completed.</p>
+<p style="color:green">[2024-09-20 12:54:42] [info] Critical task with ID: 4 added to RealTimeScheduler.</p>
+<p style="color:green">[2024-09-20 12:54:42] [info] Executing Task with ID: 4</p>
+<p style="color:green">[2024-09-20 12:54:42] [info] Task with ID: 4 completed.</p>
+==daily_log_2024-09-21.html
+<p style="color:blue">[2024-09-21 22:01:32] [debug] Logger initialized and logging to daily and hourly files</p>
+<p style="color:green">[2024-09-21 22:01:32] [info] Starting scheduling process.</p>
+<p style="color:green">[2024-09-21 22:01:32] [info] read tasks From JSON thread started.</p>
+<p style="color:green">[2024-09-21 22:01:32] [info] InsertTask thread started.</p>
+<p style="color:green">[2024-09-21 22:01:32] [info] RealTimeScheduler thread started.</p>
+<p style="color:green">[2024-09-21 22:01:32] [info] Task with ID: 0 added to Higher queue.</p>
+<p style="color:green">[2024-09-21 22:01:32] [info] Task with ID: 0 added to Higher queue.</p>
+<p style="color:green">[2024-09-21 22:01:32] [info] Task with ID: 1 added to Middle queue.</p>
+<p style="color:green">[2024-09-21 22:01:32] [info] Task with ID: 1 added to Middle queue.</p>
+<p style="color:green">[2024-09-21 22:01:32] [info] Task with ID: 2 added to Lower queue.</p>
+<p style="color:green">[2024-09-21 22:01:32] [info] Task with ID: 2 added to Lower queue.</p>
+<p style="color:green">[2024-09-21 22:01:32] [info] Task with ID: 3 added to Lower queue.</p>
+<p style="color:green">[2024-09-21 22:01:32] [info] Task with ID: 3 added to Lower queue.</p>
+<p style="color:green">[2024-09-21 22:01:32] [info] WeightRoundRobinScheduler thread started.</p>
+<p style="color:green">[2024-09-21 22:01:32] [info] Critical task with ID: 3 added to RealTimeScheduler.</p>
+<p style="color:green">[2024-09-21 22:01:32] [info] CheckStarvation thread started.</p>
+<p style="color:green">[2024-09-21 22:01:32] [info] Executing Task with ID: 3</p>
+<p style="color:green">[2024-09-21 22:01:32] [info] IterativeTaskHandler thread started.</p>
+<p style="color:green">[2024-09-21 22:01:32] [info] Task with ID: 3 completed.</p>
+<p style="color:green">[2024-09-21 22:01:32] [info] Executing Task with ID: 0</p>
+<p style="color:green">[2024-09-21 22:01:32] [info] The long Task with ID: 0 is suspended and will continue later.</p>
+<p style="color:green">[2024-09-21 22:01:32] [info] Task with ID: 0 added to Higher queue.</p>
+<p style="color:green">[2024-09-21 22:01:32] [info] Task with ID: 0 added to Higher queue.</p>
+<p style="color:green">[2024-09-21 22:01:32] [info] Executing Task with ID: 0</p>
+<p style="color:green">[2024-09-21 22:01:32] [info] Task with ID: 0 completed.</p>
+<p style="color:green">[2024-09-21 22:01:32] [info] Executing Task with ID: 1</p>
+<p style="color:green">[2024-09-21 22:01:32] [info] Task with ID: 1 completed.</p>
+<p style="color:green">[2024-09-21 22:01:32] [info] Executing Task with ID: 2</p>
+<p style="color:green">[2024-09-21 22:01:32] [info] Task with ID: 2 completed.</p>
+<p style="color:green">[2024-09-21 22:01:52] [info] New task created with priority: Lower and running time: 10000</p>
+<p style="color:green">[2024-09-21 22:01:52] [info] Task with ID: 4 added to Lower queue.</p>
+<p style="color:green">[2024-09-21 22:01:52] [info] Task with ID: 4 added to Lower queue.</p>
+<p style="color:green">[2024-09-21 22:01:52] [info] Executing Task with ID: 4</p>
+<p style="color:green">[2024-09-21 22:01:52] [info] The long Task with ID: 4 is suspended and will continue later.</p>
+<p style="color:green">[2024-09-21 22:01:52] [info] Task with ID: 4 added to Lower queue.</p>
+<p style="color:green">[2024-09-21 22:01:52] [info] Task with ID: 4 added to Lower queue.</p>
+<p style="color:green">[2024-09-21 22:01:52] [info] Executing Task with ID: 4</p>
+<p style="color:red">[2024-09-21 22:02:02] [error] Invalid priority. Please enter one of the specified options.</p>
+<p style="color:green">[2024-09-21 22:02:10] [info] New task created with priority: Critical and running time: 2</p>
+<p style="color:green">[2024-09-21 22:02:10] [info] Critical task with ID: 5 added to RealTimeScheduler.</p>
+<p style="color:green">[2024-09-21 22:02:10] [info] Executing Task with ID: 5</p>
+<p style="color:green">[2024-09-21 22:02:10] [info] Preempting Task with ID: 4 for real-time task.</p>
+<p style="color:green">[2024-09-21 22:02:10] [info] Task with ID: 4 suspended and added back to WRR queue.</p>
+<p style="color:green">[2024-09-21 22:02:10] [info] Task with ID: 5 completed.</p>
+<p style="color:green">[2024-09-21 22:02:30] [info] New task created with priority: Critical and running time: 100</p>
+<p style="color:green">[2024-09-21 22:02:30] [info] Critical task with ID: 6 added to RealTimeScheduler.</p>
+<p style="color:green">[2024-09-21 22:02:30] [info] Executing Task with ID: 6</p>
+<p style="color:green">[2024-09-21 22:02:32] [info] Task with ID: 6 completed.</p>
+<p style="color:green">[2024-09-21 22:02:49] [info] New task created with priority: Critical and running time: 10</p>
+<p style="color:green">[2024-09-21 22:02:49] [info] Critical task with ID: 7 added to RealTimeScheduler.</p>
+<p style="color:green">[2024-09-21 22:02:49] [info] Executing Task with ID: 7</p>
+<p style="color:green">[2024-09-21 22:02:49] [info] Task with ID: 7 completed.</p>
+<p style="color:green">[2024-09-21 22:03:11] [info] New task created with priority: Critical and running time: 10</p>
+<p style="color:green">[2024-09-21 22:03:11] [info] Critical task with ID: 8 added to RealTimeScheduler.</p>
+<p style="color:green">[2024-09-21 22:03:11] [info] Executing Task with ID: 8</p>
+<p style="color:green">[2024-09-21 22:03:11] [info] Task with ID: 8 completed.</p>
+<p style="color:blue">[2024-09-21 22:04:27] [debug] Logger initialized and logging to daily and hourly files</p>
+<p style="color:green">[2024-09-21 22:04:27] [info] Starting scheduling process.</p>
+<p style="color:green">[2024-09-21 22:04:27] [info] read tasks From JSON thread started.</p>
+<p style="color:green">[2024-09-21 22:04:27] [info] InsertTask thread started.</p>
+<p style="color:green">[2024-09-21 22:04:27] [info] RealTimeScheduler thread started.</p>
+<p style="color:green">[2024-09-21 22:04:27] [info] WeightRoundRobinScheduler thread started.</p>
+<p style="color:green">[2024-09-21 22:04:27] [info] CheckStarvation thread started.</p>
+<p style="color:green">[2024-09-21 22:04:30] [info] Task with ID: 0 added to Higher queue.</p>
+<p style="color:green">[2024-09-21 22:04:30] [info] Task with ID: 0 added to Higher queue.</p>
+<p style="color:green">[2024-09-21 22:04:30] [info] Task with ID: 1 added to Middle queue.</p>
+<p style="color:green">[2024-09-21 22:04:30] [info] Task with ID: 1 added to Middle queue.</p>
+<p style="color:green">[2024-09-21 22:04:30] [info] Task with ID: 2 added to Lower queue.</p>
+<p style="color:green">[2024-09-21 22:04:30] [info] Task with ID: 2 added to Lower queue.</p>
+<p style="color:green">[2024-09-21 22:04:30] [info] Task with ID: 3 added to Lower queue.</p>
+<p style="color:green">[2024-09-21 22:04:30] [info] Task with ID: 3 added to Lower queue.</p>
+<p style="color:green">[2024-09-21 22:04:30] [info] Executing Task with ID: 0</p>
+<p style="color:green">[2024-09-21 22:04:30] [info] IterativeTaskHandler thread started.</p>
+<p style="color:green">[2024-09-21 22:04:33] [info] The long Task with ID: 0 is suspended and will continue later.</p>
+<p style="color:green">[2024-09-21 22:04:33] [info] Task with ID: 0 added to Higher queue.</p>
+<p style="color:green">[2024-09-21 22:04:33] [info] Task with ID: 0 added to Higher queue.</p>
+<p style="color:green">[2024-09-21 22:04:34] [info] Critical task with ID: 3 added to RealTimeScheduler.</p>
+<p style="color:green">[2024-09-21 22:04:34] [info] Executing Task with ID: 1</p>
+<p style="color:green">[2024-09-21 22:04:34] [info] Executing Task with ID: 3</p>
+<p style="color:green">[2024-09-21 22:04:37] [info] Preempting Task with ID: 1 for real-time task.</p>
+<p style="color:green">[2024-09-21 22:04:37] [info] Task with ID: 1 suspended and added back to WRR queue.</p>
+<p style="color:green">[2024-09-21 22:04:43] [info] Task with ID: 3 completed.</p>
+<p style="color:green">[2024-09-21 22:04:43] [info] Executing Task with ID: 2</p>
+<p style="color:green">[2024-09-21 22:04:48] [info] Task with ID: 2 completed.</p>
+<p style="color:green">[2024-09-21 22:04:49] [info] Executing Task with ID: 0</p>
+<p style="color:green">[2024-09-21 22:04:55] [info] The long Task with ID: 0 is suspended and will continue later.</p>
+<p style="color:green">[2024-09-21 22:04:55] [info] Task with ID: 0 added to Higher queue.</p>
+<p style="color:green">[2024-09-21 22:04:55] [info] Task with ID: 0 added to Higher queue.</p>
+<p style="color:green">[2024-09-21 22:04:56] [info] Executing Task with ID: 0</p>
+<p style="color:green">[2024-09-21 22:04:58] [info] Task with ID: 0 completed.</p>
+<p style="color:green">[2024-09-21 22:05:22] [info] New task created with priority: Lower and running time: 10000</p>
+<p style="color:green">[2024-09-21 22:05:22] [info] Task with ID: 4 added to Lower queue.</p>
+<p style="color:green">[2024-09-21 22:05:30] [info] Task with ID: 4 added to Lower queue.</p>
+<p style="color:green">[2024-09-21 22:05:30] [info] Executing Task with ID: 4</p>
+<p style="color:green">[2024-09-21 22:05:33] [info] The long Task with ID: 4 is suspended and will continue later.</p>
+<p style="color:green">[2024-09-21 22:05:33] [info] Task with ID: 4 added to Lower queue.</p>
+<p style="color:green">[2024-09-21 22:05:33] [info] Task with ID: 4 added to Lower queue.</p>
+<p style="color:green">[2024-09-21 22:05:33] [info] Executing Task with ID: 4</p>
+<p style="color:green">[2024-09-21 22:05:50] [info] New task created with priority: Critical and running time: 10</p>
+<p style="color:green">[2024-09-21 22:05:50] [info] Critical task with ID: 5 added to RealTimeScheduler.</p>
+<p style="color:green">[2024-09-21 22:05:50] [info] Executing Task with ID: 5</p>
+<p style="color:green">[2024-09-21 22:05:50] [info] Preempting Task with ID: 4 for real-time task.</p>
+<p style="color:green">[2024-09-21 22:05:50] [info] Task with ID: 4 suspended and added back to WRR queue.</p>
+<p style="color:green">[2024-09-21 22:05:50] [info] Task with ID: 5 completed.</p>
+<p style="color:blue">[2024-09-21 22:07:43] [debug] Logger initialized and logging to daily and hourly files</p>
+<p style="color:green">[2024-09-21 22:07:43] [info] Starting scheduling process.</p>
+<p style="color:green">[2024-09-21 22:07:43] [info] read tasks From JSON thread started.</p>
+<p style="color:green">[2024-09-21 22:07:43] [info] InsertTask thread started.</p>
+<p style="color:green">[2024-09-21 22:07:43] [info] RealTimeScheduler thread started.</p>
+<p style="color:green">[2024-09-21 22:07:43] [info] WeightRoundRobinScheduler thread started.</p>
+<p style="color:green">[2024-09-21 22:07:43] [info] Task with ID: 0 added to Higher queue.</p>
+<p style="color:green">[2024-09-21 22:07:43] [info] Task with ID: 0 added to Higher queue.</p>
+<p style="color:green">[2024-09-21 22:07:43] [info] IterativeTaskHandler thread started.</p>
+<p style="color:green">[2024-09-21 22:07:43] [info] Task with ID: 1 added to Middle queue.</p>
+<p style="color:green">[2024-09-21 22:07:43] [info] Task with ID: 1 added to Middle queue.</p>
+<p style="color:green">[2024-09-21 22:07:43] [info] Task with ID: 2 added to Lower queue.</p>
+<p style="color:green">[2024-09-21 22:07:43] [info] Task with ID: 2 added to Lower queue.</p>
+<p style="color:green">[2024-09-21 22:07:43] [info] Task with ID: 3 added to Lower queue.</p>
+<p style="color:green">[2024-09-21 22:07:43] [info] Task with ID: 3 added to Lower queue.</p>
+<p style="color:green">[2024-09-21 22:07:43] [info] Executing Task with ID: 0</p>
+<p style="color:green">[2024-09-21 22:07:43] [info] CheckStarvation thread started.</p>
+<p style="color:green">[2024-09-21 22:07:43] [info] The long Task with ID: 0 is suspended and will continue later.</p>
+<p style="color:green">[2024-09-21 22:07:43] [info] Task with ID: 0 added to Higher queue.</p>
+<p style="color:green">[2024-09-21 22:07:43] [info] Task with ID: 0 added to Higher queue.</p>
+<p style="color:green">[2024-09-21 22:07:43] [info] Critical task with ID: 3 added to RealTimeScheduler.</p>
+<p style="color:green">[2024-09-21 22:07:43] [info] Executing Task with ID: 3</p>
+<p style="color:green">[2024-09-21 22:07:44] [info] Task with ID: 3 completed.</p>
+<p style="color:green">[2024-09-21 22:07:44] [info] Executing Task with ID: 1</p>
+<p style="color:green">[2024-09-21 22:07:44] [info] Task with ID: 1 completed.</p>
+<p style="color:green">[2024-09-21 22:07:44] [info] Executing Task with ID: 2</p>
+<p style="color:green">[2024-09-21 22:07:44] [info] Task with ID: 2 completed.</p>
+<p style="color:green">[2024-09-21 22:07:44] [info] Executing Task with ID: 0</p>
+<p style="color:green">[2024-09-21 22:07:44] [info] Task with ID: 0 completed.</p>
+<p style="color:green">[2024-09-21 22:07:56] [info] New task created with priority: Lower and running time: 10000</p>
+<p style="color:green">[2024-09-21 22:07:56] [info] Task with ID: 4 added to Lower queue.</p>
+<p style="color:green">[2024-09-21 22:07:56] [info] Task with ID: 4 added to Lower queue.</p>
+<p style="color:green">[2024-09-21 22:07:56] [info] Executing Task with ID: 4</p>
+<p style="color:green">[2024-09-21 22:08:04] [info] New task created with priority: Critical and running time: 10</p>
+<p style="color:green">[2024-09-21 22:08:04] [info] Critical task with ID: 5 added to RealTimeScheduler.</p>
+<p style="color:green">[2024-09-21 22:08:04] [info] Executing Task with ID: 5</p>
+<p style="color:green">[2024-09-21 22:08:04] [info] Preempting Task with ID: 4 for real-time task.</p>
+<p style="color:green">[2024-09-21 22:08:04] [info] Task with ID: 4 suspended and added back to WRR queue.</p>
+<p style="color:green">[2024-09-21 22:08:04] [info] Task with ID: 5 completed.</p>
+<p style="color:green">[2024-09-21 22:08:04] [info] Executing Task with ID: 4</p>
+<p style="color:green">[2024-09-21 22:08:16] [info] New task created with priority: Critical and running time: 20</p>
+<p style="color:green">[2024-09-21 22:08:16] [info] Critical task with ID: 6 added to RealTimeScheduler.</p>
+<p style="color:green">[2024-09-21 22:08:16] [info] Executing Task with ID: 6</p>
+<p style="color:green">[2024-09-21 22:08:16] [info] Preempting Task with ID: 4 for real-time task.</p>
+<p style="color:green">[2024-09-21 22:08:16] [info] Task with ID: 4 suspended and added back to WRR queue.</p>
+<p style="color:green">[2024-09-21 22:08:17] [info] Task with ID: 6 completed.</p>
+<p style="color:green">[2024-09-21 22:08:17] [info] Executing Task with ID: 4</p>
+<p style="color:green">[2024-09-21 22:08:26] [info] New task created with priority: Critical and running time: 10</p>
+<p style="color:green">[2024-09-21 22:08:26] [info] Critical task with ID: 7 added to RealTimeScheduler.</p>
+<p style="color:green">[2024-09-21 22:08:26] [info] Executing Task with ID: 7</p>
+<p style="color:green">[2024-09-21 22:08:26] [info] Preempting Task with ID: 4 for real-time task.</p>
+<p style="color:green">[2024-09-21 22:08:26] [info] Task with ID: 4 suspended and added back to WRR queue.</p>
+<p style="color:green">[2024-09-21 22:08:26] [info] Task with ID: 7 completed.</p>
+<p style="color:green">[2024-09-21 22:08:26] [info] Executing Task with ID: 4</p>

@@ -1,11 +1,24 @@
 #pragma once
+
 #include <iostream>
 #include <string>
-using namespace std;
+#include "Task.h"
 
-class Utility
-{
+class Task;
+class TaskFactory;
+
+class IUtility {
 public:
-	static int integerValidation(string inputMassege, string variableName, bool negative);
+    virtual ~IUtility() = default;
+    virtual void insertTaskFromInput() = 0;
+};
+
+class Utility : public IUtility {
+public:
+    static int validateIntegerInput(const std::string& inputMessage, const std::string& variableName, bool allowNegative);
+    static void displayInviteMessage(const Task* task);
+    static void checkTaskIds();
+
+    void insertTaskFromInput() override;
 };
 

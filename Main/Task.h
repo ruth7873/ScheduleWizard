@@ -2,7 +2,10 @@
 #include <string>
 #include <ctime>
 #include <chrono>
-#include "Scheduler.h"
+#include "Consts.h"
+#include "Utility.h"
+
+
 using namespace std;
 
 class Task
@@ -12,26 +15,28 @@ private:
 	string priority;
 	int runningTime;
 	string status;
-	time_t entryTime;
-
+	bool isOrdered;
+	int counter;
 public:
 	//c'tors
-	Task(int id, string priority, int runningTime, string status);
-	Task(int, string priority, int runningTime);
+	explicit Task(int id, const string& priority, int runningTime, string status, bool isOrdered = false);
+	explicit Task(int id, const string& priority, int runningTime, bool isOrdered = false);
+
+	explicit Task(const shared_ptr<Task>& other);
 
 	//getters & setters
-	int getId() const;
-	void setId(int newId);
+	virtual int getId() const;
 
-	const string& getPriority() const;
-	void setPriority(const string& newPriority);
+	virtual const string& getPriority() const;
+	virtual void setPriority(const string& newPriority);
 
-	int getRunningTime() const;
-	void setRunningTime(int newRunningTime);
+	virtual int getRunningTime() const;
+	virtual void setRunningTime(int newRunningTime);
 
-	const string& getStatus() const;
-	void setStatus(const string& newStatus);
+	virtual const string& getStatus() const;
+	virtual void setStatus(const string& newStatus);
+	
+	virtual bool getIsOrdered()const;
 
-	time_t getEntryTime() const;
-	void setEntryTime(time_t newEntryTime);
+	virtual int getCounter() const;
 };
